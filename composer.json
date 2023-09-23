@@ -1,0 +1,39 @@
+{
+  "name": "tp5er/think-auth",
+  "license": "MIT",
+  "description": "thinkphp 用户认证 Auth",
+  "type": "library",
+  "keywords": [
+    "php",
+    "Thinkphp"
+  ],
+  "authors": [
+    {
+      "name": "qmister",
+      "email": "tp5er@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "ext-json": "*",
+    "firebase/php-jwt": "^5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "tp5er\\think\\auth\\": "src"
+    }
+  },
+  "require-dev": {
+    "topthink/framework": "^6.0"
+  },
+  "extra": {
+    "think": {
+      "services": [
+        "tp5er\\think\\auth\\Service"
+      ],
+      "config": {
+        "auth": "config/auth.php"
+      }
+    }
+  }
+}
