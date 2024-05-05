@@ -1,0 +1,44 @@
+{
+  "name": "tp5er/think-auth",
+  "license": "MIT",
+  "description": "thinkphp 用户认证 Auth",
+  "homepage": "https://www.zhiqiang.wang/",
+  "type": "library",
+  "keywords": [
+    "php",
+    "Thinkphp"
+  ],
+  "authors": [
+    {
+      "name": "zhiqiang",
+      "email": "zhiqiang2033@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "ext-json": "*",
+    "tp5er/think-hashing": "^0.1.0",
+    "topthink/framework": "^6.0 || ^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "tp5er\\think\\auth\\": "src"
+    },
+    "files": [
+      "src/helper.php"
+    ]
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.9"
+  },
+  "extra": {
+    "think": {
+      "services": [
+        "tp5er\\think\\auth\\Service"
+      ],
+      "config": {
+        "auth": "config/auth.php"
+      }
+    }
+  }
+}
