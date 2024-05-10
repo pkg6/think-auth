@@ -25,12 +25,17 @@ class Service extends \think\Service
         CreateUserCommand::class,
     ];
 
+    public function boot(): void
+    {
+        $this->commands($this->commands);
+    }
+
     /**
      * @return void
      */
     public function register(): void
     {
-        $this->commands($this->commands);
+
         $this->registerAuthenticator();
         $this->registerUserResolver();
     }
