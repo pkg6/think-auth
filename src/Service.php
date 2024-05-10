@@ -14,14 +14,23 @@
 
 namespace tp5er\think\auth;
 
+use tp5er\think\auth\commands\CreateUserCommand;
+use tp5er\think\auth\commands\MigrateCommand;
+
 class Service extends \think\Service
 {
+
+    protected $commands = [
+        MigrateCommand::class,
+        CreateUserCommand::class,
+    ];
 
     /**
      * @return void
      */
     public function register(): void
     {
+        $this->commands($this->commands);
         $this->registerAuthenticator();
         $this->registerUserResolver();
     }

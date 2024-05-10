@@ -53,13 +53,13 @@ interface AuthManagerInterface
     /**
      * 设置动态驱动配置.
      *
-     * @param $guardName
+     * @param string $guard
      * @param string $tableOrModel
      * @param string $guardDriver
      *
      * @return $this
      */
-    public function setConfigGuardProvider($guardName, $tableOrModel, $guardDriver = "session");
+    public function setConfigGuardProvider($guard, $tableOrModel, $guardDriver = "session");
 
     /**
      * Register a custom driver creator Closure.

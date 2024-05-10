@@ -55,13 +55,13 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'user',
             // Set the membership validity period to 24 hours
             //"remember" => 24 * 3600
         ],
         "token" => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'user',
         ]
     ],
 
@@ -88,9 +88,9 @@ return [
 //            'model' => \tp5er\think\auth\User::class,
 //        ],
 
-        'users' => [
+        'user' => [
             'driver' => 'database',
-            'table' => 'users',
+            'table' => 'user',
         ],
     ],
 ];

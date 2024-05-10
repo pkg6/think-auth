@@ -62,21 +62,17 @@ class AuthManager implements AuthManagerInterface, Factory
             return $this->guard($guard)->user();
         };
     }
+
     /**
-     * Get the user resolver callback.
-     *
-     * @return Closure
+     * @inheritDoc
      */
     public function userResolver()
     {
         return $this->userResolver;
     }
+
     /**
-     * Set the callback to be used to resolve users.
-     *
-     * @param  Closure  $userResolver
-     *
-     * @return $this
+     * @inheritDoc
      */
     public function resolveUsersUsing(Closure $userResolver)
     {
@@ -84,10 +80,9 @@ class AuthManager implements AuthManagerInterface, Factory
 
         return $this;
     }
+
     /**
-     * Get the default authentication driver name.
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getDefaultDriver()
     {
@@ -95,11 +90,7 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * Set the default authentication driver name.
-     *
-     * @param string $name
-     *
-     * @return $this
+     * @inheritDoc
      */
     public function setDefaultDriver($name)
     {
@@ -109,46 +100,41 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * 设置动态驱动配置.
-     *
-     * @param $guardName
-     * @param string $tableOrModel
-     * @param string $guardDriver
-     *
-     * @return $this
+     * @inheritDoc
      */
-    public function setConfigGuardProvider($guardName, $tableOrModel, $guardDriver = "session")
+    public function setConfigGuardProvider($guard, $tableOrModel, $guardDriver = "session")
     {
         if (class_exists($tableOrModel)) {
-            $provider_driver = "eloquent";
+            $provider = [
+                'driver' => 'eloquent',
+                'model' => $tableOrModel,
+            ];
         } else {
-            $provider_driver = "database";
+            $provider = [
+                'driver' => 'database',
+                'table' => $tableOrModel,
+            ];
         }
+        $guards = $this->app->config->get("auth.guards", []);
+        $providers = $this->app->config->get("auth.providers", []);
+
         $this->app->config->set([
-            "guards" => [
-                $guardName => [
+            "guards" => array_merge($guards, [
+                $guard => [
                     "driver" => $guardDriver,
-                    "provider" => $guardName
+                    "provider" => $guard
                 ]
-            ],
-            "providers" => [
-                $guardName => [
-                    "driver" => $provider_driver,
-                    "table" => $tableOrModel
-                ]
-            ]
+            ]),
+            "providers" => array_merge($providers, [
+                $guard => $provider
+            ])
         ], "auth");
 
         return $this;
     }
 
     /**
-     * Register a custom driver creator Closure.
-     *
-     * @param string $driver
-     * @param \Closure $callback
-     *
-     * @return $this
+     * @inheritDoc
      */
     public function extend($driver, Closure $callback)
     {
@@ -158,9 +144,7 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * @param string $name
-     *
-     * @return mixed|Guard|StatefulGuard
+     * @inheritDoc
      */
     public function guard($name = null)
     {
@@ -170,9 +154,7 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * Determines if any guards have already been resolved.
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function hasResolvedGuards()
     {
@@ -180,9 +162,7 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * Forget all of the resolved guard instances.
-     *
-     * @return $this
+     * @inheritDoc
      */
     public function forgetGuards()
     {
@@ -192,11 +172,7 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * Set the default guard driver the factory should serve.
-     *
-     * @param string $name
-     *
-     * @return void
+     * @inheritDoc
      */
     public function shouldUse($name)
     {
@@ -208,13 +184,7 @@ class AuthManager implements AuthManagerInterface, Factory
     }
 
     /**
-     * Resolve the given guard.
-     *
-     * @param string $name
-     *
-     * @return Guard|StatefulGuard
-     *
-     * @throws \InvalidArgumentException
+     * @inheritDoc
      */
     protected function resolve($name)
     {

@@ -16,7 +16,7 @@ namespace tp5er\think\auth;
 
 use tp5er\think\auth\contracts\Authenticatable;
 
-class GenericUser implements Authenticatable
+class GenericUser implements Authenticatable, \JsonSerializable
 {
     /**
      * All of the user's attributes.
@@ -146,5 +146,12 @@ class GenericUser implements Authenticatable
     public function __unset($key)
     {
         unset($this->attributes[$key]);
+    }
+
+    // JsonSerializable
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return $this->attributes;
     }
 }
