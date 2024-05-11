@@ -15,7 +15,11 @@
 namespace tp5er\think\auth\contracts;
 
 use Closure;
+use tp5er\think\auth\AuthManager;
 
+/**
+ * @see AuthManager
+ */
 interface AuthManagerInterface
 {
     /**

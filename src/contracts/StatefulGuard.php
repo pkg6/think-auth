@@ -14,6 +14,11 @@
 
 namespace tp5er\think\auth\contracts;
 
+use tp5er\think\auth\SessionGuard;
+
+/**
+ * @see SessionGuard
+ */
 interface StatefulGuard extends Guard
 {
     /**

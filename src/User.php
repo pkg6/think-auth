@@ -15,10 +15,12 @@
 namespace tp5er\think\auth;
 
 use think\Model;
+use tp5er\think\auth\access\Authorizable;
 use tp5er\think\auth\Contracts\Authenticatable as AuthenticatableContract;
+use tp5er\think\auth\Contracts\Authorizable as AuthorizableContract;
 use tp5er\think\auth\sanctum\HasApiTokens;
 
-class User extends Model implements AuthenticatableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable,HasApiTokens;
+    use Authenticatable,HasApiTokens,Authorizable;
 }

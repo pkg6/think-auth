@@ -39,6 +39,13 @@ class AccessCommand extends Command
 
         auth()->loginUsingId(1);
 
+        $user = auth()->user();
+
+        if ($user->can("edit-settings")) {
+            $output->info("model 有权限");
+        } else {
+            $output->error("model 没有权限");
+        }
         if (Gate::allows('edit-settings')) {
             $output->info("有权限");
         } else {

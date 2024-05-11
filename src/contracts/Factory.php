@@ -14,6 +14,9 @@
 
 namespace tp5er\think\auth\contracts;
 
+/**
+ * @see AuthManager
+ */
 interface Factory
 {
     /**
