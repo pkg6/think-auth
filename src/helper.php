@@ -12,7 +12,7 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-use think\helper\Str;
+use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\AuthManagerInterface;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\Guard;
@@ -35,19 +35,17 @@ if ( ! function_exists('auth')) {
     }
 }
 
-if ( ! function_exists('str_parse_callback')) {
+if ( ! function_exists('request_user')) {
 
     /**
-     * Parse a Class[@]method style callback into class and method.
+     * Get the user making the request.
      *
-     * @param  string  $callback
-     * @param  string|null  $default
+     * @param string|null $guard
      *
-     * @return array<int, string|null>
+     * @return mixed
      */
-    function str_parse_callback($callback, $default = null)
+    function request_user($guard = null)
     {
-
-        return Str::contains($callback, '@') ? explode('@', $callback, 2) : [$callback, $default];
+        return call_user_func(app()->get(Authenticatable::class), $guard);
     }
 }
