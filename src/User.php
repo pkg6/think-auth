@@ -16,8 +16,9 @@ namespace tp5er\think\auth;
 
 use think\Model;
 use tp5er\think\auth\Contracts\Authenticatable as AuthenticatableContract;
+use tp5er\think\auth\sanctum\HasApiTokens;
 
 class User extends Model implements AuthenticatableContract
 {
-    use Authenticatable;
+    use Authenticatable,HasApiTokens;
 }
