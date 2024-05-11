@@ -13,21 +13,15 @@ class SanctumCommand extends Command
     {
         // 指令配置
         $this->setName('auth:test-sanctum')
-            ->setDescription('think-auth sanctum test');
+            ->setDescription('think-auth test sanctum');
     }
 
     protected function execute(Input $input, Output $output)
     {
-
         $output->info("手动注册服务 " . Service::class);
-
-        $this->app->register(Service::class);
-        $this->app->bootService(Service::class);
-
         $output->info("根据ID完成一次登录");
         \auth()->loginUsingId(1);
         $user = \auth()->guard("sanctum")->user();
         $output->info("使用sanctum获取用户信息：" . json_encode($user));
-
     }
 }

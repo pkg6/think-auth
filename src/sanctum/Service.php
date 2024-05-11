@@ -20,6 +20,9 @@ use tp5er\think\auth\RequestGuard;
 
 class Service extends \think\Service
 {
+    /**
+     * @return void
+     */
     public function register(): void
     {
         $guards = $this->app->config->get("auth.guards", []);
@@ -34,11 +37,17 @@ class Service extends \think\Service
         ], "auth");
     }
 
+    /**
+     * @return void
+     */
     public function boot(): void
     {
         $this->configureGuard();
     }
 
+    /**
+     * @return void
+     */
     protected function configureGuard()
     {
         auth()->extend("sanctum", function (App $app, $name, $config) {
