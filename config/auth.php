@@ -121,5 +121,20 @@ return [
         */
         'expiration' => null,
 
-    ]
+    ],
+
+    'middleware' => [
+        'global' => [
+            \think\middleware\SessionInit::class,
+        ],
+        "alias" => [
+            //'auth'=> \tp5er\think\auth\middlewares\Authenticate::class,
+            'auth.basic' => \tp5er\think\auth\middlewares\AuthenticateWithBasicAuth::class,
+            'can' => \tp5er\think\auth\middlewares\Authorize::class,
+
+            //sanctum
+            'abilities' => \tp5er\think\auth\sanctum\middlewares\CheckAbilities::class,
+            'ability' => \tp5er\think\auth\sanctum\middlewares\CheckForAnyAbility::class,
+        ],
+    ],
 ];

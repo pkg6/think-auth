@@ -30,9 +30,9 @@ class PersonalAccessToken extends Model implements HasAbilities
         return $this->createTime;
     }
 
-    public function saveLastUsedAt()
+    public function saveLastUsed()
     {
-        $this->last_used_at = date('Y-m-d H:i:s');
+        $this->last_used_time = time();
 
         return $this->save();
     }

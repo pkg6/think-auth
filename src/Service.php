@@ -19,6 +19,7 @@ use tp5er\think\auth\commands\CreateUserCommand;
 use tp5er\think\auth\commands\MakePolicyCommand;
 use tp5er\think\auth\commands\MigrateAccessTokenCommand;
 use tp5er\think\auth\commands\MigrateUserCommand;
+use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 
 class Service extends \think\Service
@@ -51,6 +52,27 @@ class Service extends \think\Service
         $this->registerAuthenticator();
         $this->registerUserResolver();
         $this->registerAccessGate();
+        $this->registerMiddleware();
+
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerMiddleware()
+    {
+        // 自动启动session中间件
+        $middlewares = $this->app->config->get("auth.middleware.global", []);
+        foreach ($middlewares as $middleware) {
+            $this->app->middleware->add($middleware);
+        }
+
+        $this->app->config->set([
+            'alias' => array_merge(
+                $this->app->config->get('middleware.alias', []),
+                $this->app->config->get("auth.middleware.alias", [])
+            )
+        ], 'middleware');
     }
 
     /**
@@ -60,7 +82,7 @@ class Service extends \think\Service
      */
     protected function registerAuthenticator()
     {
-        $this->app->bind('auth', function () {
+        $this->app->bind(Factory::class, function () {
             return new AuthManager($this->app);
         });
 

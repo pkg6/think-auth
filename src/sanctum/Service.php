@@ -54,7 +54,12 @@ class Service extends \think\Service
             $expiration = $this->app->config->get("auth.sanctum.expiration");
 
             return new RequestGuard(
-                new Guard($this->app, auth(), $expiration, $config['provider']),
+                new Guard(
+                    $this->app,
+                    auth(),
+                    $expiration,
+                    $config['provider']
+                ),
                 $this->app->request,
                 auth()->createUserProvider($config['provider'] ?? null)
             );
