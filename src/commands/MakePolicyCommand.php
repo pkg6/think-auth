@@ -16,7 +16,7 @@ namespace tp5er\think\auth\commands;
 
 use think\console\command\Make;
 
-class MakePolicy extends Make
+class MakePolicyCommand extends Make
 {
     protected $type = "policy";
 
@@ -29,7 +29,10 @@ class MakePolicy extends Make
 
     protected function getStub()
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'stubs' . DIRECTORY_SEPARATOR . 'class_policy.stub';
+        return __DIR__ . DIRECTORY_SEPARATOR
+            . 'stubs' . DIRECTORY_SEPARATOR
+            . 'class' . DIRECTORY_SEPARATOR
+            . 'policy.stub';
     }
     protected function getNamespace(string $app): string
     {

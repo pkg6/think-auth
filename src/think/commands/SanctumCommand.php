@@ -17,7 +17,8 @@ namespace tp5er\think\auth\think\commands;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use tp5er\think\auth\sanctum\Service;
+use tp5er\think\auth\sanctum\TransientToken;
+use tp5er\think\auth\User;
 
 class SanctumCommand extends Command
 {
@@ -30,7 +31,27 @@ class SanctumCommand extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $output->info("手动注册服务 " . Service::class);
+
+        $user = User::find(1);
+        foreach ($user->tokens as $token) {
+            $output->info("已颁发令牌信息：" . $token);
+        }
+        $token = $user->createToken('token-can', ['server:update']);
+        $output->info("颁发令牌权限：" . json_encode($token));
+
+        $output->info("验证权限（使用withAccessToken进行携带) 默认：" . TransientToken::class);
+        $user->withAccessToken(new TransientToken);
+        if ($user->tokenCan('server:update')) {
+            $output->info("有权限");
+        } else {
+            $output->error("无权限");
+        }
+        $output->info("Revoke all tokens");
+        $user->tokens()->delete();
+
+        // Revoke a specific token...
+        //$user->tokens()->where('id', $id)->delete();
+
         $output->info("根据ID完成一次登录");
         \auth()->loginUsingId(1);
         $user = \auth()->guard("sanctum")->user();

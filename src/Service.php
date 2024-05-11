@@ -16,17 +16,20 @@ namespace tp5er\think\auth;
 
 use tp5er\think\auth\access\Gate;
 use tp5er\think\auth\commands\CreateUserCommand;
-use tp5er\think\auth\commands\MakePolicy;
-use tp5er\think\auth\commands\MigrateCommand;
+use tp5er\think\auth\commands\MakePolicyCommand;
+use tp5er\think\auth\commands\MigrateAccessTokenCommand;
+use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\GateInterface;
 
 class Service extends \think\Service
 {
 
     protected $commands = [
-        MigrateCommand::class,
+        MigrateUserCommand::class,
+        MigrateAccessTokenCommand::class,
+
         CreateUserCommand::class,
-        MakePolicy::class
+        MakePolicyCommand::class
     ];
 
     public function boot(): void
