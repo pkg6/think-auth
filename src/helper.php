@@ -49,3 +49,18 @@ if ( ! function_exists('request_user')) {
         return call_user_func(app()->get(Authenticatable::class), $guard);
     }
 }
+
+if ( ! function_exists('with')) {
+    /**
+     * Return the given value, optionally passed through the given callback.
+     *
+     * @param  mixed  $value
+     * @param  callable|null  $callback
+     *
+     * @return mixed
+     */
+    function with($value, callable $callback = null)
+    {
+        return is_null($callback) ? $value : $callback($value);
+    }
+}

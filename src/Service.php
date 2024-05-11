@@ -24,6 +24,9 @@ use tp5er\think\auth\contracts\GateInterface;
 class Service extends \think\Service
 {
 
+    /**
+     * @var string[]
+     */
     protected $commands = [
         MigrateUserCommand::class,
         MigrateAccessTokenCommand::class,
@@ -32,6 +35,9 @@ class Service extends \think\Service
         MakePolicyCommand::class
     ];
 
+    /**
+     * @return void
+     */
     public function boot(): void
     {
         $this->commands($this->commands);
@@ -74,6 +80,10 @@ class Service extends \think\Service
             return call_user_func(auth()->userResolver());
         });
     }
+
+    /**
+     * @return void
+     */
     protected function registerAccessGate()
     {
         $this->app->bind(GateInterface::class, function () {
