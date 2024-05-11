@@ -14,11 +14,24 @@
 
 namespace tp5er\think\auth\commands;
 
+use tp5er\think\auth\sanctum\PersonalAccessToken;
+
 class MigrateAccessTokenCommand extends MigrateAbstract
 {
 
+    /**
+     * @var string
+     */
     protected $default_table = "personal_access_token";
 
+    /**
+     * @var string
+     */
+    protected $model = PersonalAccessToken::class;
+
+    /**
+     * @return string
+     */
     public function cmd()
     {
         return 'access-token';

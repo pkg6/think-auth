@@ -24,6 +24,7 @@ use think\helper\Arr;
 use tp5er\think\auth\access\events\GateEvaluated;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\GateInterface;
+use tp5er\think\auth\support\Collection;
 use tp5er\think\auth\support\Str;
 
 class Gate implements GateInterface

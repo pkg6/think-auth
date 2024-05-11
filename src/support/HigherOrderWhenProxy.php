@@ -12,7 +12,7 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\access;
+namespace tp5er\think\auth\support;
 
 class HigherOrderWhenProxy
 {

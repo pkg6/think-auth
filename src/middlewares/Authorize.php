@@ -17,8 +17,8 @@ namespace tp5er\think\auth\middlewares;
 use think\Model;
 use think\Request;
 use think\Response;
-use tp5er\think\auth\access\Collection;
 use tp5er\think\auth\contracts\GateInterface;
+use tp5er\think\auth\support\Collection;
 
 class Authorize
 {

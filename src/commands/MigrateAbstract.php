@@ -26,6 +26,14 @@ abstract class MigrateAbstract extends Command
      */
     protected $default_table = "";
 
+    /**
+     * @var string
+     */
+    protected $model = "";
+
+    /**
+     * @return string
+     */
     public function cmd()
     {
         return $this->default_table;
@@ -50,7 +58,7 @@ abstract class MigrateAbstract extends Command
     /**
      * @return string
      */
-    protected function stubs_file()
+    protected function stubsFile()
     {
         return __DIR__ . DIRECTORY_SEPARATOR .
             'stubs' . DIRECTORY_SEPARATOR .
@@ -74,10 +82,17 @@ abstract class MigrateAbstract extends Command
                 str_replace(
                     ['{%table%}'],
                     [$table],
-                    file_get_contents($this->stubs_file())
+                    file_get_contents($this->stubsFile())
                 )
             );
             $output->writeln('<info>' . 'database table: `' . $table . '` created successfully.</info>');
+
+            if ($table != $this->default_table) {
+                $output->newLine();
+                $output->highlight("Table name change requires new model extends " . $this->model);
+                $output->newLine();
+            }
+
         } catch (\Exception $exception) {
             $output->writeln('<error>' . 'database table: `' . $table . '` created error : ' . $exception->getMessage() . ' !</error>');
         }

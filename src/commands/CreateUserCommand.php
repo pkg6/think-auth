@@ -21,6 +21,9 @@ use think\console\Output;
 
 class CreateUserCommand extends Command
 {
+    /**
+     * @return void
+     */
     protected function configure()
     {
         // 指令配置
@@ -31,6 +34,16 @@ class CreateUserCommand extends Command
             ->setDescription('think-auth Create an account and password');
     }
 
+    /**
+     * @param Input $input
+     * @param Output $output
+     *
+     * @return int|void|null
+     *
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     protected function execute(Input $input, Output $output)
     {
         $table = $input->getArgument('table');

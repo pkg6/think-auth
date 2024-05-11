@@ -18,8 +18,14 @@ use think\console\command\Make;
 
 class MakePolicyCommand extends Make
 {
+    /**
+     * @var string
+     */
     protected $type = "policy";
 
+    /**
+     * @return void
+     */
     protected function configure()
     {
         parent::configure();
@@ -27,6 +33,9 @@ class MakePolicyCommand extends Make
             ->setDescription('Create a new policy class');
     }
 
+    /**
+     * @return string
+     */
     protected function getStub()
     {
         return __DIR__ . DIRECTORY_SEPARATOR
@@ -34,6 +43,12 @@ class MakePolicyCommand extends Make
             . 'class' . DIRECTORY_SEPARATOR
             . 'policy.stub';
     }
+
+    /**
+     * @param string $app
+     *
+     * @return string
+     */
     protected function getNamespace(string $app): string
     {
         return parent::getNamespace($app) . '\\policies';

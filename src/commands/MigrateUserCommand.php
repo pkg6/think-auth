@@ -14,11 +14,24 @@
 
 namespace tp5er\think\auth\commands;
 
+use tp5er\think\auth\User;
+
 class MigrateUserCommand extends MigrateAbstract
 {
 
+    /**
+     * @var string
+     */
     protected $default_table = "user";
 
+    /**
+     * @var string
+     */
+    protected $model = User::class;
+
+    /**
+     * @return string
+     */
     public function cmd()
     {
         return parent::cmd();
