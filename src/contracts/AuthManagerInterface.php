@@ -51,6 +51,15 @@ interface AuthManagerInterface
     public function setDefaultDriver($name);
 
     /**
+     * Register a new callback based request guard.
+     *
+     * @param  string  $driver
+     * @param  callable  $callback
+     * @return $this
+     */
+    public function viaRequest($driver, callable $callback);
+
+    /**
      * 设置动态驱动配置.
      *
      * @param string $guard
