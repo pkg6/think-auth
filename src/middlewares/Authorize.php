@@ -40,15 +40,18 @@ class Authorize
     {
         $this->gate = $gate;
     }
+
     /**
      * 处理请求
      *
      * @param \think\Request $request
      * @param \Closure $next
-     * @param null $guard
-     * @param null $field
+     * @param string $ability
+     * @param mixed ...$models
      *
      * @return Response
+     *
+     * @throws \tp5er\think\auth\access\AuthorizationException
      */
     public function handle($request, \Closure $next, $ability, ...$models)
     {

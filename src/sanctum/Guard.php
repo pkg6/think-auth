@@ -87,11 +87,11 @@ class Guard
                 //触发事件
                 $this->app->event->trigger(new TokenAuthenticated($accessToken));
                 if (method_exists($accessToken->tokenable, "withAccessToken")) {
-                    $tokenable = $accessToken->tokenable->withAccessToken($accessToken);
+                    $accessToken->tokenable->withAccessToken($accessToken);
                 }
                 $model->saveLastUsed();
 
-                return $tokenable;
+                return $accessToken->tokenable;
             }
         }
 

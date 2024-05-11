@@ -128,7 +128,7 @@ return [
             \think\middleware\SessionInit::class,
         ],
         "alias" => [
-//            'auth'=> \tp5er\think\auth\middlewares\Authenticate::class,
+            'auth' => \tp5er\think\auth\middlewares\Authenticate::class,
             'auth.basic' => \tp5er\think\auth\middlewares\AuthenticateWithBasicAuth::class,
             'can' => \tp5er\think\auth\middlewares\Authorize::class,
 
