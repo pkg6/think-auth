@@ -36,7 +36,7 @@ if ( ! function_exists('auth')) {
     }
 }
 
-if ( ! function_exists('request_user')) {
+if ( ! function_exists('requestUser')) {
 
     /**
      * Get the user making the request.
@@ -45,9 +45,50 @@ if ( ! function_exists('request_user')) {
      *
      * @return mixed
      */
-    function request_user($guard = null)
+    function requestUser($guard = null)
     {
         return call_user_func(app()->get(Authenticatable::class), $guard);
+    }
+}
+
+if ( ! function_exists('requestBearerToken')) {
+
+    /**
+     * @return false|string|null
+     */
+    function requestBearerToken()
+    {
+        $header = app()->request->header("Authorization", "");
+        $position = strrpos($header, 'Bearer ');
+        if ($position !== false) {
+            $header = substr($header, $position + 7);
+
+            return strpos($header, ',') !== false ? strstr($header, ',', true) : $header;
+        }
+
+        return null;
+    }
+}
+
+if ( ! function_exists('requestGetUser')) {
+
+    /**
+     * @return array|string|null
+     */
+    function requestGetUser()
+    {
+        return app()->request->header("PHP_AUTH_USER");
+    }
+}
+
+if ( ! function_exists('requestGetPassword')) {
+
+    /**
+     * @return array|string|null
+     */
+    function requestGetPassword()
+    {
+        return app()->request->header("PHP_AUTH_PW");
     }
 }
 

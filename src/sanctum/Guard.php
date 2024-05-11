@@ -20,7 +20,6 @@ use think\Model;
 use think\Request;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\sanctum\events\TokenAuthenticated;
-use tp5er\think\auth\support\Req;
 use tp5er\think\auth\support\Timer;
 
 class Guard
@@ -117,7 +116,7 @@ class Guard
             return (string) (Sanctum::$accessTokenRetrievalCallback)($request);
         }
 
-        return Req::bearerToken($request);
+        return requestBearerToken();
     }
 
     /**

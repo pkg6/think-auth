@@ -27,7 +27,6 @@ use tp5er\think\auth\events\CurrentDeviceLogout;
 use tp5er\think\auth\events\Logout;
 use tp5er\think\auth\exceptions\UnauthorizedHttpException;
 use tp5er\think\auth\support\Recaller;
-use tp5er\think\auth\support\Req;
 use tp5er\think\auth\support\Timebox;
 use tp5er\think\hashing\facade\Hash;
 use function tap;
@@ -303,7 +302,7 @@ class SessionGuard implements StatefulGuard
      */
     public function attemptBasic(Request $request, $field, $extraConditions = [])
     {
-        if ( ! Req::getUser($request)) {
+        if ( ! requestGetUser()) {
             return false;
         }
 
@@ -324,8 +323,8 @@ class SessionGuard implements StatefulGuard
     protected function basicCredentials(Request $request, $field)
     {
         return [
-            $field => Req::getUser($request),
-            'password' => Req::getPassword($request)
+            $field => requestGetUser(),
+            'password' => requestGetPassword()
         ];
     }
 
@@ -562,7 +561,7 @@ class SessionGuard implements StatefulGuard
         if (is_null($this->request)) {
             return null;
         }
-        if ($recaller = $this->request->cookies->get($this->getRecallerName())) {
+        if ($recaller = $this->cookie->get($this->getRecallerName())) {
             return new Recaller($recaller);
         }
 

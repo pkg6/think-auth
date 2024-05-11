@@ -17,7 +17,6 @@ namespace tp5er\think\auth;
 use think\Request;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\UserProvider;
-use tp5er\think\auth\support\Req;
 
 class TokenGuard implements Guard
 {
@@ -107,11 +106,11 @@ class TokenGuard implements Guard
         }
 
         if (empty($token)) {
-            $token = Req::bearerToken($this->request);
+            $token = requestBearerToken();
         }
 
         if (empty($token)) {
-            $token = Req::getPassword($this->request);
+            $token = requestGetPassword();
         }
 
         return $token;

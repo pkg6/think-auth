@@ -33,11 +33,11 @@ class CheckForAnyAbility
      */
     public function handle($request, \Closure $next, ...$abilities)
     {
-        if ( ! request_user() || ! request_user()->currentAccessToken()) {
+        if ( ! requestUser() || ! requestUser()->currentAccessToken()) {
             throw new AuthenticationException;
         }
         foreach ($abilities as $ability) {
-            if (request_user()->tokenCan($ability)) {
+            if (requestUser()->tokenCan($ability)) {
                 throw new MissingAbilityException($ability);
             }
         }
