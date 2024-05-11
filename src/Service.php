@@ -14,8 +14,11 @@
 
 namespace tp5er\think\auth;
 
+use tp5er\think\auth\access\Gate;
 use tp5er\think\auth\commands\CreateUserCommand;
+use tp5er\think\auth\commands\MakePolicy;
 use tp5er\think\auth\commands\MigrateCommand;
+use tp5er\think\auth\contracts\GateInterface;
 
 class Service extends \think\Service
 {
@@ -23,6 +26,7 @@ class Service extends \think\Service
     protected $commands = [
         MigrateCommand::class,
         CreateUserCommand::class,
+        MakePolicy::class
     ];
 
     public function boot(): void
@@ -35,9 +39,9 @@ class Service extends \think\Service
      */
     public function register(): void
     {
-
         $this->registerAuthenticator();
         $this->registerUserResolver();
+        $this->registerAccessGate();
     }
 
     /**
@@ -65,6 +69,14 @@ class Service extends \think\Service
     {
         $this->app->bind(Authenticatable::class, function () {
             return call_user_func($this->app->get("auth")->userResolver());
+        });
+    }
+    protected function registerAccessGate()
+    {
+        $this->app->bind(GateInterface::class, function () {
+            return new Gate($this->app, function () {
+                return call_user_func(auth()->userResolver());
+            });
         });
     }
 
