@@ -14,12 +14,14 @@
 
 namespace tp5er\think\auth\think;
 
+use tp5er\think\auth\think\commands\AccessCommand;
 use tp5er\think\auth\think\commands\AuthCommand;
 
 class Service extends \think\Service
 {
     protected $commands = [
         AuthCommand::class,
+        AccessCommand::class
     ];
 
     /**
