@@ -57,7 +57,7 @@ class AuthManager implements AuthManagerInterface, Factory
      */
     public function __construct(App $app)
     {
-        $this->app          = $app;
+        $this->app = $app;
         $this->userResolver = function ($guard = null) {
             return $this->guard($guard)->user();
         };
@@ -105,6 +105,7 @@ class AuthManager implements AuthManagerInterface, Factory
     {
         return $this->extend($driver, function () use ($callback) {
             $guard = new RequestGuard($callback, $this->app->request, $this->createUserProvider());
+
             return $guard;
         });
     }
@@ -117,21 +118,21 @@ class AuthManager implements AuthManagerInterface, Factory
         if (class_exists($tableOrModel)) {
             $provider = [
                 'driver' => 'eloquent',
-                'model'  => $tableOrModel,
+                'model' => $tableOrModel,
             ];
         } else {
             $provider = [
                 'driver' => 'database',
-                'table'  => $tableOrModel,
+                'table' => $tableOrModel,
             ];
         }
-        $guards    = $this->app->config->get("auth.guards", []);
+        $guards = $this->app->config->get("auth.guards", []);
         $providers = $this->app->config->get("auth.providers", []);
 
         $this->app->config->set([
-            "guards"    => array_merge($guards, [
+            "guards" => array_merge($guards, [
                 $guard => [
-                    "driver"   => $guardDriver,
+                    "driver" => $guardDriver,
                     "provider" => $guard
                 ]
             ]),
@@ -241,6 +242,9 @@ class AuthManager implements AuthManagerInterface, Factory
         }
         if (isset($config['remember'])) {
             $guard->setRememberDuration($config['remember']);
+        }
+        if (method_exists($guard, 'setRequest')) {
+            $guard->setRequest($this->app->request);
         }
 
         return $guard;

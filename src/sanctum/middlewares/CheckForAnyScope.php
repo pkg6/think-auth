@@ -16,6 +16,7 @@ namespace tp5er\think\auth\sanctum\middlewares;
 
 use think\Request;
 use think\Response;
+use tp5er\think\auth\exceptions\AuthenticationException;
 use tp5er\think\auth\sanctum\exceptions\MissingAbilityException;
 use tp5er\think\auth\sanctum\exceptions\MissingScopeException;
 
@@ -30,7 +31,8 @@ class CheckForAnyScope
      *
      * @return Response
      *
-     * @throws \tp5er\think\auth\exceptions\AuthenticationException
+     * @throws AuthenticationException
+     * @throws MissingScopeException
      */
     public function handle($request, $next, ...$scopes)
     {

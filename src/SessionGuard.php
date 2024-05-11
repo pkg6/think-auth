@@ -27,6 +27,7 @@ use tp5er\think\auth\events\CurrentDeviceLogout;
 use tp5er\think\auth\events\Logout;
 use tp5er\think\auth\exceptions\UnauthorizedHttpException;
 use tp5er\think\auth\support\Recaller;
+use tp5er\think\auth\support\Req;
 use tp5er\think\auth\support\Timebox;
 use tp5er\think\hashing\facade\Hash;
 use function tap;
@@ -163,6 +164,7 @@ class SessionGuard implements StatefulGuard
 
         return $this->app->cookie;
     }
+
     /**
      * Set the number of minutes the remember me cookie should be valid for.
      *
@@ -260,11 +262,12 @@ class SessionGuard implements StatefulGuard
 
         $this->failedBasicResponse();
     }
+
     /**
      * Perform a stateless HTTP Basic login attempt.
      *
-     * @param  string  $field
-     * @param  array  $extraConditions
+     * @param string $field
+     * @param array $extraConditions
      *
      * @return void
      */
@@ -292,15 +295,15 @@ class SessionGuard implements StatefulGuard
     /**
      * Attempt to authenticate using basic authentication.
      *
-     * @param  Request  $request
-     * @param  string  $field
-     * @param  array  $extraConditions
+     * @param Request $request
+     * @param string $field
+     * @param array $extraConditions
      *
      * @return bool
      */
     public function attemptBasic(Request $request, $field, $extraConditions = [])
     {
-        if ( ! $request->header("PHP_AUTH_USER")) {
+        if ( ! Req::getUser($request)) {
             return false;
         }
 
@@ -313,14 +316,17 @@ class SessionGuard implements StatefulGuard
     /**
      * Get the credential array for an HTTP Basic request.
      *
-     * @param  Request  $request
-     * @param  string  $field
+     * @param Request $request
+     * @param string $field
      *
      * @return array
      */
     protected function basicCredentials(Request $request, $field)
     {
-        return [$field => $request->header('PHP_AUTH_USER'), 'password' => $request->header('PHP_AUTH_PW')];
+        return [
+            $field => Req::getUser($request),
+            'password' => Req::getPassword($request)
+        ];
     }
 
     /**
@@ -587,7 +593,19 @@ class SessionGuard implements StatefulGuard
 
         return $this;
     }
+    /**
+     * Set the current request instance.
+     *
+     * @param  Request  $request
+     *
+     * @return $this
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
 
+        return $this;
+    }
     /**
      * Log the user out of the application on their current device only.
      *

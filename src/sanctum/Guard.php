@@ -14,6 +14,7 @@
 
 namespace tp5er\think\auth\sanctum;
 
+use think\App;
 use think\helper\Arr;
 use think\Model;
 use think\Request;
@@ -24,6 +25,10 @@ use tp5er\think\auth\support\Timer;
 
 class Guard
 {
+    /**
+     * @var App
+     */
+    protected $app;
     /**
      * The authentication factory implementation.
      *
@@ -50,8 +55,9 @@ class Guard
      * @param null $expiration
      * @param mixed $provider
      */
-    public function __construct(Factory $auth, $expiration = null, $provider = null)
+    public function __construct(App $app, Factory $auth, $expiration = null, $provider = null)
     {
+        $this->app = $app;
         $this->auth = $auth;
         $this->expiration = $expiration;
         $this->provider = $provider;
@@ -60,8 +66,7 @@ class Guard
     public function __invoke(Request $request)
     {
 
-        $guards = config("auth.sanctum.guard", 'web');
-
+        $guards = $this->app->config->get('auth.sanctum.guard', "web");
         foreach (Arr::wrap($guards) as $guard) {
             $user = $this->auth->guard($guard)->user();
             if ($user) {
@@ -74,7 +79,6 @@ class Guard
                 }
             }
         }
-
         if ($token = $this->getTokenFromRequest($request)) {
             /**
              * @var PersonalAccessToken $model
@@ -86,10 +90,8 @@ class Guard
                 return null;
             }
             if ($accessToken->tokenable) {
-
                 //触发事件
-                event(new TokenAuthenticated($accessToken));
-
+                $this->app->event->trigger(new TokenAuthenticated($accessToken));
                 if (method_exists($accessToken->tokenable, "withAccessToken")) {
                     $tokenable = $accessToken->tokenable->withAccessToken($accessToken);
                 }
@@ -151,7 +153,7 @@ class Guard
         if (is_null($this->provider)) {
             return true;
         }
-        $model = app()->config->get("auth.providers.{$this->provider}.model");
+        $model = $this->app->config->get("auth.providers.{$this->provider}.model");
 
         return $tokenable instanceof $model;
     }

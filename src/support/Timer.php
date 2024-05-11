@@ -23,6 +23,7 @@ class Timer
 
     /**
      * @param $timestamp
+     *
      * @return false|int
      */
     public static function timestamp($timestamp)
@@ -41,7 +42,9 @@ class Timer
 
     /**
      * @param $sec
+     *
      * @return int
+     *
      * @throws \Exception
      */
     public static function timeAddSec($sec = null)

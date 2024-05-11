@@ -14,10 +14,10 @@
 
 namespace tp5er\think\auth\sanctum\exceptions;
 
-//class MissingAbilityException extends AuthorizationException
 use think\helper\Arr;
+use tp5er\think\auth\access\AuthorizationException;
 
-class MissingAbilityException extends \RuntimeException
+class MissingAbilityException extends AuthorizationException
 {
 
     /**
@@ -26,18 +26,16 @@ class MissingAbilityException extends \RuntimeException
      * @var array
      */
     protected $abilities;
+
     /**
      * Create a new authorization exception instance.
      *
-     * @param  string|null  $message
-     * @param  mixed  $code
-     * @param  \Throwable|null  $previous
-     *
-     * @return void
+     * @param array $abilities
+     * @param string|null $message
      */
     public function __construct($abilities = [], $message = 'Invalid ability provided.')
     {
-        parent::__construct($message ?? 'This action is unauthorized.', 0, $previous);
+        parent::__construct($message ?? 'This action is unauthorized.', 0);
 
         $this->abilities = Arr::wrap($abilities);
     }

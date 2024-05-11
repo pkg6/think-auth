@@ -55,6 +55,7 @@ interface AuthManagerInterface
      *
      * @param  string  $driver
      * @param  callable  $callback
+     *
      * @return $this
      */
     public function viaRequest($driver, callable $callback);

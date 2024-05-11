@@ -56,7 +56,7 @@ class Service extends \think\Service
         });
 
         $this->app->bind("auth.driver", function () {
-            return $this->app->get("auth")->guard();
+            return auth()->guard();
         });
     }
 
@@ -68,7 +68,7 @@ class Service extends \think\Service
     protected function registerUserResolver()
     {
         $this->app->bind(Authenticatable::class, function () {
-            return call_user_func($this->app->get("auth")->userResolver());
+            return call_user_func(auth()->userResolver());
         });
     }
     protected function registerAccessGate()

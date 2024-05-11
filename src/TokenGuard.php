@@ -17,6 +17,7 @@ namespace tp5er\think\auth;
 use think\Request;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\UserProvider;
+use tp5er\think\auth\support\Req;
 
 class TokenGuard implements Guard
 {
@@ -106,11 +107,11 @@ class TokenGuard implements Guard
         }
 
         if (empty($token)) {
-            $token = $this->bearerToken();
+            $token = Req::bearerToken($this->request);
         }
 
         if (empty($token)) {
-            $token = $this->getPassword();
+            $token = Req::getPassword($this->request);
         }
 
         return $token;
@@ -134,27 +135,5 @@ class TokenGuard implements Guard
         }
 
         return false;
-    }
-
-    /**
-     * @return false|string|void
-     */
-    protected function bearerToken()
-    {
-        $header = $this->request->header("Authorization", "");
-        $position = strrpos($header, 'Bearer ');
-        if ($position !== false) {
-            $header = substr($header, $position + 7);
-
-            return strpos($header, ',') !== false ? strstr($header, ',', true) : $header;
-        }
-    }
-
-    /**
-     * @return array|string|null
-     */
-    protected function getPassword()
-    {
-        return $this->request->header('PHP_AUTH_PW');
     }
 }

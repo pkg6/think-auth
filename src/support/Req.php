@@ -20,6 +20,7 @@ class Req
 {
     /**
      * @param Request $request
+     *
      * @return false|string|null
      */
     public static function bearerToken(Request $request)
@@ -37,10 +38,21 @@ class Req
 
     /**
      * @param Request $request
+     *
+     * @return array|string|null
+     */
+    public static function getUser(Request $request)
+    {
+        return $request->header('PHP_AUTH_USER');
+    }
+    /**
+     * @param Request $request
+     *
      * @return array|string|null
      */
     public static function getPassword(Request $request)
     {
         return $request->header('PHP_AUTH_PW');
     }
+
 }
