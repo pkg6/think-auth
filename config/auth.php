@@ -87,11 +87,14 @@ return [
             'driver' => 'eloquent',
             'model' => \tp5er\think\auth\User::class,
         ],
+        //'user' => [
+        //    'driver' => 'database',
+        //    'table' => 'user',
+        //],
+    ],
 
-//        'user' => [
-//            'driver' => 'database',
-//            'table' => 'user',
-//        ],
+    "policies" => [
+        //'app\model\Model' => 'app\policies\ModelPolicy',
     ],
 
     "sanctum" => [
