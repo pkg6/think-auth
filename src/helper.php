@@ -14,6 +14,7 @@
 
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\AuthManagerInterface;
+use tp5er\think\auth\contracts\Authorizable;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
@@ -43,7 +44,7 @@ if ( ! function_exists('requestUser')) {
      *
      * @param string|null $guard
      *
-     * @return mixed
+     * @return Authenticatable|Authorizable
      */
     function requestUser($guard = null)
     {
