@@ -8,28 +8,19 @@ composer require tp5er/think-auth
 
 [CHANGELOG.md](https://github.com/pkg6/think-auth/blob/main/CHANGELOG.md)
 
-## 基础user表
+## 命令行
 
 ~~~
-CREATE TABLE `users`
-(
-    `id`             int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `username`       varchar(50)      DEFAULT '' COMMENT '用户名',
-    `nickname`       varchar(50)      DEFAULT '' COMMENT '昵称',
-    `email`          varchar(100)     DEFAULT '' COMMENT '电子邮箱',
-    `mobile`         varchar(11)      DEFAULT '' COMMENT '手机号码',
-    `password`       varchar(255)     DEFAULT '' COMMENT '密码',
-    `remember_token` varchar(255)     DEFAULT '' COMMENT '记住token标识',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB CHARSET=utf8mb4  COMMENT='用户表';
+//生成基础用户表，如果重命名，需要继承\tp5er\think\auth\User,然后修改`config/auth.php`中的providers
+php think auth:create-user
+//生成基础personal_access_token表,如果重写命名 需继承\tp5er\think\auth\sanctum\PersonalAccessToken
+//修改模型地址 \tp5er\think\auth\sanctum\Sanctum::$personalAccessTokenModel =\app\model\PersonalAccessToken::class;
+php think auth:migrate-access-token
+//创建一个admin用户，密码为123456
+php think auth:create-user  admin 123456
+//指定用户表中创建一个admin用户，密码为123456
+php think auth:create-user  admin 123456 user
 ~~~
-
-
->在provider中使用`model`,需要做一下操作
->
->1. 创建User模型
->2. 模型继承` tp5er\think\auth\User`
 
 ## Auth常用方法
 ~~~
@@ -128,22 +119,6 @@ app()->event->listen( Authenticated::class,function (Authenticated $user){
 });
 
 Auth::loginUsingId(1);
-~~~
-
-## [密码生成和验证](https://github.com/pkg6/think-hashing)
-
-~~~
-use tp5er\think\hashing\facade\Hash;
-
-//加密
-$hashedValue= Hash::make("123456");
-//验证密码是否有效
-$check = Hash::check("123456",$hashedValue);
-
-//加密
-$hashedValue = hash_make("123456");
-//验证密码是否有效
-hash_check("123456",$hashedValue);
 ~~~
 
 ## 在路由演示使用think-auth
@@ -263,9 +238,21 @@ thinkRoute::get("/api/tokencan", function () {
 })->middleware('auth', "sanctum");
 ~~~
 
+## [密码生成和验证](https://github.com/pkg6/think-hashing)
 
+~~~
+use tp5er\think\hashing\facade\Hash;
 
+//加密
+$hashedValue= Hash::make("123456");
+//验证密码是否有效
+$check = Hash::check("123456",$hashedValue);
 
+//加密
+$hashedValue = hash_make("123456");
+//验证密码是否有效
+hash_check("123456",$hashedValue);
+~~~
 
 ## 加入我们
 

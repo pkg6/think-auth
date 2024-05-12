@@ -28,9 +28,9 @@ class CreateUserCommand extends Command
     {
         // 指令配置
         $this->setName('auth:create-user')
-            ->addArgument("table", Argument::OPTIONAL, "Custom user table name", "user")
             ->addArgument("user", Argument::OPTIONAL, "Username used to log in", "tp5er")
             ->addArgument("password", Argument::OPTIONAL, "Password used to log in", "123456")
+            ->addArgument("table", Argument::OPTIONAL, "Custom user table name", "user")
             ->setDescription('think-auth Create an account and password');
     }
 

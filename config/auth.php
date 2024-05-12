@@ -29,7 +29,7 @@ return [
         'guard' => 'web',
 
         //The provider generally does not need to be set up, but can be mined by oneself
-        //"provider" => "users"
+        //"provider" => "user"
     ],
 
     /*
@@ -83,15 +83,15 @@ return [
     */
 
     'providers' => [
-//        'user' => [
-//            'driver' => 'eloquent',
-//            'model' => \tp5er\think\auth\User::class,
-//        ],
-
         'user' => [
-            'driver' => 'database',
-            'table' => 'user',
+            'driver' => 'eloquent',
+            'model' => \tp5er\think\auth\User::class,
         ],
+
+//        'user' => [
+//            'driver' => 'database',
+//            'table' => 'user',
+//        ],
     ],
 
     "sanctum" => [
