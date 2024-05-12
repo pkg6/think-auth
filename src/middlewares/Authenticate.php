@@ -31,7 +31,6 @@ class Authenticate
      */
     public function handle($request, \Closure $next, ...$guards)
     {
-
         $this->authenticate($request, $guards);
 
         return $next($request);
@@ -52,12 +51,14 @@ class Authenticate
         if (empty($guards)) {
             $guards = [null];
         }
+
         foreach ($guards as $guard) {
             if (auth()->guard($guard)->check()) {
                 auth()->shouldUse($guard);
+
+                return;
             }
         }
-
         $this->unauthenticated($request, $guards);
     }
 
@@ -90,5 +91,6 @@ class Authenticate
     protected function redirectTo($request)
     {
         //
+
     }
 }

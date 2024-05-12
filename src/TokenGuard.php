@@ -106,11 +106,11 @@ class TokenGuard implements Guard
         }
 
         if (empty($token)) {
-            $token = $this->bearerToken();
+            $token = requestBearerToken();
         }
 
         if (empty($token)) {
-            $token = $this->getPassword();
+            $token = requestGetPassword();
         }
 
         return $token;
@@ -134,27 +134,5 @@ class TokenGuard implements Guard
         }
 
         return false;
-    }
-
-    /**
-     * @return false|string|void
-     */
-    protected function bearerToken()
-    {
-        $header = $this->request->header("Authorization", "");
-        $position = strrpos($header, 'Bearer ');
-        if ($position !== false) {
-            $header = substr($header, $position + 7);
-
-            return strpos($header, ',') !== false ? strstr($header, ',', true) : $header;
-        }
-    }
-
-    /**
-     * @return array|string|null
-     */
-    protected function getPassword()
-    {
-        return $this->request->header('PHP_AUTH_PW');
     }
 }

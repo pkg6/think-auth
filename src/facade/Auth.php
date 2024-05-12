@@ -16,6 +16,7 @@ namespace tp5er\think\auth\facade;
 
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\AuthManagerInterface;
+use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
 
@@ -41,6 +42,6 @@ class Auth extends \think\Facade
      */
     protected static function getFacadeClass()
     {
-        return "auth";
+        return Factory::class;
     }
 }

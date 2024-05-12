@@ -102,6 +102,18 @@ class AuthManager implements AuthManagerInterface, Factory
     /**
      * @inheritDoc
      */
+    public function viaRequest($driver, callable $callback)
+    {
+        return $this->extend($driver, function () use ($callback) {
+            $guard = new RequestGuard($callback, $this->app->request, $this->createUserProvider());
+
+            return $guard;
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setConfigGuardProvider($guard, $tableOrModel, $guardDriver = "session")
     {
         if (class_exists($tableOrModel)) {
@@ -115,19 +127,40 @@ class AuthManager implements AuthManagerInterface, Factory
                 'table' => $tableOrModel,
             ];
         }
-        $guards = $this->app->config->get("auth.guards", []);
-        $providers = $this->app->config->get("auth.providers", []);
+        $this->configMergeGuards($guard, [
+            "driver" => $guardDriver,
+            "provider" => $guard
+        ]);
+        $this->configMergeProviders($guard, $provider);
 
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configMergeGuards($guard, $config)
+    {
         $this->app->config->set([
-            "guards" => array_merge($guards, [
-                $guard => [
-                    "driver" => $guardDriver,
-                    "provider" => $guard
-                ]
-            ]),
-            "providers" => array_merge($providers, [
-                $guard => $provider
-            ])
+            "guards" => array_merge(
+                $this->app->config->get("auth.guards", []),
+                [$guard => $config]
+            ),
+        ], "auth");
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configMergeProviders($guard, $config)
+    {
+        $this->app->config->set([
+            "providers" => array_merge(
+                $this->app->config->get("auth.providers", []),
+                [$guard => $config]
+            ),
         ], "auth");
 
         return $this;
@@ -231,6 +264,9 @@ class AuthManager implements AuthManagerInterface, Factory
         }
         if (isset($config['remember'])) {
             $guard->setRememberDuration($config['remember']);
+        }
+        if (method_exists($guard, 'setRequest')) {
+            $guard->setRequest($this->app->request);
         }
 
         return $guard;

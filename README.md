@@ -8,28 +8,25 @@ composer require tp5er/think-auth
 
 [CHANGELOG.md](https://github.com/pkg6/think-auth/blob/main/CHANGELOG.md)
 
-## 基础user表
+## 命令行
 
 ~~~
-CREATE TABLE `users`
-(
-    `id`             int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `username`       varchar(50)      DEFAULT '' COMMENT '用户名',
-    `nickname`       varchar(50)      DEFAULT '' COMMENT '昵称',
-    `email`          varchar(100)     DEFAULT '' COMMENT '电子邮箱',
-    `mobile`         varchar(11)      DEFAULT '' COMMENT '手机号码',
-    `password`       varchar(255)     DEFAULT '' COMMENT '密码',
-    `remember_token` varchar(255)     DEFAULT '' COMMENT '记住token标识',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB CHARSET=utf8mb4  COMMENT='用户表';
+//生成基础用户表，如果重命名，需要继承\tp5er\think\auth\User,然后修改`config/auth.php`中的providers
+php think auth:create-user
+
+//生成基础personal_access_token表,如果重写命名 需继承\tp5er\think\auth\sanctum\PersonalAccessToken
+//修改模型地址 \tp5er\think\auth\sanctum\Sanctum::$personalAccessTokenModel =\app\model\PersonalAccessToken::class;
+php think auth:migrate-access-token
+
+//创建一个admin用户，密码为123456
+php think auth:create-user  admin 123456
+
+//指定用户表中创建一个admin用户，密码为123456
+php think auth:create-user  admin 123456 user
+
+// 使用policy类
+php think make:policy Post
 ~~~
-
-
->在provider中使用`model`,需要做一下操作
->
->1. 创建User模型
->2. 模型继承` tp5er\think\auth\User`
 
 ## Auth常用方法
 ~~~
@@ -79,6 +76,59 @@ Auth::provider("test",function (App $app,$config){
 
 //动态设置配置信息
 Auth::setConfigGuardProvider("admin","user_table","session");
+Auth::configMergeGuards('sanctum', ["driver" => 'sanctum',"provider" => null])
+Auth::configMergeProviders("admin", ['driver' => 'database','table' => "user"]);
+~~~
+
+## 使用policy
+
+#### 生成一个PostPolicy
+
+~~~
+php think make:policy Post
+~~~
+
+#### 重写AccessService
+
+~~~
+php think make:service AccessService
+~~~
+
+AccessService代码
+
+~~~
+<?php
+declare (strict_types = 1);
+
+namespace app\service;
+
+class AccessService extends \tp5er\think\auth\AccessService
+{
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array
+     */
+    protected $policies = [
+    		//'app\model\Model' => 'app\policies\ModelPolicy',
+        \tp5er\think\auth\User::class =>\app\policies\Post::class,
+    ];
+}
+
+~~~
+
+#### 注册AccessService到`app/service.php`
+
+~~~
+<?php
+
+// 系统服务定义文件
+// 服务在完成全局初始化之后执行
+return [
+		.......
+    \app\service\AccessService::class,
+];
+
 ~~~
 
 ## 使用事件
@@ -126,6 +176,123 @@ app()->event->listen( Authenticated::class,function (Authenticated $user){
 });
 
 Auth::loginUsingId(1);
+~~~
+
+## 在路由演示使用think-auth
+
+> 根据实际需求进行开发使用
+
+在`route/app.php`添加
+
+~~~
+\tp5er\think\auth\think\Route::api();
+~~~
+
+部分代码(此处只是部分代码,演示有可能随时发生变化,但使用方法是不会发生变化)
+
+~~~
+use think\facade\Route as thinkRoute;
+use tp5er\think\auth\contracts\Authenticatable;
+use tp5er\think\auth\facade\Gate;
+use tp5er\think\auth\User;
+
+//定义一个演示的权限
+Gate::define('edit-settings', function (Authenticatable $authenticatable) {
+    return true;
+});
+
+thinkRoute::get("/api/register", function () {
+    //TODO 自己根据实际需求进行注册
+    $user = new User();
+    $user->username = "tp5er";
+    $user->password = hash_make("123456");
+    $user->save();
+
+    return json(['code' => 0, "msge" => $user]);
+});
+
+thinkRoute::get("/api/login", function () {
+    //TODO 自己根据实际需求进行登录
+    auth()->attempt(["username" => "tp5er", "password" => "123456"]);
+
+    return json(['code' => 0, "msge" => "登录成功"]);
+});
+thinkRoute::get("/api/user", function () {
+
+    $user = requestUser();
+    //$user=  auth()->user();
+
+    return json(['code' => 0, "msg" => "获取登录信息", "data" => $user]);
+});
+
+thinkRoute::get("/api/scan", function () {
+
+    $ret = [];
+    if (Gate::allows('edit-settings')) {
+        $ret["edit-settings"] = "有权限";
+    } else {
+        $ret["edit-settings"] = "无权限";
+    }
+
+    if (Gate::allows('delete-settings')) {
+        $ret["delete-settings"] = "有权限";
+    } else {
+        $ret["delete-settings"] = "无权限";
+    }
+
+    return json(['code' => 0, "msg" => "获取权限列表", 'data' => $ret]);
+
+});
+
+thinkRoute::get("/api/token", function () {
+    //$user = requestUser();
+    $user = auth()->user();
+    $token = $user->createToken("test-token");
+
+    return json(['code' => 0, "msg" => "获取token信息", "data" => ["token" => $token->plainTextToken]]);
+});
+
+thinkRoute::get("/api/sanctum", function () {
+    //TODO 逻辑
+    // 1. 首先判断你是否完成登录，通过默认guard中获取用户信息，如果有用户进行就直接返回
+    // 2. 如果在默认的guard没有获取到用户信息就通过header中获取Authorization，然后进行获取用户信息
+    // 3. Authorization是用`/api/token`中拿到的token，然后进字符串拼接成：（Bearer token）放在header中Bearer 参考curl
+    // curl -H "Authorization: Bearer 9|DqTQsBngTVJcFwJkslyvdZSeGuAjgaeikknQPHBI"  "http://127.0.0.1:8000/api/sanctum"
+    // 注意： 使用sanctum必须使用模型，database 无法进行access权限验证
+
+    //$user = requestUser();
+    $user = auth()->user();
+
+    return json(['code' => 0, "msg" => "通过sanctum获取用户信息", "data" => $user]);
+})->middleware('auth', "sanctum");
+
+thinkRoute::get("/api/tokencan", function () {
+    //$user = requestUser();
+    $user = auth()->user();
+    $ret = [];
+    //TODO 默认accessToken是tp5er\think\auth\sanctum\TransientToken
+    // 此处无论是什么都有权限的哦
+    // 可以使用withAccessToken(HasAbilities $accessToken) 进行自定义
+    if ($user->tokenCan("edit-settings")) {
+        $ret["tokenCan"] = "有权限";
+    } else {
+        $ret["tokenCan"] = "无权限";
+    }
+    //TODO Gate 定义的关系
+    if ($user->can("edit-settings")) {
+        $ret["edit-settings"] = "有权限";
+    } else {
+        $ret["edit-settings"] = "无权限";
+    }
+    if ($user->can('delete-settings')) {
+        $ret["delete-settings"] = "有权限";
+    } else {
+        $ret["delete-settings"] = "无权限";
+    }
+
+    return json(['code' => 0, "msg" => "获取权限列表", 'data' => $ret]);
+
+})->middleware('auth', "sanctum");
 ~~~
 
 ## [密码生成和验证](https://github.com/pkg6/think-hashing)

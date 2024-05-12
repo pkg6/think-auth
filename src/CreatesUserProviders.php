@@ -61,13 +61,11 @@ trait CreatesUserProviders
      *
      * @throws \InvalidArgumentException
      */
-    protected function createUserProvider($provider = null)
+    public function createUserProvider($provider = null)
     {
         $config = $this->getProviderConfiguration($provider);
         if (is_null($config)) {
-            throw new InvalidArgumentException(
-                "Authentication user provider config is not defined."
-            );
+            return  null;
         }
         if (isset($this->customProviderCreators[$driver = ($config['driver'] ?? null)])) {
             return call_user_func(

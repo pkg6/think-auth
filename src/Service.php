@@ -14,17 +14,34 @@
 
 namespace tp5er\think\auth;
 
+use think\App;
+use tp5er\think\auth\access\Gate;
 use tp5er\think\auth\commands\CreateUserCommand;
-use tp5er\think\auth\commands\MigrateCommand;
+use tp5er\think\auth\commands\MakePolicyCommand;
+use tp5er\think\auth\commands\MigrateAccessTokenCommand;
+use tp5er\think\auth\commands\MigrateUserCommand;
+use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
+use tp5er\think\auth\contracts\Factory;
+use tp5er\think\auth\contracts\GateInterface;
+use tp5er\think\auth\sanctum\Guard;
 
 class Service extends \think\Service
 {
 
+    /**
+     * @var string[]
+     */
     protected $commands = [
-        MigrateCommand::class,
+        MigrateUserCommand::class,
+        MigrateAccessTokenCommand::class,
+
         CreateUserCommand::class,
+        MakePolicyCommand::class
     ];
 
+    /**
+     * @return void
+     */
     public function boot(): void
     {
         $this->commands($this->commands);
@@ -35,9 +52,31 @@ class Service extends \think\Service
      */
     public function register(): void
     {
-
         $this->registerAuthenticator();
         $this->registerUserResolver();
+        $this->registerAccessGate();
+        $this->registerMiddleware();
+        $this->registerSanctum();
+
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerMiddleware()
+    {
+        // 自动启动session中间件
+        $middlewares = $this->app->config->get("auth.middleware.global", []);
+        foreach ($middlewares as $middleware) {
+            $this->app->middleware->add($middleware);
+        }
+
+        $this->app->config->set([
+            'alias' => array_merge(
+                $this->app->config->get('middleware.alias', []),
+                $this->app->config->get("auth.middleware.alias", [])
+            )
+        ], 'middleware');
     }
 
     /**
@@ -47,12 +86,12 @@ class Service extends \think\Service
      */
     protected function registerAuthenticator()
     {
-        $this->app->bind('auth', function () {
+        $this->app->bind(Factory::class, function () {
             return new AuthManager($this->app);
         });
 
         $this->app->bind("auth.driver", function () {
-            return $this->app->get("auth")->guard();
+            return $this->app->get(Factory::class)->guard();
         });
     }
 
@@ -63,8 +102,44 @@ class Service extends \think\Service
      */
     protected function registerUserResolver()
     {
-        $this->app->bind(Authenticatable::class, function () {
-            return call_user_func($this->app->get("auth")->userResolver());
+        $this->app->bind(AuthenticatableContract::class, function () {
+            return $this->app->get(Factory::class)->userResolver();
+        });
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerAccessGate()
+    {
+        $this->app->bind(GateInterface::class, function () {
+            return new Gate($this->app, $this->app->get(AuthenticatableContract::class));
+        });
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerSanctum()
+    {
+        $auth = $this->app->get(Factory::class);
+        $auth->configMergeGuards('sanctum', [
+            "driver" => 'sanctum',
+            "provider" => null
+        ]);
+        $auth->extend("sanctum", function (App $app, $name, $config) use (&$auth) {
+            $expiration = $this->app->config->get("auth.sanctum.expiration");
+
+            return new RequestGuard(
+                new Guard(
+                    $this->app,
+                    $auth,
+                    $expiration,
+                    $config['provider']
+                ),
+                $this->app->request,
+                $auth->createUserProvider($config['provider'] ?? null)
+            );
         });
     }
 

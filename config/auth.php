@@ -29,7 +29,7 @@ return [
         'guard' => 'web',
 
         //The provider generally does not need to be set up, but can be mined by oneself
-        //"provider" => "users"
+        //"provider" => "user"
     ],
 
     /*
@@ -83,14 +83,58 @@ return [
     */
 
     'providers' => [
-//        'users' => [
-//            'driver' => 'eloquent',
-//            'model' => \tp5er\think\auth\User::class,
-//        ],
-
         'user' => [
-            'driver' => 'database',
-            'table' => 'user',
+            'driver' => 'eloquent',
+            'model' => \tp5er\think\auth\User::class,
+        ],
+
+//        'user' => [
+//            'driver' => 'database',
+//            'table' => 'user',
+//        ],
+    ],
+
+    "sanctum" => [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sanctum Guards
+        |--------------------------------------------------------------------------
+        |
+        | This array contains the authentication guards that will be checked when
+        | Sanctum is trying to authenticate a request. If none of these guards
+        | are able to authenticate the request, Sanctum will use the bearer
+        | token that's present on an incoming request for authentication.
+        |
+        */
+        'guard' => ['web'],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Expiration Minutes
+        |--------------------------------------------------------------------------
+        |
+        | This value controls the number of minutes until an issued token will be
+        | considered expired. If this value is null, personal access tokens do
+        | not expire. This won't tweak the lifetime of first-party sessions.
+        |
+        */
+        'expiration' => null,
+
+    ],
+
+    'middleware' => [
+        'global' => [
+            \think\middleware\SessionInit::class,
+        ],
+        "alias" => [
+            'auth' => \tp5er\think\auth\middlewares\Authenticate::class,
+            'auth.basic' => \tp5er\think\auth\middlewares\AuthenticateWithBasicAuth::class,
+            'can' => \tp5er\think\auth\middlewares\Authorize::class,
+
+            //sanctum
+            'abilities' => \tp5er\think\auth\sanctum\middlewares\CheckAbilities::class,
+            'ability' => \tp5er\think\auth\sanctum\middlewares\CheckForAnyAbility::class,
         ],
     ],
 ];

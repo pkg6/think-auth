@@ -14,6 +14,10 @@
 
 namespace tp5er\think\auth\contracts;
 
+/**
+ * @see GenericUser
+ * @see \tp5er\think\auth\Authenticatable
+ */
 interface Authenticatable
 {
     /**

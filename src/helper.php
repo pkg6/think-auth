@@ -12,9 +12,11 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-use think\helper\Str;
+use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\AuthManagerInterface;
+use tp5er\think\auth\contracts\Authorizable;
 use tp5er\think\auth\contracts\Factory;
+use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
 
@@ -28,26 +30,96 @@ if ( ! function_exists('auth')) {
     function auth($guard = null)
     {
         if (is_null($guard)) {
-            return app()->get("auth");
+            return app()->get(Factory::class);
         }
 
-        return app()->get("auth")->guard($guard);
+        return app()->get(Factory::class)->guard($guard);
     }
 }
 
-if ( ! function_exists('str_parse_callback')) {
+if ( ! function_exists('requestUser')) {
 
     /**
-     * Parse a Class[@]method style callback into class and method.
+     * Get the user making the request.
      *
-     * @param  string  $callback
-     * @param  string|null  $default
+     * @param string|null $guard
      *
-     * @return array<int, string|null>
+     * @return Authenticatable|Authorizable
      */
-    function str_parse_callback($callback, $default = null)
+    function requestUser($guard = null)
     {
+        return call_user_func(app()->get(Authenticatable::class), $guard);
+    }
+}
 
-        return Str::contains($callback, '@') ? explode('@', $callback, 2) : [$callback, $default];
+if ( ! function_exists('requestBearerToken')) {
+
+    /**
+     * @return false|string|null
+     */
+    function requestBearerToken()
+    {
+        $header = app()->request->header("Authorization", "");
+        $position = strrpos($header, 'Bearer ');
+        if ($position !== false) {
+            $header = substr($header, $position + 7);
+
+            return strpos($header, ',') !== false ? strstr($header, ',', true) : $header;
+        }
+
+        return null;
+    }
+}
+
+if ( ! function_exists('requestGetUser')) {
+
+    /**
+     * @return array|string|null
+     */
+    function requestGetUser()
+    {
+        return app()->request->header("PHP_AUTH_USER");
+    }
+}
+
+if ( ! function_exists('requestGetPassword')) {
+
+    /**
+     * @return array|string|null
+     */
+    function requestGetPassword()
+    {
+        return app()->request->header("PHP_AUTH_PW");
+    }
+}
+
+if ( ! function_exists('with')) {
+    /**
+     * Return the given value, optionally passed through the given callback.
+     *
+     * @param  mixed  $value
+     * @param  callable|null  $callback
+     *
+     * @return mixed
+     */
+    function with($value, callable $callback = null)
+    {
+        return is_null($callback) ? $value : $callback($value);
+    }
+}
+
+if ( ! function_exists('policy')) {
+    /**
+     * Get a policy instance for a given class.
+     *
+     * @param  object|string  $class
+     *
+     * @return mixed
+     *
+     * @throws \InvalidArgumentException
+     */
+    function policy($class)
+    {
+        return app(GateInterface::class)->getPolicyFor($class);
     }
 }

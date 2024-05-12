@@ -21,16 +21,29 @@ use think\console\Output;
 
 class CreateUserCommand extends Command
 {
+    /**
+     * @return void
+     */
     protected function configure()
     {
         // 指令配置
         $this->setName('auth:create-user')
-            ->addArgument("table", Argument::OPTIONAL, "Custom user table name", "user")
             ->addArgument("user", Argument::OPTIONAL, "Username used to log in", "tp5er")
             ->addArgument("password", Argument::OPTIONAL, "Password used to log in", "123456")
+            ->addArgument("table", Argument::OPTIONAL, "Custom user table name", "user")
             ->setDescription('think-auth Create an account and password');
     }
 
+    /**
+     * @param Input $input
+     * @param Output $output
+     *
+     * @return int|void|null
+     *
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     protected function execute(Input $input, Output $output)
     {
         $table = $input->getArgument('table');
