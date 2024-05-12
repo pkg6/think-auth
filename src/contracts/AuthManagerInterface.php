@@ -76,6 +76,26 @@ interface AuthManagerInterface
     public function setConfigGuardProvider($guard, $tableOrModel, $guardDriver = "session");
 
     /**
+     * 动态配置Guards.
+     *
+     * @param string $guard
+     * @param array $config
+     *
+     * @return mixed
+     */
+    public function configMergeGuards($guard, $config);
+
+    /**
+     *  动态配置Providers.
+     *
+     * @param string $guard
+     * @param array $config
+     *
+     * @return mixed
+     */
+    public function configMergeProviders($guard, $config);
+
+    /**
      * Register a custom driver creator Closure.
      *
      * @param string $driver

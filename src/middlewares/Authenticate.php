@@ -51,12 +51,14 @@ class Authenticate
         if (empty($guards)) {
             $guards = [null];
         }
+
         foreach ($guards as $guard) {
             if (auth()->guard($guard)->check()) {
                 auth()->shouldUse($guard);
+
+                return;
             }
         }
-
         $this->unauthenticated($request, $guards);
     }
 

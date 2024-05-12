@@ -98,6 +98,7 @@ class AuthManager implements AuthManagerInterface, Factory
 
         return $this;
     }
+
     /**
      * @inheritDoc
      */
@@ -126,19 +127,40 @@ class AuthManager implements AuthManagerInterface, Factory
                 'table' => $tableOrModel,
             ];
         }
-        $guards = $this->app->config->get("auth.guards", []);
-        $providers = $this->app->config->get("auth.providers", []);
+        $this->configMergeGuards($guard, [
+            "driver" => $guardDriver,
+            "provider" => $guard
+        ]);
+        $this->configMergeProviders($guard, $provider);
 
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configMergeGuards($guard, $config)
+    {
         $this->app->config->set([
-            "guards" => array_merge($guards, [
-                $guard => [
-                    "driver" => $guardDriver,
-                    "provider" => $guard
-                ]
-            ]),
-            "providers" => array_merge($providers, [
-                $guard => $provider
-            ])
+            "guards" => array_merge(
+                $this->app->config->get("auth.guards", []),
+                [$guard => $config]
+            ),
+        ], "auth");
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configMergeProviders($guard, $config)
+    {
+        $this->app->config->set([
+            "providers" => array_merge(
+                $this->app->config->get("auth.providers", []),
+                [$guard => $config]
+            ),
         ], "auth");
 
         return $this;

@@ -31,7 +31,6 @@ class Service extends \think\Service
      */
     public function boot(): void
     {
-        $this->app->register(\tp5er\think\auth\sanctum\Service::class);
         $this->commands($this->commands);
     }
 

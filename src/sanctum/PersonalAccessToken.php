@@ -23,11 +23,11 @@ class PersonalAccessToken extends Model implements HasAbilities
     protected $json = ['abilities'];
 
     /**
-     * @return false|string
+     * @return int
      */
     public function getCreateTimeTimestamp()
     {
-        return $this->createTime;
+        return strtotime($this->{$this->createTime});
     }
 
     public function saveLastUsed()

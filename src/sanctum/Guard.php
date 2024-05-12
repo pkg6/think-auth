@@ -62,18 +62,26 @@ class Guard
         $this->provider = $provider;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return mixed|\tp5er\think\auth\contracts\Authenticatable|null
+     */
     public function __invoke(Request $request)
     {
+
         $guards = $this->app->config->get('auth.sanctum.guard', "web");
         foreach (Arr::wrap($guards) as $guard) {
-            $user = $this->auth->guard($guard)->user();
-            if ($this->supportsTokens($user) && method_exists($user, 'withAccessToken')) {
-                $user->withAccessToken(new TransientToken);
-            }
+            if ($user = $this->auth->guard($guard)->user()) {
+                if ($this->supportsTokens($user) && method_exists($user, 'withAccessToken')) {
+                    $user->withAccessToken(new TransientToken);
+                }
 
-            return $user;
+                return $user;
+            }
         }
         if ($token = $this->getTokenFromRequest($request)) {
+
             /**
              * @var PersonalAccessToken $model
              */
@@ -83,16 +91,11 @@ class Guard
                 ! $this->supportsTokens($accessToken->tokenable)) {
                 return null;
             }
-            if ($accessToken->tokenable) {
-                //触发事件
-                $this->app->event->trigger(new TokenAuthenticated($accessToken));
-                if (method_exists($accessToken->tokenable, "withAccessToken")) {
-                    $accessToken->tokenable->withAccessToken($accessToken);
-                }
-                $model->saveLastUsed();
+            $tokenable = $accessToken->tokenable->withAccessToken($accessToken);
+            $this->app->event->trigger(new TokenAuthenticated($accessToken));
+            $accessToken->saveLastUsed();
 
-                return $accessToken->tokenable;
-            }
+            return $tokenable;
         }
 
         return null;
@@ -110,6 +113,11 @@ class Guard
         return $tokenable && in_array(HasApiTokens::class, class_uses_recursive(get_class($tokenable)));
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return false|string|null
+     */
     protected function getTokenFromRequest(Request $request)
     {
         if (is_callable(Sanctum::$accessTokenRetrievalCallback)) {
@@ -131,7 +139,6 @@ class Guard
         if ( ! $accessToken) {
             return false;
         }
-
         $isValid =
             ( ! $this->expiration || $accessToken->getCreateTimeTimestamp() > Timer::timeAddSec($this->expiration))
             && $this->hasValidProvider($accessToken->getTokenable());
@@ -142,6 +149,11 @@ class Guard
         return $isValid;
     }
 
+    /**
+     * @param $tokenable
+     *
+     * @return bool
+     */
     protected function hasValidProvider($tokenable)
     {
         if (is_null($this->provider)) {
