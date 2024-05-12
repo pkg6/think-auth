@@ -82,53 +82,38 @@ Auth::configMergeProviders("admin", ['driver' => 'database','table' => "user"]);
 
 ## 使用policy
 
+生成Post模型
+
+~~~
+php think make:model Post
+~~~
+
 #### 生成一个PostPolicy
 
 ~~~
 php think make:policy Post
 ~~~
 
-#### 重写AccessService
+#### 加入配置`config/auth.php`
 
 ~~~
-php think make:service AccessService
+"policies" => [
+    //'app\model\Model' => 'app\policies\ModelPolicy',
+    \app\model\Post::class => \app\policies\Post::class,
+],
 ~~~
 
-AccessService代码
+## 使用
 
 ~~~
-<?php
-declare (strict_types = 1);
+use tp5er\think\auth\access\AuthorizesRequests
 
-namespace app\service;
-
-class AccessService extends \tp5er\think\auth\AccessService
+public function destroy(Post $post)
 {
-    /**
-     * The policy mappings for the application.
-     *
-     * @var array
-     */
-    protected $policies = [
-    		//'app\model\Model' => 'app\policies\ModelPolicy',
-        \tp5er\think\auth\User::class =>\app\policies\Post::class,
-    ];
+    $this->authorize('delete', $post);
+    $post->delete();
+    return redirect('/posts');
 }
-
-~~~
-
-#### 注册AccessService到`app/service.php`
-
-~~~
-<?php
-
-// 系统服务定义文件
-// 服务在完成全局初始化之后执行
-return [
-		.......
-    \app\service\AccessService::class,
-];
-
 ~~~
 
 ## 使用事件

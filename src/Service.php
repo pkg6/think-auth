@@ -38,6 +38,14 @@ class Service extends \think\Service
         CreateUserCommand::class,
         MakePolicyCommand::class
     ];
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array
+     */
+    protected $policies = [
+        // 'app\model\Model' => 'app\policies\ModelPolicy',
+    ];
 
     /**
      * @return void
@@ -57,6 +65,7 @@ class Service extends \think\Service
         $this->registerAccessGate();
         $this->registerMiddleware();
         $this->registerSanctum();
+        $this->registerPolicies();
 
     }
 
@@ -141,6 +150,29 @@ class Service extends \think\Service
                 $auth->createUserProvider($config['provider'] ?? null)
             );
         });
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerPolicies()
+    {
+        foreach ($this->policies() as $key => $value) {
+            $this->app->get(GateInterface::class)->policy($key, $value);
+        }
+    }
+
+    /**
+     * Get the policies defined on the provider.
+     *
+     * @return array
+     */
+    public function policies()
+    {
+        return array_merge(
+            $this->policies,
+            $this->app->config->get("auth.policies", [])
+        );
     }
 
 }
