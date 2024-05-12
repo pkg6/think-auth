@@ -13,13 +13,19 @@ composer require tp5er/think-auth
 ~~~
 //生成基础用户表，如果重命名，需要继承\tp5er\think\auth\User,然后修改`config/auth.php`中的providers
 php think auth:create-user
+
 //生成基础personal_access_token表,如果重写命名 需继承\tp5er\think\auth\sanctum\PersonalAccessToken
 //修改模型地址 \tp5er\think\auth\sanctum\Sanctum::$personalAccessTokenModel =\app\model\PersonalAccessToken::class;
 php think auth:migrate-access-token
+
 //创建一个admin用户，密码为123456
 php think auth:create-user  admin 123456
+
 //指定用户表中创建一个admin用户，密码为123456
 php think auth:create-user  admin 123456 user
+
+// 使用policy类
+php think make:policy Post
 ~~~
 
 ## Auth常用方法
@@ -72,6 +78,57 @@ Auth::provider("test",function (App $app,$config){
 Auth::setConfigGuardProvider("admin","user_table","session");
 Auth::configMergeGuards('sanctum', ["driver" => 'sanctum',"provider" => null])
 Auth::configMergeProviders("admin", ['driver' => 'database','table' => "user"]);
+~~~
+
+## 使用policy
+
+#### 生成一个PostPolicy
+
+~~~
+php think make:policy Post
+~~~
+
+#### 重写AccessService
+
+~~~
+php think make:service AccessService
+~~~
+
+AccessService代码
+
+~~~
+<?php
+declare (strict_types = 1);
+
+namespace app\service;
+
+class AccessService extends \tp5er\think\auth\AccessService
+{
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array
+     */
+    protected $policies = [
+    		//'app\model\Model' => 'app\policies\ModelPolicy',
+        \tp5er\think\auth\User::class =>\app\policies\Post::class,
+    ];
+}
+
+~~~
+
+#### 注册AccessService到`app/service.php`
+
+~~~
+<?php
+
+// 系统服务定义文件
+// 服务在完成全局初始化之后执行
+return [
+		.......
+    \app\service\AccessService::class,
+];
+
 ~~~
 
 ## 使用事件
