@@ -37,6 +37,12 @@ trait HasApiTokens
         return $this->morphMany(Sanctum::$personalAccessTokenModel, 'tokenable');
     }
 
+    /**
+     * @param string $name
+     * @param array $abilities
+     *
+     * @return NewAccessToken
+     */
     public function createToken($name, array $abilities = ['*'])
     {
         $token = $this->tokens()->save([

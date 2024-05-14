@@ -15,7 +15,6 @@
 namespace tp5er\think\auth\access;
 
 use tp5er\think\auth\contracts\Authenticatable;
-use tp5er\think\auth\contracts\GateInterface;
 
 trait AuthorizesRequests
 {
@@ -33,7 +32,7 @@ trait AuthorizesRequests
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
-        return app(GateInterface::class)->authorize($ability, $arguments);
+        return gate()->authorize($ability, $arguments);
     }
 
     /**
@@ -51,7 +50,7 @@ trait AuthorizesRequests
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
-        return app(GateInterface::class)->forUser($user)->authorize($ability, $arguments);
+        return gate()->forUser($user)->authorize($ability, $arguments);
     }
 
     /**

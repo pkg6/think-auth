@@ -32,7 +32,7 @@ class MigrateAccessTokenCommand extends MigrateAbstract
     /**
      * @return string
      */
-    public function cmd()
+    protected function cmd()
     {
         return 'access-token';
     }

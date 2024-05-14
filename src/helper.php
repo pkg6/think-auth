@@ -37,6 +37,16 @@ if ( ! function_exists('auth')) {
     }
 }
 
+if ( ! function_exists('gate')) {
+    /**
+     * @return GateInterface
+     */
+    function gate()
+    {
+        return app()->get(GateInterface::class);
+    }
+}
+
 if ( ! function_exists('requestUser')) {
 
     /**
@@ -105,21 +115,5 @@ if ( ! function_exists('with')) {
     function with($value, callable $callback = null)
     {
         return is_null($callback) ? $value : $callback($value);
-    }
-}
-
-if ( ! function_exists('policy')) {
-    /**
-     * Get a policy instance for a given class.
-     *
-     * @param  object|string  $class
-     *
-     * @return mixed
-     *
-     * @throws \InvalidArgumentException
-     */
-    function policy($class)
-    {
-        return app(GateInterface::class)->getPolicyFor($class);
     }
 }

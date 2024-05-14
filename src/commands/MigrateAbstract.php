@@ -34,7 +34,7 @@ abstract class MigrateAbstract extends Command
     /**
      * @return string
      */
-    public function cmd()
+    protected function cmd()
     {
         return $this->default_table;
     }

@@ -14,8 +14,6 @@
 
 namespace tp5er\think\auth\access;
 
-use tp5er\think\auth\contracts\GateInterface;
-
 trait Authorizable
 {
     /**
@@ -28,7 +26,7 @@ trait Authorizable
      */
     public function can($abilities, $arguments = [])
     {
-        return app(GateInterface::class)->forUser($this)->check($abilities, $arguments);
+        return gate()->forUser($this)->check($abilities, $arguments);
     }
 
     /**
@@ -41,7 +39,7 @@ trait Authorizable
      */
     public function canAny($abilities, $arguments = [])
     {
-        return app(GateInterface::class)->forUser($this)->any($abilities, $arguments);
+        return gate()->forUser($this)->any($abilities, $arguments);
     }
 
     /**

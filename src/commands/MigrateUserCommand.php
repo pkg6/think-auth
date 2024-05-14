@@ -32,7 +32,7 @@ class MigrateUserCommand extends MigrateAbstract
     /**
      * @return string
      */
-    public function cmd()
+    protected function cmd()
     {
         return parent::cmd();
     }

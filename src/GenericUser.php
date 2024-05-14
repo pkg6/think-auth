@@ -14,9 +14,10 @@
 
 namespace tp5er\think\auth;
 
+use JsonSerializable;
 use tp5er\think\auth\contracts\Authenticatable;
 
-class GenericUser implements Authenticatable, \JsonSerializable
+class GenericUser implements Authenticatable, JsonSerializable
 {
     /**
      * All of the user's attributes.
