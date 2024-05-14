@@ -1,3 +1,10 @@
+## 介绍
+
+许多web应用程序为用户提供了一种通过应用程序进行身份验证和“登录”的方式。在web应用程序中实现此功能可能是一项复杂且潜在风险的工作。因此，think-auth努力为您提供快速、安全、轻松地实现身份验证所需的工具。
+其核心是，think-auth的认证设施由“卫士”和“提供者”组成。防护程序定义了如何对每个请求的用户进行身份验证。例如，think-auth附带了一个会话保护程序，该程序使用会话存储和cookie来维护状态。
+提供程序定义如何从持久存储中检索用户。think-auth提供了使用Eloquent和数据库查询生成器检索用户的支持。但是，您可以根据应用程序的需要自由定义其他提供程序。
+您的应用程序的身份验证配置文件位于config/auth.php中。该文件包含几个详细记录的选项，用于调整think-auth的身份验证服务的行为。
+
 ## 安装
 
 ~~~
@@ -299,6 +306,14 @@ hash_check("123456",$hashedValue);
 ## 加入我们
 
 如果你认可我们的开源项目，有兴趣为 think-auth 的发展做贡献，竭诚欢迎加入我们一起开发完善。无论是[报告错误](https://github.com/pkg6/think-auth/issues)或是 [Pull Request](https://github.com/pkg6/think-hashing/pulls) 开发，那怕是修改一个错别字也是对我们莫大的帮助。
+
+## 感谢
+
+https://laravel.com/docs/8.x/authentication
+
+https://github.com/laravel/framework/tree/8.x/src/Illuminate/Auth
+
+https://github.com/laravel/sanctum
 
 ## 许可协议
 

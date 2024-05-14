@@ -67,8 +67,9 @@ class Route
             } else {
                 $ret["delete-settings"] = "无权限";
             }
+
             $post = new Post();
-            if (Gate::authorize('create', $post)) {
+            if (\gate()->authorize('create', $post)) {
                 $ret["post-create"] = "有权限";
             } else {
                 $ret["post-create"] = "无权限";
@@ -91,7 +92,7 @@ class Route
             // 1. 首先判断你是否完成登录，通过默认guard中获取用户信息，如果有用户进行就直接返回
             // 2. 如果在默认的guard没有获取到用户信息就通过header中获取Authorization，然后进行获取用户信息
             // 3. Authorization是用`/api/token`中拿到的token，然后进字符串拼接成：（Bearer token）放在header中Bearer 参考curl
-            // curl -H "Authorization: Bearer 9|DqTQsBngTVJcFwJkslyvdZSeGuAjgaeikknQPHBI"  "http://127.0.0.1:8000/api/sanctum"
+            // curl -H "Authorization: Bearer 1|eQdtbpVmxShtySPRAyOtIjbFkyaoHNRTErLkTgge"  "http://127.0.0.1:8000/api/sanctum"
             // 注意： 使用sanctum必须使用模型，database 无法进行access权限验证
 
             //$user = requestUser();

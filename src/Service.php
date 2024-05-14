@@ -23,8 +23,8 @@ use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
-use tp5er\think\auth\sanctum\Guard;
 use tp5er\think\auth\contracts\Guard as ContractGuard;
+use tp5er\think\auth\sanctum\Guard;
 
 class Service extends \think\Service
 {
