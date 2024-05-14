@@ -24,6 +24,7 @@ use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\sanctum\Guard;
+use tp5er\think\auth\contracts\Guard as ContractGuard;
 
 class Service extends \think\Service
 {
@@ -99,7 +100,7 @@ class Service extends \think\Service
             return new AuthManager($this->app);
         });
 
-        $this->app->bind("auth.driver", function () {
+        $this->app->bind(ContractGuard::class, function () {
             return $this->app->get(Factory::class)->guard();
         });
     }
