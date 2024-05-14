@@ -1,3 +1,5 @@
+[![Latest Stable Version](http://poser.pugx.org/tp5er/think-auth/v)](https://packagist.org/packages/tp5er/think-auth) [![Total Downloads](http://poser.pugx.org/tp5er/think-auth/downloads)](https://packagist.org/packages/tp5er/think-auth) [![Latest Unstable Version](http://poser.pugx.org/tp5er/think-auth/v/unstable)](https://packagist.org/packages/tp5er/think-auth) [![License](http://poser.pugx.org/tp5er/think-auth/license)](https://packagist.org/packages/tp5er/think-auth) [![PHP Version Require](http://poser.pugx.org/tp5er/think-auth/require/php)](https://packagist.org/packages/tp5er/think-auth)
+
 ## 介绍
 
 许多web应用程序为用户提供了一种通过应用程序进行身份验证和“登录”的方式。在web应用程序中实现此功能可能是一项复杂且潜在风险的工作。因此，think-auth努力为您提供快速、安全、轻松地实现身份验证所需的工具。
