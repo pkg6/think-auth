@@ -66,12 +66,6 @@ if (Auth::check()) {
 //使用户退出登录（清除会话）
 Auth::logout();
 
-//注册任意应用身份验证 / 授权服务
-Auth::provider('riak', function ($app, array $config) {
-      // 返回实现 tp5er\think\auth\contracts\StatefulGuard 对象
-});
-
-
 //添加自定义的看守器
 Auth::extend("test",function (App $app, $name, $config){
     //返回实现Guard|StatefulGuard的对象
