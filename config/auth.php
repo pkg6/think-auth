@@ -78,13 +78,13 @@ return [
     | sources which represent each model / table. These sources may then
     | be assigned to any extra authentication guards you have defined.
     |
-    | Supported: "database", "eloquent"
+    | Supported: "database", "eloquent","model"
     |
     */
 
     'providers' => [
         'user' => [
-            'driver' => 'model',
+            'driver' => 'model', //eloquent
             'model' => \tp5er\think\auth\User::class,
         ],
         //'user' => [
