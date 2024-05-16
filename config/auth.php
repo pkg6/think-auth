@@ -84,7 +84,7 @@ return [
 
     'providers' => [
         'user' => [
-            'driver' => 'eloquent',
+            'driver' => 'model',
             'model' => \tp5er\think\auth\User::class,
         ],
         //'user' => [

@@ -74,10 +74,10 @@ trait CreatesUserProviders
                 $config
             );
         }
-
         switch ($driver) {
             case 'database':
                 return $this->createDatabaseProvider($config);
+            case 'model':
             case 'eloquent':
                 return $this->createEloquentProvider($config);
             default:
