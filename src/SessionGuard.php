@@ -29,7 +29,6 @@ use tp5er\think\auth\exceptions\UnauthorizedHttpException;
 use tp5er\think\auth\support\Recaller;
 use tp5er\think\auth\support\Timebox;
 use tp5er\think\hashing\facade\Hash;
-use function tap;
 
 class SessionGuard implements StatefulGuard
 {
@@ -223,6 +222,22 @@ class SessionGuard implements StatefulGuard
         }
 
         return $this->user;
+    }
+
+    /**
+     * Get the ID for the currently authenticated user.
+     *
+     * @return int|string|null
+     */
+    public function id()
+    {
+        if ($this->loggedOut) {
+            return;
+        }
+
+        return $this->user()
+            ? $this->user()->getAuthIdentifier()
+            : $this->session->get($this->getName());
     }
 
     /**
@@ -592,10 +607,11 @@ class SessionGuard implements StatefulGuard
 
         return $this;
     }
+
     /**
      * Set the current request instance.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return $this
      */
@@ -605,6 +621,7 @@ class SessionGuard implements StatefulGuard
 
         return $this;
     }
+
     /**
      * Log the user out of the application on their current device only.
      *
@@ -659,15 +676,17 @@ class SessionGuard implements StatefulGuard
      *
      * @throws \InvalidArgumentException
      */
-    protected function rehashUserPassword($password, $attribute)
+    public function rehashUserPassword($password, $attribute)
     {
         if ( ! Hash::check($password, $this->user()->{$attribute})) {
             throw new InvalidArgumentException('The given password does not match the current password.');
         }
 
-        return tap($this->user()->forceFill([
-            $attribute => Hash::make($password),
-        ]))->save();
+        if ($this->user() instanceof \think\Model) {
+            $this->user()->save([$attribute => Hash::make($password),]);
+        }
+
+        return $this->user();
     }
 
 }

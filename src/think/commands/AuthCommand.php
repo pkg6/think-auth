@@ -46,7 +46,7 @@ class AuthCommand extends Command
 
         $output->comment("database 测试...");
         $database = auth()
-            ->setConfigGuardProvider("database", User::class)
+            ->setConfigGuardProvider("database", 'user')
             ->guard('database');
         $database->attempt(["username" => "tp5er","password" => "123456"]);
 
