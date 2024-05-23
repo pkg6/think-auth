@@ -676,13 +676,13 @@ class SessionGuard implements StatefulGuard
      *
      * @throws \InvalidArgumentException
      */
-    public function rehashUserPassword($password, $attribute)
+    protected function rehashUserPassword($password, $attribute)
     {
         if ( ! Hash::check($password, $this->user()->{$attribute})) {
             throw new InvalidArgumentException('The given password does not match the current password.');
         }
 
-        if ($this->user() instanceof \think\Model) {
+        if ($this->user() instanceof \think\Model || $this->user() instanceof \think\Db) {
             $this->user()->save([$attribute => Hash::make($password),]);
         }
 
