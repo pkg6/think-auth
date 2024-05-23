@@ -237,7 +237,7 @@ class SessionGuard implements StatefulGuard
 
         return $this->user()
             ? $this->user()->getAuthIdentifier()
-            : $this->session->get($this->getName());
+            : $this->session->get($this->getSessionName());
     }
 
     /**
