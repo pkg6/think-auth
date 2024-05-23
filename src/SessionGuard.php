@@ -30,22 +30,8 @@ use tp5er\think\auth\support\Recaller;
 use tp5er\think\auth\support\Timebox;
 use tp5er\think\hashing\facade\Hash;
 
-class SessionGuard implements StatefulGuard
+class SessionGuard extends GuardAbstract implements StatefulGuard
 {
-    use GuardHelpers, GuardEventHelper;
-
-    /**
-     * @var App
-     */
-    protected $app;
-    /**
-     * The name of the guard. Typically "web".
-     *
-     * Corresponds to guard name in authentication configuration.
-     *
-     * @var string
-     */
-    protected $name;
     /**
      * @var Session
      */
@@ -109,34 +95,17 @@ class SessionGuard implements StatefulGuard
      * @param Timebox|null $timebox
      */
     public function __construct(
-        App          $app,
+        App     $app,
         $name,
         UserProvider $provider,
-        Request      $request = null,
-        Timebox      $timebox = null
+        Request $request = null,
+        Timebox $timebox = null
     ) {
-        $this->app = $app;
-        $this->name = $name;
+
+        parent::__construct($app, $name, $provider);
         $this->session = $app->session;
         $this->request = $request;
-        $this->provider = $provider;
         $this->timebox = $timebox ?: new Timebox;
-    }
-
-    /**
-     * @return App
-     */
-    public function getApp()
-    {
-        return $this->app;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -237,7 +206,7 @@ class SessionGuard implements StatefulGuard
 
         return $this->user()
             ? $this->user()->getAuthIdentifier()
-            : $this->session->get($this->getName());
+            : $this->session->get($this->getSessionName());
     }
 
     /**
