@@ -41,7 +41,7 @@ class Route
 
         thinkRoute::get("/api/login", function () {
             //TODO 自己根据实际需求进行登录
-            auth()->attempt(["username" => "tp5er", "password" => "123456"]);
+            auth()->attempt(["username" => "tp5er", "password" => "123456"], true);
 
             return json(['code' => 0, "msge" => "登录成功"]);
         });

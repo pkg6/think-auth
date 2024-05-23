@@ -355,6 +355,7 @@ class SessionGuard implements StatefulGuard
 
         $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
         if ($this->hasValidCredentials($user, $credentials)) {
+
             $this->login($user, $remember);
 
             return true;
@@ -386,13 +387,15 @@ class SessionGuard implements StatefulGuard
      *
      * @return void
      */
-    public function login(Authenticatable $user, $remember = false)
+    public function login($user, $remember = false)
     {
         $this->updateSession($user->getAuthIdentifier());
         // If the user should be permanently "remembered" by the application we will
         // queue a permanent cookie that contains the encrypted copy of the user
         // identifier. We will then decrypt this later to retrieve the users.
+
         if ($remember) {
+
             if (empty($user->getRememberToken())) {
                 $this->cycleRememberToken($user);
             }

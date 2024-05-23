@@ -131,7 +131,7 @@ class EloquentUserProvider implements UserProvider
             );
         }
 
-        return $this->getGenericUser($user->toArray());
+        return $user;
     }
 
     /**
@@ -184,21 +184,5 @@ class EloquentUserProvider implements UserProvider
         }
 
         return null;
-    }
-
-    /**
-     * Get the generic user.
-     *
-     * @param mixed $user
-     *
-     * @return GenericUser|null
-     */
-    protected function getGenericUser($user)
-    {
-        if ( ! is_null($user)) {
-            return new GenericUser((array) $user);
-        }
-
-        return  null;
     }
 }
