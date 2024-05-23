@@ -48,7 +48,7 @@ interface StatefulGuard extends Guard
      *
      * @return void
      */
-    public function login(Authenticatable $user, $remember = false);
+    public function login($user, $remember = false);
 
     /**
      * Log the given user ID into the application.
