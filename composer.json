@@ -7,8 +7,17 @@
   "keywords": [
     "php",
     "thinkphp",
-    "auth"
+    "auth",
+    "jwt",
+    "token",
+    "session",
+    "login"
   ],
+  "support": {
+    "issues": "https://github.com/pkg6/think-auth/issues",
+    "source": "https://github.com/pkg6/think-auth",
+    "request": "https://github.com/pkg6/think-auth/pulls"
+  },
   "authors": [
     {
       "name": "zhiqiang",
