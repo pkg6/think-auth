@@ -15,15 +15,27 @@
 namespace tp5er\think\auth;
 
 use think\App;
+
 use tp5er\think\auth\access\Gate;
 use tp5er\think\auth\commands\CreateUserCommand;
 use tp5er\think\auth\commands\MakePolicyCommand;
 use tp5er\think\auth\commands\MigrateAccessTokenCommand;
+
 use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
+
 use tp5er\think\auth\contracts\Guard as ContractGuard;
+
+use tp5er\think\auth\jwt\Blacklist as JWTBlacklist;
+use tp5er\think\auth\jwt\contracts\JWT as JWTContract;
+use tp5er\think\auth\jwt\http\parser\Parser as JWTParser;
+use tp5er\think\auth\jwt\JWTAuth;
+use tp5er\think\auth\jwt\Manager as JWTManager;
+use tp5er\think\auth\jwt\PayloadFactory as PayloadFactory;
+use tp5er\think\auth\jwt\providers\jwt\Lcobucci;
+use tp5er\think\auth\jwt\providers\storage\Think as JWTThinkStorage;
 use tp5er\think\auth\sanctum\Guard;
 
 class Service extends \think\Service
@@ -37,7 +49,7 @@ class Service extends \think\Service
         MigrateAccessTokenCommand::class,
 
         CreateUserCommand::class,
-        MakePolicyCommand::class
+        MakePolicyCommand::class,
     ];
     /**
      * The policy mappings for the application.
@@ -67,6 +79,7 @@ class Service extends \think\Service
         $this->registerMiddleware();
         $this->registerSanctum();
         $this->registerPolicies();
+        $this->registerJWT();
 
     }
 
@@ -76,7 +89,7 @@ class Service extends \think\Service
     protected function registerMiddleware()
     {
         // 自动启动session中间件
-        $middlewares = $this->app->config->get("auth.middleware.global", []);
+        $middlewares = $this->config('middleware.global', []);
         foreach ($middlewares as $middleware) {
             $this->app->middleware->add($middleware);
         }
@@ -84,7 +97,7 @@ class Service extends \think\Service
         $this->app->config->set([
             'alias' => array_merge(
                 $this->app->config->get('middleware.alias', []),
-                $this->app->config->get("auth.middleware.alias", [])
+                $this->config('middleware.alias', [])
             )
         ], 'middleware');
     }
@@ -138,7 +151,7 @@ class Service extends \think\Service
             "provider" => null
         ]);
         $auth->extend("sanctum", function (App $app, $name, $config) use (&$auth) {
-            $expiration = $this->app->config->get("auth.sanctum.expiration");
+            $expiration = $this->config('sanctum.expiration');
 
             return new RequestGuard(
                 new Guard(
@@ -172,8 +185,66 @@ class Service extends \think\Service
     {
         return array_merge(
             $this->policies,
-            $this->app->config->get("auth.policies", [])
+            $this->config('policies', [])
         );
+    }
+
+    protected function registerJWT()
+    {
+        /*** 定义的是jwt加密提供者 需要实现 JWTContract::clas 中的方法* @see  JWTContract::class */
+        $this->app->bind(JWTContract::class, function () {
+            $jwtClass = $this->config('jwt.providers.jwt');
+            if (class_exists($jwtClass)) {
+                return new $jwtClass(
+                    $this->config('jwt.secret'),
+                    $this->config('jwt.algo'),
+                    $this->config('jwt.keys')
+                );
+            } else {
+                return new Lcobucci(
+                    $this->config('jwt.secret'),
+                    $this->config('jwt.algo'),
+                    $this->config('jwt.keys', [])
+                );
+            }
+        });
+        /*** 定义获取token的方法 setChain 进行覆盖默认组装* @see JWTParser::class */
+        $this->app->bind(JWTParser::class, function () {
+            return new JWTParser($this->app->request);
+        });
+
+        $this->app->bind(JWTBlacklist::class, function () {
+            $storageClass = $this->config('jwt.providers.storage');
+            if (class_exists($storageClass)) {
+                $storage = new $storageClass($this->app);
+            } else {
+                $storage = new JWTThinkStorage($this->app);
+            }
+
+            return new JWTBlacklist($storage);
+        });
+
+        $this->app->bind(JWTManager::class, function () {
+            $payloadFactory = new PayloadFactory($this->app);
+
+            return new JWTManager(
+                $this->app->get(JWTContract::class),
+                $this->app->get(JWTBlacklist::class),
+                $payloadFactory
+            );
+        });
+
+        $this->app->bind(JWTAuth::class, function () {
+            return new JWTAuth(
+                $this->app->get(JWTManager::class),
+                $this->app->get(JWTParser::class)
+            );
+        });
+    }
+
+    protected function config($key, $default = null)
+    {
+        return $this->app->config->get("auth." . $key, $default);
     }
 
 }

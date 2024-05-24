@@ -99,7 +99,7 @@ trait GuardHelpers
      *
      * @return $this
      */
-    public function setUser(Authenticatable $user)
+    public function setUser($user)
     {
         $this->user = $user;
 

@@ -171,6 +171,16 @@ class EloquentUserProvider implements UserProvider
     }
 
     /**
+     * Gets the name of the Eloquent user model.
+     *
+     * @return string
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
      * Get the first key from the credential array.
      *
      * @param array $credentials

@@ -17,6 +17,18 @@ namespace tp5er\think\auth\support;
 class Str extends \think\helper\Str
 {
     /**
+     * Make a string's first character uppercase.
+     *
+     * @param  string  $string
+     *
+     * @return string
+     */
+    public static function ucfirst($string)
+    {
+        return static::upper(static::substr($string, 0, 1)) . static::substr($string, 1);
+    }
+
+    /**
      * Parse a Class[@]method style callback into class and method.
      *
      * @param  string  $callback

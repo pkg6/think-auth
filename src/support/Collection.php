@@ -15,15 +15,19 @@
 namespace tp5er\think\auth\support;
 
 use stdClass;
+use think\helper\Arr;
 use function data_get;
 
+/**
+ * 基于\think\Collection方法基础补充.
+ */
 class Collection extends \think\Collection
 {
     /**
      * Create a new collection by invoking the callback a given amount of times.
      *
-     * @param  int  $number
-     * @param  callable|null  $callback
+     * @param int $number
+     * @param callable|null $callback
      *
      * @return static
      */
@@ -37,12 +41,13 @@ class Collection extends \think\Collection
             ->when($callback)
             ->map($callback);
     }
+
     /**
      * Apply the callback if the value is truthy.
      *
-     * @param  bool|mixed  $value
-     * @param  callable|null  $callback
-     * @param  callable|null  $default
+     * @param bool|mixed $value
+     * @param callable|null $callback
+     * @param callable|null $default
      *
      * @return static|mixed
      */
@@ -60,11 +65,12 @@ class Collection extends \think\Collection
 
         return $this;
     }
+
     /**
      * Create a collection with the given range.
      *
-     * @param  int  $from
-     * @param  int  $to
+     * @param int $from
+     * @param int $to
      *
      * @return static
      */
@@ -72,12 +78,13 @@ class Collection extends \think\Collection
     {
         return new static(range($from, $to));
     }
+
     /**
      * Determine if all items pass the given truth test.
      *
-     * @param  string|callable  $key
-     * @param  mixed  $operator
-     * @param  mixed  $value
+     * @param string|callable $key
+     * @param mixed $operator
+     * @param mixed $value
      *
      * @return bool
      */
@@ -97,12 +104,13 @@ class Collection extends \think\Collection
 
         return $this->every($this->operatorForWhere(...func_get_args()));
     }
+
     /**
      * Get an operator checker callback.
      *
-     * @param  string  $key
-     * @param  string|null  $operator
-     * @param  mixed  $value
+     * @param string $key
+     * @param string|null $operator
+     * @param mixed $value
      *
      * @return \Closure
      */
@@ -134,15 +142,23 @@ class Collection extends \think\Collection
             switch ($operator) {
                 default:
                 case '=':
-                case '==':  return $retrieved == $value;
+                case '==':
+                    return $retrieved == $value;
                 case '!=':
-                case '<>':  return $retrieved != $value;
-                case '<':   return $retrieved < $value;
-                case '>':   return $retrieved > $value;
-                case '<=':  return $retrieved <= $value;
-                case '>=':  return $retrieved >= $value;
-                case '===': return $retrieved === $value;
-                case '!==': return $retrieved !== $value;
+                case '<>':
+                    return $retrieved != $value;
+                case '<':
+                    return $retrieved < $value;
+                case '>':
+                    return $retrieved > $value;
+                case '<=':
+                    return $retrieved <= $value;
+                case '>=':
+                    return $retrieved >= $value;
+                case '===':
+                    return $retrieved === $value;
+                case '!==':
+                    return $retrieved !== $value;
             }
         };
     }
@@ -150,7 +166,7 @@ class Collection extends \think\Collection
     /**
      * Get a value retrieving callback.
      *
-     * @param  callable|string|null  $value
+     * @param callable|string|null $value
      *
      * @return callable
      */
@@ -164,10 +180,11 @@ class Collection extends \think\Collection
             return data_get($item, $value);
         };
     }
+
     /**
      * Determine if the given value is callable, but not a string.
      *
-     * @param  mixed  $value
+     * @param mixed $value
      *
      * @return bool
      */
@@ -175,12 +192,13 @@ class Collection extends \think\Collection
     {
         return ! is_string($value) && is_callable($value);
     }
+
     /**
      * Determine if an item exists in the collection.
      *
-     * @param  mixed  $key
-     * @param  mixed  $operator
-     * @param  mixed  $value
+     * @param mixed $key
+     * @param mixed $operator
+     * @param mixed $value
      *
      * @return bool
      */
@@ -197,5 +215,100 @@ class Collection extends \think\Collection
         }
 
         return $this->contains($this->operatorForWhere(...func_get_args()));
+    }
+
+    /**
+     * Put an item in the collection by key.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function put($key, $value)
+    {
+        $this->offsetSet($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * Run a map over each of the items.
+     *
+     * @param callable $callback
+     *
+     * @return static
+     */
+    public function map(callable $callback)
+    {
+        $keys = array_keys($this->items);
+
+        $items = array_map($callback, $this->items, $keys);
+
+        return new static(array_combine($keys, $items));
+    }
+
+    /**
+     * @param $value
+     *
+     * @return static
+     */
+    public static function wrap($value)
+    {
+        return new static(Arr::wrap($value));
+    }
+
+    /**
+     * Get the items with the specified keys.
+     *
+     * @param mixed $keys
+     *
+     * @return static
+     */
+    public function only($keys)
+    {
+        if (is_null($keys)) {
+            return new static($this->items);
+        }
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        return new static(Arr::only($this->items, $keys));
+    }
+
+    /**
+     * Determine if an item exists in the collection by key.
+     *
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        foreach ($keys as $value) {
+            if ( ! array_key_exists($value, $this->items)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get an item from the collection by key.
+     *
+     * @param mixed $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        if (array_key_exists($key, $this->items)) {
+            return $this->items[$key];
+        }
+
+        return value($default);
     }
 }

@@ -311,6 +311,8 @@ https://github.com/laravel/framework/tree/8.x/src/Illuminate/Auth
 
 https://github.com/laravel/sanctum
 
+https://github.com/tymondesigns/jwt-auth
+
 ## 许可协议
 
 [MIT](https://opensource.org/licenses/MIT)

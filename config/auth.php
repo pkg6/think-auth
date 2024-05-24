@@ -62,6 +62,10 @@ return [
         "token" => [
             'driver' => 'token',
             'provider' => 'user',
+        ],
+        'jwt' => [
+            'driver' => 'jwt',
+            'provider' => 'user',
         ]
     ],
 
@@ -124,6 +128,67 @@ return [
         */
         'expiration' => null,
 
+    ],
+
+    "jwt" => [
+        /*
+         |--------------------------------------------------------------------------
+         | JWT Authentication Secret
+         |--------------------------------------------------------------------------
+         |
+         | Don't forget to set this in your .env file, as it will be used to sign
+         | your tokens. A helper command is provided for this:
+         | `php artisan jwt:secret`
+         |
+         | Note: This will be used for Symmetric algorithms only (HMAC),
+         | since RSA and ECDSA use a private/public key combo (See below).
+         |
+         | Str::random(64)
+         */
+        'secret' => env('JWT_SECRET', 'NEobvtpheIMkAVfcCYOmjHJUagFwWPTbNseGMEJVDAXsHNywGKBXLevxmKJFdrhW'),
+        'algo' => env('JWT_ALGO', 'HS256'),
+        'keys' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Public Key
+            |--------------------------------------------------------------------------
+            |
+            | A path or resource to your public key.
+            |
+            | E.g. 'file://path/to/public/key'
+            |
+            */
+
+            'public' => env('JWT_PUBLIC_KEY'),
+
+            /*
+            |--------------------------------------------------------------------------
+            | Private Key
+            |--------------------------------------------------------------------------
+            |
+            | A path or resource to your private key.
+            |
+            | E.g. 'file://path/to/private/key'
+            |
+            */
+
+            'private' => env('JWT_PRIVATE_KEY'),
+
+            /*
+            |--------------------------------------------------------------------------
+            | Passphrase
+            |--------------------------------------------------------------------------
+            |
+            | The passphrase for your private key. Can be null if none set.
+            |
+            */
+
+            'passphrase' => env('JWT_PASSPHRASE'),
+        ],
+        'providers' => [
+            'jwt' => \tp5er\think\auth\jwt\providers\jwt\Lcobucci::class,
+            "storage" => \tp5er\think\auth\jwt\providers\storage\Think::class,
+        ]
     ],
 
     'middleware' => [
