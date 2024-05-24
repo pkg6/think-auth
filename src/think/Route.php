@@ -36,21 +36,21 @@ class Route
             $user->password = hash_make("123456");
             $user->save();
 
-            return json(['code' => 0, "msge" => $user]);
+            return json(["code" => 0, "msge" => $user]);
         });
 
         thinkRoute::get("/api/login", function () {
             //TODO 自己根据实际需求进行登录
             auth()->attempt(["username" => "tp5er", "password" => "123456"], true);
 
-            return json(['code' => 0, "msge" => "登录成功"]);
+            return json(["code" => 0, "msge" => "登录成功"]);
         });
         thinkRoute::get("/api/user", function () {
 
             $user = requestUser();
             //$user=  auth()->user();
 
-            return json(['code' => 0, "msg" => "获取登录信息", "data" => $user]);
+            return json(["code" => 0, "msg" => "获取登录信息", "data" => $user]);
         });
 
         thinkRoute::get("/api/scan", function () {
@@ -75,7 +75,7 @@ class Route
                 $ret["post-create"] = "无权限";
             }
 
-            return json(['code' => 0, "msg" => "获取权限列表", 'data' => $ret]);
+            return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);
 
         });
 
@@ -84,9 +84,15 @@ class Route
             $user = auth()->user();
             $token = $user->createToken("test-token");
 
-            return json(['code' => 0, "msg" => "获取token信息", "data" => ["token" => $token->plainTextToken]]);
+            return json(["code" => 0, "msg" => "获取token信息", "data" => ["token" => $token->plainTextToken]]);
         });
 
+        Route::sanctum();
+        Route::jwt();
+    }
+
+    public static function sanctum()
+    {
         thinkRoute::get("/api/sanctum", function () {
             //TODO 逻辑
             // 1. 首先判断你是否完成登录，通过默认guard中获取用户信息，如果有用户进行就直接返回
@@ -98,7 +104,7 @@ class Route
             //$user = requestUser();
             $user = auth()->user();
 
-            return json(['code' => 0, "msg" => "通过sanctum获取用户信息", "data" => $user]);
+            return json(["code" => 0, "msg" => "通过sanctum获取用户信息", "data" => $user]);
         })->middleware('auth', "sanctum");
 
         thinkRoute::get("/api/tokencan", function () {
@@ -125,8 +131,62 @@ class Route
                 $ret["delete-settings"] = "无权限";
             }
 
-            return json(['code' => 0, "msg" => "获取权限列表", 'data' => $ret]);
+            return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);
 
         })->middleware('auth', "sanctum");
+    }
+
+    protected static function jwt()
+    {
+
+        thinkRoute::get("/jwt/token", function () {
+            $token = auth('jwt')->attempt(["username" => "tp5er", "password" => "123456"]);
+
+            return json([
+                "code" => 0,
+                "msg" => "获取token信息",
+                "data" => [
+                    'access_token' => $token,
+                    'token_type' => 'bearer',
+                    'expires_in' => auth('jwt')->factory()->getTTL() * 60,
+                    'claims' => auth('jwt')->getPayload()
+                ]
+            ]);
+        });
+        thinkRoute::get("/jwt/user", function () {
+            $user = auth('jwt')->user();
+
+            return json([
+                "code" => 0,
+                "msg" => "获取用户信息",
+                "data" => $user
+            ]);
+        })->middleware('auth', "jwt");
+
+        thinkRoute::get("/jwt/logout", function () {
+            auth('jwt')->logout();
+
+            return json([
+                "code" => 0,
+                "msg" => "退出登录",
+            ]);
+        })->middleware('auth', "jwt");
+
+        thinkRoute::get("/jwt/refresh", function () {
+            $token = auth('jwt')->parseToken()->getToken()->get();
+            $newtoken = auth('jwt')->parseToken()->refresh();
+
+            return json([
+                "code" => 0,
+                "msg" => "刷新token成功",
+                "data" => [
+                    "token" => $token,
+                    'refresh_token' => $newtoken,
+                    'token_type' => 'bearer',
+                    'expires_in' => auth('jwt')->factory()->getTTL() * 60
+                ]
+            ]);
+
+        })->middleware('auth', "jwt");
     }
 }

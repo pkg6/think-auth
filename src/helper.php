@@ -19,13 +19,15 @@ use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
+use tp5er\think\auth\jwt\JWTAuth;
+use tp5er\think\auth\JWTGuard;
 
 if ( ! function_exists('auth')) {
 
     /**
      * @param $guard
      *
-     * @return Guard|StatefulGuard|Factory|AuthManagerInterface
+     * @return Guard|StatefulGuard|Factory|AuthManagerInterface|JWTGuard|JWTAuth
      */
     function auth($guard = null)
     {
@@ -44,6 +46,16 @@ if ( ! function_exists('gate')) {
     function gate()
     {
         return app()->get(GateInterface::class);
+    }
+}
+
+if ( ! function_exists('jwt')) {
+    /**
+     * @return JWTAuth
+     */
+    function jwt()
+    {
+        return app()->get(JWTAuth::class);
     }
 }
 

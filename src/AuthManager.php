@@ -278,6 +278,26 @@ class AuthManager implements AuthManagerInterface, Factory
      * @param string $name
      * @param array $config
      *
+     * @return JWTGuard
+     */
+    protected function createJWTDriver($name, $config)
+    {
+        $provider = $this->createUserProvider($config['provider'] ?? null);
+        $guard = new JWTGuard(
+            $this->app,
+            $name,
+            $provider
+        );
+
+        return $guard;
+    }
+
+    /**
+     * Create a token based authentication guard.
+     *
+     * @param string $name
+     * @param array $config
+     *
      * @return TokenGuard
      */
     protected function createTokenDriver($name, $config)

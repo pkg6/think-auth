@@ -14,7 +14,6 @@
 
 namespace tp5er\think\auth;
 
-use think\App;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\events\Attempting;
 use tp5er\think\auth\events\Authenticated;
@@ -25,13 +24,14 @@ use tp5er\think\auth\events\OtherDeviceLogout;
 trait GuardEventHelper
 {
     /**
-     * @return string
+     * The name of the guard. Typically "web".
+     *
+     * Corresponds to guard name in authentication configuration.
+     *
+     * @var string
      */
-    abstract public function getName();
-    /**
-     * @return App
-     */
-    abstract public function getApp();
+    protected $name;
+
     /**
      * @param Authenticatable $user
      *
@@ -39,7 +39,7 @@ trait GuardEventHelper
      */
     protected function fireAuthenticatedEvent($user)
     {
-        $this->getApp()->event->trigger(new Authenticated($this->getName(), $user));
+        $this->app->event->trigger(new Authenticated($this->name, $user));
     }
 
     /**
@@ -50,7 +50,7 @@ trait GuardEventHelper
      */
     protected function fireAttemptEvent($credentials, $remember)
     {
-        $this->getApp()->event->trigger(new Attempting($this->getName(), $credentials, $remember));
+        $this->app->event->trigger(new Attempting($this->name, $credentials, $remember));
     }
 
     /**
@@ -61,7 +61,7 @@ trait GuardEventHelper
      */
     protected function fireFailedEvent($user, $credentials)
     {
-        $this->getApp()->event->trigger(new Failed($this->getName(), $user, $credentials));
+        $this->app->event->trigger(new Failed($this->name, $user, $credentials));
     }
 
     /**
@@ -72,7 +72,7 @@ trait GuardEventHelper
      */
     protected function fireLoginEvent($user, $remember = false)
     {
-        $this->getApp()->event->trigger(new Login($this->getName(), $user, $remember));
+        $this->app->event->trigger(new Login($this->name, $user, $remember));
     }
     /**
      * Fire the other device logout event if the dispatcher is set.
@@ -83,7 +83,7 @@ trait GuardEventHelper
      */
     protected function fireOtherDeviceLogoutEvent($user)
     {
-        $this->getApp()->event->trigger(new OtherDeviceLogout($this->getName(), $user));
+        $this->app->event->trigger(new OtherDeviceLogout($this->name, $user));
     }
 
 }

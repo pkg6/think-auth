@@ -602,7 +602,7 @@ class SessionGuard implements StatefulGuard
      *
      * @return $this|void
      */
-    public function setUser(Authenticatable $user)
+    public function setUser($user)
     {
         $this->user = $user;
         $this->loggedOut = false;

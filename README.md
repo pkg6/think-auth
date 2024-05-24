@@ -281,6 +281,57 @@ thinkRoute::get("/api/tokencan", function () {
     return json(['code' => 0, "msg" => "获取权限列表", 'data' => $ret]);
 
 })->middleware('auth', "sanctum");
+
+//JWT 使用
+thinkRoute::get("/jwt/token", function () {
+    $token = auth('jwt')->attempt(["username" => "tp5er", "password" => "123456"]);
+
+    return json([
+        "code" => 0,
+        "msg" => "获取token信息",
+        "data" => [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('jwt')->factory()->getTTL() * 60,
+            'claims' => auth('jwt')->getPayload()
+        ]
+    ]);
+});
+thinkRoute::get("/jwt/user", function () {
+    $user = auth('jwt')->user();
+
+    return json([
+        "code" => 0,
+        "msg" => "获取用户信息",
+        "data" => $user
+    ]);
+})->middleware('auth', "jwt");
+
+thinkRoute::get("/jwt/logout", function () {
+    auth('jwt')->logout();
+
+    return json([
+        "code" => 0,
+        "msg" => "退出登录",
+    ]);
+})->middleware('auth', "jwt");
+
+thinkRoute::get("/jwt/refresh", function () {
+    $token = auth('jwt')->parseToken()->getToken()->get();
+    $newtoken = auth('jwt')->parseToken()->refresh();
+
+    return json([
+        "code" => 0,
+        "msg" => "刷新token成功",
+        "data" => [
+            "token" => $token,
+            'refresh_token' => $newtoken,
+            'token_type' => 'bearer',
+            'expires_in' => auth('jwt')->factory()->getTTL() * 60
+        ]
+    ]);
+
+})->middleware('auth', "jwt");
 ~~~
 
 ## [密码生成和验证](https://github.com/pkg6/think-hashing)
@@ -310,6 +361,8 @@ https://laravel.com/docs/8.x/authentication
 https://github.com/laravel/framework/tree/8.x/src/Illuminate/Auth
 
 https://github.com/laravel/sanctum
+
+https://github.com/tymondesigns/jwt-auth
 
 ## 许可协议
 

@@ -47,7 +47,7 @@ interface Guard
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
+     * @param array $credentials
      *
      * @return bool
      */
@@ -56,9 +56,9 @@ interface Guard
     /**
      * Set the current user.
      *
-     * @param  Authenticatable  $user
+     * @param Authenticatable $user
      *
      * @return void
      */
-    public function setUser(Authenticatable $user);
+    public function setUser($user);
 }
