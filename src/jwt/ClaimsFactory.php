@@ -22,7 +22,7 @@ use tp5er\think\auth\jwt\support\CustomClaims;
 use tp5er\think\auth\jwt\support\RefreshFlow;
 use tp5er\think\auth\jwt\validators\PayloadValidator;
 
-class PayloadFactory
+class ClaimsFactory
 {
     use CustomClaims, RefreshFlow;
 

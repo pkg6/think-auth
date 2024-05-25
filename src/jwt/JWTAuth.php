@@ -361,7 +361,7 @@ class JWTAuth
     /**
      * Get the Payload Factory.
      *
-     * @return PayloadFactory
+     * @return ClaimsFactory
      */
     public function factory()
     {

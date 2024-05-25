@@ -27,10 +27,10 @@ use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard as ContractGuard;
 use tp5er\think\auth\contracts\KeyParserFactory;
 use tp5er\think\auth\jwt\Blacklist as JWTBlacklist;
+use tp5er\think\auth\jwt\ClaimsFactory;
 use tp5er\think\auth\jwt\contracts\JWT as JWTContract;
 use tp5er\think\auth\jwt\JWTAuth;
 use tp5er\think\auth\jwt\Manager as JWTManager;
-use tp5er\think\auth\jwt\PayloadFactory as PayloadFactory;
 use tp5er\think\auth\jwt\providers\jwt\Lcobucci;
 use tp5er\think\auth\jwt\providers\storage\Think as JWTThinkStorage;
 use tp5er\think\auth\sanctum\Guard;
@@ -232,7 +232,7 @@ class Service extends \think\Service
         });
 
         $this->app->bind(JWTManager::class, function () {
-            $payloadFactory = new PayloadFactory($this->app);
+            $payloadFactory = new ClaimsFactory($this->app);
 
             return new JWTManager(
                 $this->app->get(JWTContract::class),
