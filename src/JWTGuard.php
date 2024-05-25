@@ -24,7 +24,7 @@ use tp5er\think\auth\jwt\JWTAuth;
 
 class JWTGuard implements Guard
 {
-    use GuardHelpers, GuardEventHelper;
+    use GuardHelpers;
 
     /**
      * @var App

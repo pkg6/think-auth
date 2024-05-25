@@ -52,6 +52,16 @@ class PayloadFactory
     protected $claims;
 
     /**
+     * @var ClaimFactory
+     */
+    protected $claimFactory;
+
+    /**
+     * @var PayloadValidator
+     */
+    protected $validator;
+
+    /**
      * Constructor.
      *
      * @param App $app
@@ -60,16 +70,8 @@ class PayloadFactory
     {
         $this->app = $app;
         $this->claims = new Collection;
-    }
-
-    public function claimFactory()
-    {
-        return new ClaimFactory($this->app->request);
-    }
-
-    public function validator()
-    {
-        return new PayloadValidator();
+        $this->claimFactory = new ClaimFactory($this->app->request);
+        $this->validator = new PayloadValidator();
     }
 
     /**
@@ -139,13 +141,13 @@ class PayloadFactory
     protected function buildClaims()
     {
         // remove the exp claim if it exists and the ttl is null
-        if ($this->claimFactory()->getTTL() === null && $key = array_search('exp', $this->defaultClaims)) {
+        if ($this->claimFactory->getTTL() === null && $key = array_search('exp', $this->defaultClaims)) {
             unset($this->defaultClaims[$key]);
         }
 
         // add the default claims
         foreach ($this->defaultClaims as $claim) {
-            $this->addClaim($claim, $this->claimFactory()->make($claim));
+            $this->addClaim($claim, $this->claimFactory->make($claim));
         }
 
         // add custom claims on top, allowing them to overwrite defaults
@@ -160,7 +162,7 @@ class PayloadFactory
     protected function resolveClaims()
     {
         return $this->claims->map(function ($value, $name) {
-            return $value instanceof Claim ? $value : $this->claimFactory()->get($name, $value);
+            return $value instanceof Claim ? $value : $this->claimFactory->get($name, $value);
         });
     }
 
@@ -183,7 +185,7 @@ class PayloadFactory
      */
     public function withClaims(Collection $claims)
     {
-        return new Payload($claims, $this->validator(), $this->refreshFlow);
+        return new Payload($claims, $this->validator, $this->refreshFlow);
     }
 
     /**
@@ -209,7 +211,7 @@ class PayloadFactory
      */
     public function setTTL($ttl)
     {
-        $this->claimFactory()->setTTL($ttl);
+        $this->claimFactory->setTTL($ttl);
 
         return $this;
     }
@@ -221,7 +223,7 @@ class PayloadFactory
      */
     public function getTTL()
     {
-        return $this->claimFactory()->getTTL();
+        return $this->claimFactory->getTTL();
     }
 
     /**
