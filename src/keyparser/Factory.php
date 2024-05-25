@@ -20,6 +20,17 @@ use tp5er\think\auth\contracts\KeyParserFactory;
 
 class Factory implements KeyParserFactory
 {
+
+    /**
+     * 默认解析token方式.
+     */
+    const defaultParsers = [
+        AuthHeaders::class,
+        QueryString::class,
+        InputSource::class,
+        Cookies::class,
+        RouteParams::class
+    ];
     /**
      * The chain.
      *
@@ -47,21 +58,23 @@ class Factory implements KeyParserFactory
     {
         $this->request = $request;
         if (empty($chain)) {
-            $this->parsers = $this->defaultChain();
+            $this->parsers = $this->defaultParsers();
         } else {
             $this->parsers = $chain;
         }
     }
 
-    public function defaultChain()
+    /**
+     * @return array
+     */
+    public function defaultParsers()
     {
-        return [
-            new  AuthHeaders,
-            new  QueryString,
-            new  InputSource,
-            new  Cookies,
-            new  RouteParams
-        ];
+        $default = [];
+        foreach (self::defaultParsers as $class) {
+            $default[] = new $class;
+        }
+
+        return $default;
     }
 
     /**
@@ -77,7 +90,7 @@ class Factory implements KeyParserFactory
     /**
      * Set the order of the parser chain.
      *
-     * @param array $chain
+     * @param array $parser
      *
      * @return $this
      */
@@ -96,7 +109,7 @@ class Factory implements KeyParserFactory
      */
     public function parseToken()
     {
-        foreach ($this->parsers as $parser) {
+        foreach ($this->getParsers() as $parser) {
             if ($response = $parser->parse($this->request)) {
                 return $response;
             }

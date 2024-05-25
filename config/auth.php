@@ -145,7 +145,7 @@ return [
          |
          | Str::random(64)
          */
-        'secret' => env('JWT_SECRET', 'NEobvtpheIMkAVfcCYOmjHJUagFwWPTbNseGMEJVDAXsHNywGKBXLevxmKJFdrhW'),
+        'secret' => env('JWT_SECRET'),
         'algo' => env('JWT_ALGO', 'HS256'),
         'keys' => [
             /*

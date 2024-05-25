@@ -51,7 +51,8 @@ if ( ! function_exists('gate')) {
 
 if ( ! function_exists('key_parser')) {
     /**
-     * 获取token的方式
+     * 获取token的方式.
+     *
      * @return \tp5er\think\auth\contracts\KeyParserFactory
      */
     function key_parser()
