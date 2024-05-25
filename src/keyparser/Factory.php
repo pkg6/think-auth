@@ -12,19 +12,20 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\jwt\http\parser;
+namespace tp5er\think\auth\keyparser;
 
 use think\Request;
-use tp5er\think\auth\jwt\contracts\Parser as ParserContract;
+use tp5er\think\auth\contracts\KeyParser as ParserContract;
+use tp5er\think\auth\contracts\KeyParserFactory;
 
-class Parser
+class Factory implements KeyParserFactory
 {
     /**
      * The chain.
      *
      * @var ParserContract []
      */
-    private $chain = [
+    private $parsers = [
     ];
 
     /**
@@ -38,17 +39,17 @@ class Parser
      * Constructor.
      *
      * @param Request $request
-     * @param ParserContract[] $chain
+     * @param ParserContract[] $parsers
      *
      * @return void
      */
-    public function __construct(Request $request, array $chain = [])
+    public function __construct(Request $request, array $parsers = [])
     {
         $this->request = $request;
         if (empty($chain)) {
-            $this->chain = $this->defaultChain();
+            $this->parsers = $this->defaultChain();
         } else {
-            $this->chain = $chain;
+            $this->parsers = $chain;
         }
     }
 
@@ -68,9 +69,9 @@ class Parser
      *
      * @return array
      */
-    public function getChain()
+    public function getParsers()
     {
-        return $this->chain;
+        return $this->parsers;
     }
 
     /**
@@ -80,23 +81,11 @@ class Parser
      *
      * @return $this
      */
-    public function setChain(array $chain)
+    public function setParsers(array $parser)
     {
-        $this->chain = $chain;
+        $this->parsers = $parser;
 
         return $this;
-    }
-
-    /**
-     * Alias for setting the order of the chain.
-     *
-     * @param array $chain
-     *
-     * @return $this
-     */
-    public function setChainOrder(array $chain)
-    {
-        return $this->setChain($chain);
     }
 
     /**
@@ -107,7 +96,7 @@ class Parser
      */
     public function parseToken()
     {
-        foreach ($this->chain as $parser) {
+        foreach ($this->parsers as $parser) {
             if ($response = $parser->parse($this->request)) {
                 return $response;
             }

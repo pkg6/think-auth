@@ -12,24 +12,24 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\jwt\http\parser;
+namespace tp5er\think\auth\keyparser;
 
 use think\Request;
-use tp5er\think\auth\jwt\contracts\Parser as ParserContract;
+use tp5er\think\auth\contracts\KeyParser as ParserContract;
 
-class InputSource implements ParserContract
+class RouteParams implements ParserContract
 {
     use KeyTrait;
 
     /**
-     * Try to parse the token from the request input source.
+     * Try to get the token from the route parameters.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return null|string
      */
     public function parse(Request $request)
     {
-        return $request->param([$this->key]);
+        return  $request->route($this->key);
     }
 }
