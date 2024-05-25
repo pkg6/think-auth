@@ -20,20 +20,17 @@ use tp5er\think\auth\access\Gate;
 use tp5er\think\auth\commands\CreateUserCommand;
 use tp5er\think\auth\commands\MakePolicyCommand;
 use tp5er\think\auth\commands\MigrateAccessTokenCommand;
-
 use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
-
 use tp5er\think\auth\contracts\Guard as ContractGuard;
-
+use tp5er\think\auth\contracts\KeyParserFactory;
 use tp5er\think\auth\jwt\Blacklist as JWTBlacklist;
+use tp5er\think\auth\jwt\ClaimsFactory;
 use tp5er\think\auth\jwt\contracts\JWT as JWTContract;
-use tp5er\think\auth\jwt\http\parser\Parser as JWTParser;
 use tp5er\think\auth\jwt\JWTAuth;
 use tp5er\think\auth\jwt\Manager as JWTManager;
-use tp5er\think\auth\jwt\PayloadFactory as PayloadFactory;
 use tp5er\think\auth\jwt\providers\jwt\Lcobucci;
 use tp5er\think\auth\jwt\providers\storage\Think as JWTThinkStorage;
 use tp5er\think\auth\sanctum\Guard;
@@ -73,6 +70,7 @@ class Service extends \think\Service
      */
     public function register(): void
     {
+        $this->registerKeyParser();
         $this->registerAuthenticator();
         $this->registerUserResolver();
         $this->registerAccessGate();
@@ -81,6 +79,16 @@ class Service extends \think\Service
         $this->registerPolicies();
         $this->registerJWT();
 
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerKeyParser()
+    {
+        $this->app->bind(KeyParserFactory::class, function () {
+            return new \tp5er\think\auth\keyparser\Factory($this->app->request);
+        });
     }
 
     /**
@@ -189,6 +197,9 @@ class Service extends \think\Service
         );
     }
 
+    /**
+     * @return void
+     */
     protected function registerJWT()
     {
         /*** 定义的是jwt加密提供者 需要实现 JWTContract::clas 中的方法* @see  JWTContract::class */
@@ -208,10 +219,6 @@ class Service extends \think\Service
                 );
             }
         });
-        /*** 定义获取token的方法 setChain 进行覆盖默认组装* @see JWTParser::class */
-        $this->app->bind(JWTParser::class, function () {
-            return new JWTParser($this->app->request);
-        });
 
         $this->app->bind(JWTBlacklist::class, function () {
             $storageClass = $this->config('jwt.providers.storage');
@@ -225,7 +232,7 @@ class Service extends \think\Service
         });
 
         $this->app->bind(JWTManager::class, function () {
-            $payloadFactory = new PayloadFactory($this->app);
+            $payloadFactory = new ClaimsFactory($this->app);
 
             return new JWTManager(
                 $this->app->get(JWTContract::class),
@@ -237,11 +244,17 @@ class Service extends \think\Service
         $this->app->bind(JWTAuth::class, function () {
             return new JWTAuth(
                 $this->app->get(JWTManager::class),
-                $this->app->get(JWTParser::class)
+                $this->app->get(KeyParserFactory::class)
             );
         });
     }
 
+    /**
+     * @param $key
+     * @param $default
+     *
+     * @return array|mixed
+     */
     protected function config($key, $default = null)
     {
         return $this->app->config->get("auth." . $key, $default);

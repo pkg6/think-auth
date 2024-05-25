@@ -16,9 +16,9 @@ namespace tp5er\think\auth\jwt;
 
 use BadMethodCallException;
 use think\Request;
+use tp5er\think\auth\contracts\KeyParserFactory;
 use tp5er\think\auth\jwt\contracts\JWTSubject;
 use tp5er\think\auth\jwt\exceptions\JWTException;
-use tp5er\think\auth\jwt\http\parser\Parser;
 use tp5er\think\auth\jwt\support\CustomClaims;
 
 class JWTAuth
@@ -46,7 +46,7 @@ class JWTAuth
      */
     protected $lockSubject = true;
     /**
-     * @var Parser
+     * @var KeyParserFactory
      */
     protected $parser;
 
@@ -54,9 +54,9 @@ class JWTAuth
      * JWT constructor.
      *
      * @param Manager $manager
-     * @param Parser $parser
+     * @param KeyParserFactory $parser
      */
-    public function __construct(Manager $manager, Parser $parser)
+    public function __construct(Manager $manager, KeyParserFactory $parser)
     {
         $this->manager = $manager;
         $this->parser = $parser;
@@ -350,7 +350,7 @@ class JWTAuth
     /**
      * Get the Parser instance.
      *
-     * @return Http\Parser\Parser
+     * @return \tp5er\think\auth\keyparser\Factory
      */
     public function parser()
     {
@@ -360,7 +360,7 @@ class JWTAuth
     /**
      * Get the Payload Factory.
      *
-     * @return PayloadFactory
+     * @return ClaimsFactory
      */
     public function factory()
     {

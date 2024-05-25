@@ -12,19 +12,24 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\jwt\contracts;
+namespace tp5er\think\auth\keyparser;
 
 use think\Request;
+use tp5er\think\auth\contracts\KeyParser as ParserContract;
 
-interface Parser
+class Cookies implements ParserContract
 {
+    use KeyTrait;
 
     /**
-     * Parse the request.
+     * Try to parse the token from the request cookies.
      *
      * @param  Request  $request
      *
      * @return null|string
      */
-    public function parse(Request $request);
+    public function parse(Request $request)
+    {
+        return $request->cookie($this->key);
+    }
 }

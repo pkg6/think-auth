@@ -12,19 +12,31 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\jwt\http\parser;
+namespace tp5er\think\auth\keyparser;
 
 use think\Request;
-use tp5er\think\auth\jwt\contracts\Parser as ParserContract;
+use tp5er\think\auth\contracts\KeyParser as ParserContract;
+use tp5er\think\auth\contracts\KeyParserFactory;
 
-class Parser
+class Factory implements KeyParserFactory
 {
+
+    /**
+     * 默认解析token方式.
+     */
+    const defaultParsers = [
+        AuthHeaders::class,
+        QueryString::class,
+        InputSource::class,
+        Cookies::class,
+        RouteParams::class
+    ];
     /**
      * The chain.
      *
      * @var ParserContract []
      */
-    private $chain = [
+    private $parsers = [
     ];
 
     /**
@@ -38,29 +50,31 @@ class Parser
      * Constructor.
      *
      * @param Request $request
-     * @param ParserContract[] $chain
+     * @param ParserContract[] $parsers
      *
      * @return void
      */
-    public function __construct(Request $request, array $chain = [])
+    public function __construct(Request $request, array $parsers = [])
     {
         $this->request = $request;
         if (empty($chain)) {
-            $this->chain = $this->defaultChain();
+            $this->parsers = $this->defaultParsers();
         } else {
-            $this->chain = $chain;
+            $this->parsers = $chain;
         }
     }
 
-    public function defaultChain()
+    /**
+     * @return array
+     */
+    public function defaultParsers()
     {
-        return [
-            new  AuthHeaders,
-            new  QueryString,
-            new  InputSource,
-            new  Cookies,
-            new  RouteParams
-        ];
+        $default = [];
+        foreach (self::defaultParsers as $class) {
+            $default[] = new $class;
+        }
+
+        return $default;
     }
 
     /**
@@ -68,35 +82,23 @@ class Parser
      *
      * @return array
      */
-    public function getChain()
+    public function getParsers()
     {
-        return $this->chain;
+        return $this->parsers;
     }
 
     /**
      * Set the order of the parser chain.
      *
-     * @param array $chain
+     * @param array $parser
      *
      * @return $this
      */
-    public function setChain(array $chain)
+    public function setParsers(array $parser)
     {
-        $this->chain = $chain;
+        $this->parsers = $parser;
 
         return $this;
-    }
-
-    /**
-     * Alias for setting the order of the chain.
-     *
-     * @param array $chain
-     *
-     * @return $this
-     */
-    public function setChainOrder(array $chain)
-    {
-        return $this->setChain($chain);
     }
 
     /**
@@ -107,7 +109,7 @@ class Parser
      */
     public function parseToken()
     {
-        foreach ($this->chain as $parser) {
+        foreach ($this->getParsers() as $parser) {
             if ($response = $parser->parse($this->request)) {
                 return $response;
             }

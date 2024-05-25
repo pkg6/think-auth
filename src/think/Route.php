@@ -140,7 +140,10 @@ class Route
     {
 
         thinkRoute::get("/jwt/token", function () {
-            $token = auth('jwt')->attempt(["username" => "tp5er", "password" => "123456"]);
+            $token = auth('jwt')
+                //有效期1分钟,默认是1小时
+//                ->setTTL(1)
+                ->attempt(["username" => "tp5er", "password" => "123456"]);
 
             return json([
                 "code" => 0,
