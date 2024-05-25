@@ -20,7 +20,6 @@ use tp5er\think\auth\contracts\KeyParserFactory;
 use tp5er\think\auth\jwt\contracts\JWTSubject;
 use tp5er\think\auth\jwt\exceptions\JWTException;
 use tp5er\think\auth\jwt\support\CustomClaims;
-use tp5er\think\auth\keyparser\Factory;
 
 class JWTAuth
 {
