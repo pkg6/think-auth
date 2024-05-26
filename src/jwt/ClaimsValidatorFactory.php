@@ -22,7 +22,7 @@ use tp5er\think\auth\jwt\support\CustomClaims;
 use tp5er\think\auth\jwt\support\RefreshFlow;
 use tp5er\think\auth\jwt\validators\PayloadValidator;
 
-class ClaimsFactory
+class ClaimsValidatorFactory
 {
     use CustomClaims, RefreshFlow;
 
@@ -64,14 +64,14 @@ class ClaimsFactory
     /**
      * Constructor.
      *
-     * @param App $app
+     * @param ClaimFactory $claimFactory
+     * @param PayloadValidator $validator
      */
-    public function __construct(App $app)
+    public function __construct(ClaimFactory $claimFactory, PayloadValidator $validator)
     {
-        $this->app = $app;
         $this->claims = new Collection;
-        $this->claimFactory = new ClaimFactory($this->app->request);
-        $this->validator = new PayloadValidator();
+        $this->claimFactory = $claimFactory;
+        $this->validator = $validator;
     }
 
     /**

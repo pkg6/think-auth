@@ -12,21 +12,13 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\facade;
+namespace tp5er\think\auth\support;
 
-use tp5er\think\auth\jwt\JWTAuth;
-use tp5er\think\auth\jwt\Register;
-
-/**
- * @mixin JWTAuth
- */
-class JWT extends \think\Facade
+class Ref
 {
-    /**
-     * @return string
-     */
-    protected static function getFacadeClass()
+
+    public static function getClassConstValue($objectOrClass, $name)
     {
-        return Register::auth;
+        return (new \ReflectionClass($objectOrClass))->getConstant($name);
     }
 }

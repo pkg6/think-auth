@@ -21,6 +21,7 @@ use tp5er\think\auth\contracts\AuthManagerInterface;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
+use tp5er\think\auth\jwt\Register as JWTRegister;
 
 class AuthManager implements AuthManagerInterface, Factory
 {
@@ -286,7 +287,8 @@ class AuthManager implements AuthManagerInterface, Factory
         $guard = new JWTGuard(
             $this->app,
             $name,
-            $provider
+            $provider,
+            $this->app->get(JWTRegister::auth)
         );
 
         return $guard;

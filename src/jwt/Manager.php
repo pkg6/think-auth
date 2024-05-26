@@ -42,7 +42,7 @@ class Manager
     /**
      * the payload factory.
      *
-     * @var ClaimsFactory
+     * @var ClaimsValidatorFactory
      */
     protected $payloadFactory;
 
@@ -65,11 +65,11 @@ class Manager
      *
      * @param contracts\JWT $provider
      * @param Blacklist $blacklist
-     * @param ClaimsFactory $payloadFactory
+     * @param ClaimsValidatorFactory $payloadFactory
      *
      * @return void
      */
-    public function __construct(JWTContract $provider, Blacklist $blacklist, ClaimsFactory $payloadFactory)
+    public function __construct(JWTContract $provider, Blacklist $blacklist, ClaimsValidatorFactory $payloadFactory)
     {
         $this->provider = $provider;
         $this->blacklist = $blacklist;
@@ -192,7 +192,7 @@ class Manager
     /**
      * Get the Payload Factory instance.
      *
-     * @return ClaimsFactory
+     * @return ClaimsValidatorFactory
      */
     public function getPayloadFactory()
     {

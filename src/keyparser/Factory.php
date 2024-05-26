@@ -20,7 +20,6 @@ use tp5er\think\auth\contracts\KeyParserFactory;
 
 class Factory implements KeyParserFactory
 {
-
     /**
      * 默认解析token方式.
      */
@@ -36,8 +35,7 @@ class Factory implements KeyParserFactory
      *
      * @var ParserContract []
      */
-    private $parsers = [
-    ];
+    private $parsers = [];
 
     /**
      * The request.
@@ -57,10 +55,10 @@ class Factory implements KeyParserFactory
     public function __construct(Request $request, array $parsers = [])
     {
         $this->request = $request;
-        if (empty($chain)) {
+        if (empty($parsers)) {
             $this->parsers = $this->defaultParsers();
         } else {
-            $this->parsers = $chain;
+            $this->parsers = $parsers;
         }
     }
 

@@ -50,13 +50,17 @@ class JWTGuard implements Guard
      * @param $name
      * @param UserProvider $provider
      */
-    public function __construct(App $app, $name, UserProvider $provider)
-    {
+    public function __construct(
+        App $app,
+        $name,
+        UserProvider $provider,
+        JWTAuth $jwt
+    ) {
         $this->app = $app;
         $this->name = $name;
         $this->provider = $provider;
         $this->request = $this->app->request;
-        $this->jwt = $this->app->get(JWTAuth::class);
+        $this->jwt = $jwt;
     }
 
     /**
