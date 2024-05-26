@@ -14,29 +14,25 @@
 
 namespace tp5er\think\auth;
 
-use think\App;
-
-use tp5er\think\auth\access\Gate;
 use tp5er\think\auth\commands\CreateUserCommand;
 use tp5er\think\auth\commands\MakePolicyCommand;
 use tp5er\think\auth\commands\MigrateAccessTokenCommand;
 use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
-use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard as ContractGuard;
-use tp5er\think\auth\contracts\KeyParserFactory;
-use tp5er\think\auth\jwt\Blacklist as JWTBlacklist;
-use tp5er\think\auth\jwt\ClaimsFactory;
-use tp5er\think\auth\jwt\contracts\JWT as JWTContract;
-use tp5er\think\auth\jwt\JWTAuth;
-use tp5er\think\auth\jwt\Manager as JWTManager;
-use tp5er\think\auth\jwt\providers\jwt\Lcobucci;
-use tp5er\think\auth\jwt\providers\storage\Think as JWTThinkStorage;
-use tp5er\think\auth\sanctum\Guard;
+use tp5er\think\auth\support\Ref;
 
 class Service extends \think\Service
 {
+
+    protected $registers = [
+        \tp5er\think\auth\keyparser\Register::class,
+        \tp5er\think\auth\access\Register::class,
+        \tp5er\think\auth\sanctum\Register::class,
+        \tp5er\think\auth\access\Register::class,
+        \tp5er\think\auth\jwt\Register::class,
+    ];
 
     /**
      * @var string[]
@@ -70,25 +66,12 @@ class Service extends \think\Service
      */
     public function register(): void
     {
-        $this->registerKeyParser();
+
         $this->registerAuthenticator();
         $this->registerUserResolver();
-        $this->registerAccessGate();
         $this->registerMiddleware();
-        $this->registerSanctum();
+        $this->registers();
         $this->registerPolicies();
-        $this->registerJWT();
-
-    }
-
-    /**
-     * @return void
-     */
-    protected function registerKeyParser()
-    {
-        $this->app->bind(KeyParserFactory::class, function () {
-            return new \tp5er\think\auth\keyparser\Factory($this->app->request);
-        });
     }
 
     /**
@@ -101,7 +84,6 @@ class Service extends \think\Service
         foreach ($middlewares as $middleware) {
             $this->app->middleware->add($middleware);
         }
-
         $this->app->config->set([
             'alias' => array_merge(
                 $this->app->config->get('middleware.alias', []),
@@ -138,40 +120,16 @@ class Service extends \think\Service
         });
     }
 
-    /**
-     * @return void
-     */
-    protected function registerAccessGate()
+    protected function registers()
     {
-        $this->app->bind(GateInterface::class, function () {
-            return new Gate($this->app, $this->app->get(AuthenticatableContract::class));
-        });
-    }
-
-    /**
-     * @return void
-     */
-    protected function registerSanctum()
-    {
-        $auth = $this->app->get(Factory::class);
-        $auth->configMergeGuards('sanctum', [
-            "driver" => 'sanctum',
-            "provider" => null
-        ]);
-        $auth->extend("sanctum", function (App $app, $name, $config) use (&$auth) {
-            $expiration = $this->config('sanctum.expiration');
-
-            return new RequestGuard(
-                new Guard(
-                    $this->app,
-                    $auth,
-                    $expiration,
-                    $config['provider']
-                ),
-                $this->app->request,
-                $auth->createUserProvider($config['provider'] ?? null)
-            );
-        });
+        foreach ($this->registers as $register) {
+            if (class_exists($register)) {
+                $cfg = Ref::getClassConstValue($register, "config");
+                if (method_exists($register, 'bind')) {
+                    $register::bind($this->app, $this->config($cfg, []));
+                }
+            }
+        }
     }
 
     /**
@@ -179,9 +137,7 @@ class Service extends \think\Service
      */
     protected function registerPolicies()
     {
-        foreach ($this->policies() as $key => $value) {
-            $this->app->get(GateInterface::class)->policy($key, $value);
-        }
+        \tp5er\think\auth\access\Register::registerPolicy($this->app, $this->policies());
     }
 
     /**
@@ -198,66 +154,16 @@ class Service extends \think\Service
     }
 
     /**
-     * @return void
-     */
-    protected function registerJWT()
-    {
-        /*** 定义的是jwt加密提供者 需要实现 JWTContract::clas 中的方法* @see  JWTContract::class */
-        $this->app->bind(JWTContract::class, function () {
-            $jwtClass = $this->config('jwt.providers.jwt');
-            if (class_exists($jwtClass)) {
-                return new $jwtClass(
-                    $this->config('jwt.secret'),
-                    $this->config('jwt.algo'),
-                    $this->config('jwt.keys')
-                );
-            } else {
-                return new Lcobucci(
-                    $this->config('jwt.secret'),
-                    $this->config('jwt.algo'),
-                    $this->config('jwt.keys', [])
-                );
-            }
-        });
-
-        $this->app->bind(JWTBlacklist::class, function () {
-            $storageClass = $this->config('jwt.providers.storage');
-            if (class_exists($storageClass)) {
-                $storage = new $storageClass($this->app);
-            } else {
-                $storage = new JWTThinkStorage($this->app);
-            }
-
-            return new JWTBlacklist($storage);
-        });
-
-        $this->app->bind(JWTManager::class, function () {
-            $payloadFactory = new ClaimsFactory($this->app);
-
-            return new JWTManager(
-                $this->app->get(JWTContract::class),
-                $this->app->get(JWTBlacklist::class),
-                $payloadFactory
-            );
-        });
-
-        $this->app->bind(JWTAuth::class, function () {
-            return new JWTAuth(
-                $this->app->get(JWTManager::class),
-                $this->app->get(KeyParserFactory::class)
-            );
-        });
-    }
-
-    /**
      * @param $key
      * @param $default
      *
-     * @return array|mixed
+     * @return array
      */
     protected function config($key, $default = null)
     {
+        if ($key == false) {
+            return $this->app->config->get('auth', []);
+        }
         return $this->app->config->get("auth." . $key, $default);
     }
-
 }

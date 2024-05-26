@@ -185,6 +185,11 @@ return [
 
             'passphrase' => env('JWT_PASSPHRASE'),
         ],
+        'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
+        'persistent_claims' => [
+            // 'foo',
+            // 'bar',
+        ],
         'providers' => [
             'jwt' => \tp5er\think\auth\jwt\providers\jwt\Lcobucci::class,
             "storage" => \tp5er\think\auth\jwt\providers\storage\Think::class,
