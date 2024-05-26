@@ -12,7 +12,7 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\think\commands;
+namespace tp5er\thinkphp\auth\commands;
 
 use think\console\Command;
 use think\console\Input;

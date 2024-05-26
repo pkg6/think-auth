@@ -12,10 +12,10 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\think\policies;
+namespace tp5er\thinkphp\auth\policies;
 
 use tp5er\think\auth\contracts\Authenticatable;
-use tp5er\think\auth\think\model\Post;
+use tp5er\thinkphp\auth\model\Post;
 
 class PostPolicy
 {

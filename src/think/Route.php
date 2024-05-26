@@ -17,7 +17,6 @@ namespace tp5er\think\auth\think;
 use think\facade\Route as thinkRoute;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\facade\Gate;
-use tp5er\think\auth\think\model\Post;
 use tp5er\think\auth\User;
 
 class Route
@@ -64,13 +63,6 @@ class Route
                 $ret["delete-settings"] = "有权限";
             } else {
                 $ret["delete-settings"] = "无权限";
-            }
-
-            $post = new Post();
-            if (\gate()->authorize('create', $post)) {
-                $ret["post-create"] = "有权限";
-            } else {
-                $ret["post-create"] = "无权限";
             }
 
             return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);

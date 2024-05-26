@@ -12,14 +12,13 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\think\commands;
+namespace tp5er\thinkphp\auth\commands;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use tp5er\think\auth\events\Login;
 use tp5er\think\auth\User;
-use function auth;
 
 class AuthCommand extends Command
 {

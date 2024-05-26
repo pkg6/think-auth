@@ -12,10 +12,8 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\think\model;
+namespace tp5er\thinkphp\auth\model;
 
-use think\Model;
-
-class Post extends Model
+class Post extends \think\Model
 {
 }

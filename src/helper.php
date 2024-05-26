@@ -144,3 +144,17 @@ if ( ! function_exists('with')) {
         return is_null($callback) ? $value : $callback($value);
     }
 }
+
+if ( ! function_exists('head')) {
+    /**
+     * Get the first element of an array. Useful for method chaining.
+     *
+     * @param  array  $array
+     *
+     * @return mixed
+     */
+    function head($array)
+    {
+        return reset($array);
+    }
+}

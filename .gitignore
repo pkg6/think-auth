@@ -1,5 +1,6 @@
 .scannerwork
 /vendor
+/runtime
 /.idea
 *.DS_Store
 /composer.lock

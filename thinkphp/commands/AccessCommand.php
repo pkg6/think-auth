@@ -12,13 +12,14 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\think\commands;
+namespace tp5er\thinkphp\auth\commands;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\facade\Gate;
+use tp5er\thinkphp\auth\model\Post;
 
 class AccessCommand extends Command
 {
@@ -47,6 +48,13 @@ class AccessCommand extends Command
             $output->error("model 没有权限");
         }
         if (Gate::allows('edit-settings')) {
+            $output->info("有权限");
+        } else {
+            $output->error("没有权限");
+        }
+
+        $post = new Post();
+        if (\gate()->authorize('create', $post)) {
             $output->info("有权限");
         } else {
             $output->error("没有权限");
