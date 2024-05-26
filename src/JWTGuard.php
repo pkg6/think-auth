@@ -46,21 +46,35 @@ class JWTGuard implements Guard
     protected $lastAttempted;
 
     /**
+     * @var string
+     */
+    protected $name = '';
+
+    /**
      * @param App $app
      * @param $name
      * @param UserProvider $provider
+     * @param JWTAuth $jwt
      */
     public function __construct(
-        App $app,
+        App          $app,
         $name,
         UserProvider $provider,
-        JWTAuth $jwt
+        JWTAuth      $jwt
     ) {
         $this->app = $app;
         $this->name = $name;
         $this->provider = $provider;
         $this->request = $this->app->request;
         $this->jwt = $jwt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -79,12 +93,13 @@ class JWTGuard implements Guard
             return $this->user = $this->provider->retrieveById($payload['sub']);
         }
     }
+
     /**
      * Get the currently authenticated user or throws an exception.
      *
-     * @throws UserNotDefinedException
-     *
      * @return \tp5er\think\auth\contracts\Authenticatable
+     *
+     * @throws UserNotDefinedException
      */
     public function userOrFail()
     {
@@ -94,6 +109,7 @@ class JWTGuard implements Guard
 
         return $user;
     }
+
     /**
      * @param array $credentials
      * @param $login
@@ -109,10 +125,11 @@ class JWTGuard implements Guard
 
         return false;
     }
+
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
+     * @param array $credentials
      *
      * @return bool
      */
@@ -133,10 +150,11 @@ class JWTGuard implements Guard
 
         return $token;
     }
+
     /**
      * Logout the user, thus invalidating the token.
      *
-     * @param  bool  $forceForever
+     * @param bool $forceForever
      *
      * @return void
      */
@@ -146,12 +164,13 @@ class JWTGuard implements Guard
         $this->user = null;
         $this->jwt->unsetToken();
     }
+
     /**
      * Ensure that a token is available in the request.
      *
      * @return JWTAuth
      *
-     *@throws JWTException
+     * @throws JWTException
      */
     protected function requireToken()
     {
@@ -161,6 +180,7 @@ class JWTGuard implements Guard
 
         return $this->jwt;
     }
+
     /**
      * Determine if the user matches the credentials.
      *
@@ -185,10 +205,11 @@ class JWTGuard implements Guard
 
         return $this;
     }
+
     /**
      * Set the token ttl.
      *
-     * @param  int  $ttl
+     * @param int $ttl
      *
      * @return $this
      */
@@ -214,6 +235,7 @@ class JWTGuard implements Guard
 
         return $this->jwt->checkSubjectModel($this->provider->getModel());
     }
+
     /**
      * Magically call the JWT instance.
      *

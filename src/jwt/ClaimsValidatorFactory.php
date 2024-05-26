@@ -86,7 +86,6 @@ class ClaimsValidatorFactory
         if ($resetClaims) {
             $this->emptyClaims();
         }
-
         return $this->withClaims($this->buildClaimsCollection());
     }
 
