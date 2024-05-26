@@ -46,7 +46,6 @@ class Route
             return json(["code" => 0, "msge" => "登录成功"]);
         });
         thinkRoute::get("/api/user", function () {
-
             $user = requestUser();
             //$user=  auth()->user();
 
@@ -54,7 +53,6 @@ class Route
         });
 
         thinkRoute::get("/api/scan", function () {
-
             $ret = [];
             if (Gate::allows('edit-settings')) {
                 $ret["edit-settings"] = "有权限";
@@ -76,7 +74,6 @@ class Route
             }
 
             return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);
-
         });
 
         thinkRoute::get("/api/token", function () {
@@ -132,13 +129,11 @@ class Route
             }
 
             return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);
-
         })->middleware('auth', "sanctum");
     }
 
     protected static function jwt()
     {
-
         thinkRoute::get("/jwt/token", function () {
             $token = auth('jwt')
                 //有效期1分钟,默认是1小时
@@ -189,7 +184,6 @@ class Route
                     'expires_in' => auth('jwt')->factory()->getTTL() * 60
                 ]
             ]);
-
         })->middleware('auth', "jwt");
     }
 }

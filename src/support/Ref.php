@@ -16,7 +16,6 @@ namespace tp5er\think\auth\support;
 
 class Ref
 {
-
     public static function getClassConstValue($objectOrClass, $name)
     {
         return (new \ReflectionClass($objectOrClass))->getConstant($name);

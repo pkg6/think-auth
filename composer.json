@@ -50,6 +50,10 @@
       "tp5er\\think\\auth\\Test\\": "tests/"
     }
   },
+  "scripts": {
+    "fixer": "./vendor/bin/php-cs-fixer fix",
+    "tests": "./vendor/bin/phpunit"
+  },
   "extra": {
     "think": {
       "services": [

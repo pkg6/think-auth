@@ -44,5 +44,4 @@ class MigrateUserCommand extends MigrateAbstract
     {
         return 'user.stub';
     }
-
 }

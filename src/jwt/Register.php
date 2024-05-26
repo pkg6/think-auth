@@ -25,7 +25,6 @@ use tp5er\think\auth\jwt\validators\PayloadValidator;
 
 class Register
 {
-
     const config = "jwt";
 
     const claimFactory = ClaimFactory::class;
@@ -40,7 +39,6 @@ class Register
 
     public static function bind(App $app, $config)
     {
-
         $app->bind(Register::claimFactory, function () use (&$app) {
             return new ClaimFactory($app->request);
         });

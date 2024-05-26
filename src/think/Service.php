@@ -40,6 +40,5 @@ class Service extends \think\Service
 
     public function register()
     {
-
     }
 }

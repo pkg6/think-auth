@@ -29,7 +29,6 @@ class JWTCommand extends Command
     }
     protected function execute(Input $input, Output $output)
     {
-
         $this->app->config->set([
             'jwt' => [
                 'secret' => Str::random(64),

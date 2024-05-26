@@ -30,7 +30,6 @@ class AuthenticateWithBasicAuth
      */
     public function handle($request, \Closure $next, $guard = null, $field = null)
     {
-
         auth()->guard($guard)->basic($field ?: 'email');
 
         return $next($request);

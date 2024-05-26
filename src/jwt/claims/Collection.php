@@ -124,5 +124,4 @@ class Collection extends \tp5er\think\auth\support\Collection
 
         return $claims;
     }
-
 }

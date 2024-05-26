@@ -85,5 +85,4 @@ trait GuardEventHelper
     {
         $this->app->event->trigger(new OtherDeviceLogout($this->name, $user));
     }
-
 }

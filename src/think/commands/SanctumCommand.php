@@ -31,7 +31,6 @@ class SanctumCommand extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
         $user = User::find(1);
         foreach ($user->tokens as $token) {
             $output->info("已颁发令牌信息：" . $token);

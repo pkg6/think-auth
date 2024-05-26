@@ -32,7 +32,6 @@ class AuthCommand extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
         $output->comment("default 测试....");
 
         $this->app->event->listen(Login::class, function (Login $user) use (&$output) {
@@ -63,5 +62,4 @@ class AuthCommand extends Command
         $output->info("eloquent测试：获取用户ID：" . $model->id());
         $output->info("eloquent测试：检查用户状态：" . $model->check());
     }
-
 }

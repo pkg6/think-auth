@@ -16,7 +16,6 @@ namespace tp5er\think\auth\exceptions;
 
 class CredentialsException extends \RuntimeException
 {
-
     const codeMissing = 1;
     const codeNoRecordFound = 2;
 

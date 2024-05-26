@@ -51,6 +51,5 @@ class AccessCommand extends Command
         } else {
             $output->error("没有权限");
         }
-
     }
 }
