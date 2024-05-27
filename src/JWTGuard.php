@@ -157,6 +157,7 @@ class JWTGuard implements Guard
      * @param bool $forceForever
      *
      * @return void
+     * @throws JWTException
      */
     public function logout($forceForever = false)
     {

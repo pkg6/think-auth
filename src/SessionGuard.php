@@ -459,7 +459,7 @@ class SessionGuard implements StatefulGuard
         if ( ! is_null($this->user) && ! empty($user->getRememberToken())) {
             $this->cycleRememberToken($user);
         }
-        $this->app->event->trigger(new Logout($this->name, $user));
+        $this->fireLogoutEvent($user);
         $this->user = null;
         $this->loggedOut = true;
     }
