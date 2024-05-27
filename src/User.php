@@ -25,5 +25,4 @@ use tp5er\think\auth\sanctum\HasApiTokens;
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubjectContract
 {
     use Authenticatable,HasApiTokens,Authorizable,JWTSubject;
-
 }

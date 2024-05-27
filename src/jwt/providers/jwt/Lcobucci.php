@@ -111,7 +111,6 @@ class Lcobucci extends Provider implements JWT
      */
     public function decode($token)
     {
-
         try {
             /** @var \Lcobucci\JWT\Token\Plain */
             $token = $this->config->parser()->parse($token);

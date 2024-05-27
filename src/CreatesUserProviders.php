@@ -126,5 +126,4 @@ trait CreatesUserProviders
 
         return $this->app->config->get('auth.providers.' . $provider);
     }
-
 }

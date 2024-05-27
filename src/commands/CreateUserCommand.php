@@ -63,6 +63,5 @@ class CreateUserCommand extends Command
             $describe = " (已存在，密码为加密后数据)";
         }
         $output->info(sprintf("创建用户成功,用户名：%s 密码：%s %s", $user, $password, $describe ?? ""));
-
     }
 }

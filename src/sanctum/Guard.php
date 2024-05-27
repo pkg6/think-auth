@@ -69,7 +69,6 @@ class Guard
      */
     public function __invoke(Request $request)
     {
-
         $guards = $this->app->config->get('auth.sanctum.guard', "web");
         foreach (Arr::wrap($guards) as $guard) {
             if ($user = $this->auth->guard($guard)->user()) {

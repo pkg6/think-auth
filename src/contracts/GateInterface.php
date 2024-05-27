@@ -177,5 +177,4 @@ interface GateInterface
      * @return array
      */
     public function abilities();
-
 }

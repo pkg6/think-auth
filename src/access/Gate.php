@@ -886,5 +886,4 @@ class Gate implements GateInterface
     {
         return $this->policies;
     }
-
 }

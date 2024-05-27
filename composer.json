@@ -34,14 +34,26 @@
   },
   "autoload": {
     "psr-4": {
-      "tp5er\\think\\auth\\": "src"
+      "tp5er\\think\\auth\\": "src",
+      "tp5er\\thinkphp\\auth\\": "thinkphp"
     },
     "files": [
       "src/helper.php"
     ]
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.9"
+    "friendsofphp/php-cs-fixer": "^3.9",
+    "mockery/mockery": ">=0.9.9",
+    "phpunit/phpunit": "~4.8|~6.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "tp5er\\think\\auth\\Test\\": "tests/"
+    }
+  },
+  "scripts": {
+    "fixer": "./vendor/bin/php-cs-fixer fix",
+    "tests": "./vendor/bin/phpunit"
   },
   "extra": {
     "think": {

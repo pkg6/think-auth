@@ -25,7 +25,6 @@ use tp5er\think\auth\support\Ref;
 
 class Service extends \think\Service
 {
-
     protected $registers = [
         \tp5er\think\auth\keyparser\Register::class,
         \tp5er\think\auth\access\Register::class,
@@ -66,7 +65,6 @@ class Service extends \think\Service
      */
     public function register(): void
     {
-
         $this->registerAuthenticator();
         $this->registerUserResolver();
         $this->registerMiddleware();
@@ -164,6 +162,7 @@ class Service extends \think\Service
         if ($key == false) {
             return $this->app->config->get('auth', []);
         }
+
         return $this->app->config->get("auth." . $key, $default);
     }
 }

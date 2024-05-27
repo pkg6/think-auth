@@ -12,7 +12,7 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\think\commands;
+namespace tp5er\thinkphp\auth\commands;
 
 use think\console\Command;
 use think\console\Input;
@@ -31,7 +31,6 @@ class SanctumCommand extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
         $user = User::find(1);
         foreach ($user->tokens as $token) {
             $output->info("已颁发令牌信息：" . $token);

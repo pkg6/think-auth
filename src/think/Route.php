@@ -17,7 +17,6 @@ namespace tp5er\think\auth\think;
 use think\facade\Route as thinkRoute;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\facade\Gate;
-use tp5er\think\auth\think\model\Post;
 use tp5er\think\auth\User;
 
 class Route
@@ -46,7 +45,6 @@ class Route
             return json(["code" => 0, "msge" => "登录成功"]);
         });
         thinkRoute::get("/api/user", function () {
-
             $user = requestUser();
             //$user=  auth()->user();
 
@@ -54,7 +52,6 @@ class Route
         });
 
         thinkRoute::get("/api/scan", function () {
-
             $ret = [];
             if (Gate::allows('edit-settings')) {
                 $ret["edit-settings"] = "有权限";
@@ -68,15 +65,7 @@ class Route
                 $ret["delete-settings"] = "无权限";
             }
 
-            $post = new Post();
-            if (\gate()->authorize('create', $post)) {
-                $ret["post-create"] = "有权限";
-            } else {
-                $ret["post-create"] = "无权限";
-            }
-
             return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);
-
         });
 
         thinkRoute::get("/api/token", function () {
@@ -132,13 +121,11 @@ class Route
             }
 
             return json(["code" => 0, "msg" => "获取权限列表", 'data' => $ret]);
-
         })->middleware('auth', "sanctum");
     }
 
     protected static function jwt()
     {
-
         thinkRoute::get("/jwt/token", function () {
             $token = auth('jwt')
                 //有效期1分钟,默认是1小时
@@ -189,7 +176,6 @@ class Route
                     'expires_in' => auth('jwt')->factory()->getTTL() * 60
                 ]
             ]);
-
         })->middleware('auth', "jwt");
     }
 }

@@ -74,7 +74,6 @@ abstract class MigrateAbstract extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-
         $table = $input->getArgument("table") ?? $this->default_table;
 
         try {
@@ -92,7 +91,6 @@ abstract class MigrateAbstract extends Command
                 $output->highlight("Table name change requires new model extends " . $this->model);
                 $output->newLine();
             }
-
         } catch (\Exception $exception) {
             $output->writeln('<error>' . 'database table: `' . $table . '` created error : ' . $exception->getMessage() . ' !</error>');
         }

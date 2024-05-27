@@ -23,6 +23,20 @@ class Register
     const keyParser = "tp5er.auth.keyparser";
 
     /**
+     * @return array
+     */
+    public static function defaultParsers()
+    {
+        return [
+            new AuthHeaders,
+            new QueryString,
+            new InputSource,
+            new RouteParams,
+            new Cookies(),
+        ];
+    }
+
+    /**
      * @param App $app
      * @param array $config
      *
@@ -31,7 +45,8 @@ class Register
     public static function bind(App $app, array $config = [])
     {
         $app->bind(Register::keyParser, function () use (&$app, &$config) {
-            return new Factory($app->request, Arr::get($config, 'parsers', []));
+            return new Factory($app->request, Arr::get($config, 'parsers', Register::defaultParsers()));
         });
+        key_parser();
     }
 }

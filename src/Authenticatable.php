@@ -94,5 +94,4 @@ trait Authenticatable
     {
         return $this->rememberTokenName;
     }
-
 }

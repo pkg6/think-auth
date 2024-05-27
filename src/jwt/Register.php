@@ -25,7 +25,6 @@ use tp5er\think\auth\jwt\validators\PayloadValidator;
 
 class Register
 {
-
     const config = "jwt";
 
     const claimFactory = ClaimFactory::class;
@@ -40,7 +39,6 @@ class Register
 
     public static function bind(App $app, $config)
     {
-
         $app->bind(Register::claimFactory, function () use (&$app) {
             return new ClaimFactory($app->request);
         });
@@ -50,11 +48,14 @@ class Register
                 ->setRequiredClaims(Arr::get($config, 'required_claims', []));
         });
 
-        $app->bind(Register::claimsValidatorFactory, function () use ($app) {
-            return new ClaimsValidatorFactory(
+        $app->bind(Register::claimsValidatorFactory, function () use (&$app, &$config) {
+            $factory = new ClaimsValidatorFactory(
                 $app->get(Register::claimFactory),
                 $app->get(Register::validatorpayload)
             );
+
+            return $factory->setTTL(Arr::get($config, 'ttl'))
+                ->setLeeway(Arr::get($config, 'leeway'));
         });
 
         $app->bind(Register::storge, function () use (&$app, $config) {
@@ -63,8 +64,11 @@ class Register
             return new $storageClass($app);
         });
 
-        $app->bind(Register::blacklist, function () use ($app) {
-            return new Blacklist($app->get(Register::storge));
+        $app->bind(Register::blacklist, function () use (&$app, &$config) {
+            $instance = new Blacklist($app->get(Register::storge));
+
+            return $instance->setGracePeriod(Arr::get($config, 'blacklist_grace_period'))
+                ->setRefreshTTL(Arr::get($config, 'refresh_ttl'));
         });
 
         $app->bind(Register::cipher, function () use (&$config) {
@@ -88,11 +92,13 @@ class Register
                 ->setBlacklistEnabled((bool) Arr::get($config, 'blacklist_enabled', true))
                 ->setPersistentClaims(Arr::get($config, 'persistent_claims', []));
         });
-        $app->bind(Register::auth, function () use ($app) {
-            return new JWTAuth(
+        $app->bind(Register::auth, function () use ($app, &$config) {
+            $instance = new JWTAuth(
                 $app->get(Register::manager),
                 $app->get(\tp5er\think\auth\keyparser\Register::keyParser)
             );
+
+            return $instance->lockSubject(Arr::get($config, 'lock_subject'));
         });
     }
 }

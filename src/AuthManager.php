@@ -355,5 +355,4 @@ class AuthManager implements AuthManagerInterface, Factory
     {
         return $this->guard()->{$method}(...$parameters);
     }
-
 }

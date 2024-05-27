@@ -355,7 +355,6 @@ class SessionGuard implements StatefulGuard
 
         $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
         if ($this->hasValidCredentials($user, $credentials)) {
-
             $this->login($user, $remember);
 
             return true;
@@ -395,7 +394,6 @@ class SessionGuard implements StatefulGuard
         // identifier. We will then decrypt this later to retrieve the users.
 
         if ($remember) {
-
             if (empty($user->getRememberToken())) {
                 $this->cycleRememberToken($user);
             }
@@ -691,5 +689,4 @@ class SessionGuard implements StatefulGuard
 
         return $this->user();
     }
-
 }

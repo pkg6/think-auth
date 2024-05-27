@@ -46,5 +46,4 @@ interface KeyParserFactory
      * @return bool
      */
     public function hasToken();
-
 }
