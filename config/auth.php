@@ -137,13 +137,11 @@ return [
          |--------------------------------------------------------------------------
          |
          | Don't forget to set this in your .env file, as it will be used to sign
-         | your tokens. A helper command is provided for this:
-         | `php artisan jwt:secret`
+         | your tokens : Generate 64 random strings through Str::random(64)
          |
          | Note: This will be used for Symmetric algorithms only (HMAC),
          | since RSA and ECDSA use a private/public key combo (See below).
          |
-         | Str::random(64)
          */
         'secret' => env('JWT_SECRET'),
         'algo' => env('JWT_ALGO', 'HS256'),
