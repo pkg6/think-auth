@@ -45,6 +45,7 @@ class JWTAuth
      * @var bool
      */
     protected $lockSubject = true;
+
     /**
      * @var KeyParserFactory
      */

@@ -19,6 +19,7 @@ use tp5er\think\auth\events\Attempting;
 use tp5er\think\auth\events\Authenticated;
 use tp5er\think\auth\events\Failed;
 use tp5er\think\auth\events\Login;
+use tp5er\think\auth\events\Logout;
 use tp5er\think\auth\events\OtherDeviceLogout;
 
 trait GuardEventHelper
@@ -84,5 +85,15 @@ trait GuardEventHelper
     protected function fireOtherDeviceLogoutEvent($user)
     {
         $this->app->event->trigger(new OtherDeviceLogout($this->name, $user));
+    }
+
+    /**
+     * @param $user
+     *
+     * @return void
+     */
+    protected function fireLogoutEvent($user)
+    {
+        $this->app->event->trigger(new Logout($this->name, $user));
     }
 }
