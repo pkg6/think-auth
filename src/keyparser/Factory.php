@@ -21,16 +21,6 @@ use tp5er\think\auth\contracts\KeyParserFactory;
 class Factory implements KeyParserFactory
 {
     /**
-     * 默认解析token方式.
-     */
-    const defaultParsers = [
-        AuthHeaders::class,
-        QueryString::class,
-        InputSource::class,
-        Cookies::class,
-        RouteParams::class
-    ];
-    /**
      * The chain.
      *
      * @var ParserContract []
@@ -55,24 +45,7 @@ class Factory implements KeyParserFactory
     public function __construct(Request $request, array $parsers = [])
     {
         $this->request = $request;
-        if (empty($parsers)) {
-            $this->parsers = $this->defaultParsers();
-        } else {
-            $this->parsers = $parsers;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function defaultParsers()
-    {
-        $default = [];
-        foreach (self::defaultParsers as $class) {
-            $default[] = new $class;
-        }
-
-        return $default;
+        $this->parsers = $parsers;
     }
 
     /**

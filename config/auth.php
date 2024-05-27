@@ -183,11 +183,116 @@ return [
 
             'passphrase' => env('JWT_PASSPHRASE'),
         ],
+        /*
+        |--------------------------------------------------------------------------
+        | JWT time to live
+        |--------------------------------------------------------------------------
+        |
+        | Specify the length of time (in minutes) that the token will be valid for.
+        | Defaults to 1 hour.
+        |
+        | You can also set this to null, to yield a never expiring token.
+        | Some people may want this behaviour for e.g. a mobile app.
+        | This is not particularly recommended, so make sure you have appropriate
+        | systems in place to revoke the token if necessary.
+        | Notice: If you set this to null you should remove 'exp' element from 'required_claims' list.
+        |
+        */
+        'ttl' => env('JWT_TTL', 60),
+        /*
+        |--------------------------------------------------------------------------
+        | Leeway
+        |--------------------------------------------------------------------------
+        |
+        | This property gives the jwt timestamp claims some "leeway".
+        | Meaning that if you have any unavoidable slight clock skew on
+        | any of your servers then this will afford you some level of cushioning.
+        |
+        | This applies to the claims `iat`, `nbf` and `exp`.
+        |
+        | Specify in seconds - only if you know you need it.
+        |
+        */
+        'leeway' => env('JWT_LEEWAY', 0),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Blacklist Enabled
+        |--------------------------------------------------------------------------
+        |
+        | In order to invalidate tokens, you must have the blacklist enabled.
+        | If you do not want or need this functionality, then set this to false.
+        |
+        */
         'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
+        'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+        /*
+        |--------------------------------------------------------------------------
+        | Required Claims
+        |--------------------------------------------------------------------------
+        |
+        | Specify the required claims that must exist in any token.
+        | A TokenInvalidException will be thrown if any of these claims are not
+        | present in the payload.
+        |
+        */
+        'required_claims' => [
+            'iss',
+            'iat',
+            'exp',
+            'nbf',
+            'sub',
+            'jti',
+        ],
+
+        /*
+        | -------------------------------------------------------------------------
+        | Blacklist Grace Period
+        | -------------------------------------------------------------------------
+        |
+        | When multiple concurrent requests are made with the same JWT,
+        | it is possible that some of them fail, due to token regeneration
+        | on every request.
+        |
+        | Set grace period in seconds to prevent parallel request failure.
+        |
+        */
+        'blacklist_grace_period' => env('JWT_BLACKLIST_GRACE_PERIOD', 0),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Persistent Claims
+        |--------------------------------------------------------------------------
+        |
+        | Specify the claim keys to be persisted when refreshing a token.
+        | `sub` and `iat` will automatically be persisted, in
+        | addition to the these claims.
+        |
+        | Note: If a claim does not exist then it will be ignored.
+        |
+        */
         'persistent_claims' => [
             // 'foo',
             // 'bar',
         ],
+        /*
+        |--------------------------------------------------------------------------
+        | Lock Subject
+        |--------------------------------------------------------------------------
+        |
+        | This will determine whether a `prv` claim is automatically added to
+        | the token. The purpose of this is to ensure that if you have multiple
+        | authentication models e.g. `App\User` & `App\OtherPerson`, then we
+        | should prevent one authentication request from impersonating another,
+        | if 2 tokens happen to have the same id across the 2 different models.
+        |
+        | Under specific circumstances, you may want to disable this behaviour
+        | e.g. if you only have one authentication model, then you would save
+        | a little on token size.
+        |
+        */
+        'lock_subject' => true,
+
         'providers' => [
             'jwt' => \tp5er\think\auth\jwt\providers\jwt\Lcobucci::class,
             "storage" => \tp5er\think\auth\jwt\providers\storage\Think::class,
