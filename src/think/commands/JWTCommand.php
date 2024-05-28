@@ -30,12 +30,6 @@ class JWTCommand extends Command
     }
     protected function execute(Input $input, Output $output)
     {
-        $this->app->config->set([
-            'jwt' => [
-                'secret' => Str::random(64),
-                'algo' => 'HS256'
-            ]], "auth");
-
         $token = auth('jwt')->attempt(["username" => "tp5er", "password" => "123456"]);
         $output->info("登录生成JWT-Token ：" . $token);
         $user = auth('jwt')->user();
