@@ -26,13 +26,14 @@ use tp5er\think\auth\contracts\UserProvider;
 use tp5er\think\auth\events\CurrentDeviceLogout;
 use tp5er\think\auth\events\Logout;
 use tp5er\think\auth\exceptions\UnauthorizedHttpException;
+use tp5er\think\auth\support\Macroable;
 use tp5er\think\auth\support\Recaller;
 use tp5er\think\auth\support\Timebox;
 use tp5er\think\hashing\facade\Hash;
 
 class SessionGuard implements StatefulGuard
 {
-    use GuardHelpers, GuardEventHelper;
+    use GuardHelpers, GuardEventHelper,Macroable;
 
     /**
      * @var App

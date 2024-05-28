@@ -19,7 +19,7 @@ use Closure;
 use think\App;
 use think\Request;
 
-class AuthRequest
+class Requesta
 {
     /**
      * @var Request
@@ -58,7 +58,7 @@ class AuthRequest
     /**
      * Set the user resolver callback.
      *
-     * @param  \Closure  $callback
+     * @param \Closure $callback
      *
      * @return $this
      */
@@ -72,7 +72,7 @@ class AuthRequest
     /**
      * Get the user making the request.
      *
-     * @param  string|null  $guard
+     * @param string|null $guard
      *
      * @return mixed
      */
@@ -126,6 +126,77 @@ class AuthRequest
     {
         return $this->request->header("PHP_AUTH_USER");
     }
+
+    /**
+     * @return array|mixed
+     */
+    public function userAgent()
+    {
+        return $this->request->get('User-Agent');
+    }
+
+    /**
+     * Gets the user info.
+     *
+     * @return string|null A user name if any and, optionally, scheme-specific information about how to gain authorization to access the server
+     */
+    public function getUserInfo()
+    {
+        $userinfo = $this->getUser();
+        $pass = $this->getPassword();
+        if ('' != $pass) {
+            $userinfo .= ":$pass";
+        }
+
+        return $userinfo;
+    }
+
+    /**
+     * Determine if a header is set on the request.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasHeader($key)
+    {
+        return ! is_null($this->request->header($key));
+    }
+
+    /**
+     * Checks whether or not the method is safe.
+     *
+     * @see https://tools.ietf.org/html/rfc7231#section-4.2.1
+     *
+     * @return bool
+     */
+    public function isMethodSafe()
+    {
+        return in_array($this->request->method(), ['GET', 'HEAD', 'OPTIONS', 'TRACE']);
+    }
+
+    /**
+     * Checks whether or not the method is idempotent.
+     *
+     * @return bool
+     */
+    public function isMethodIdempotent()
+    {
+        return in_array($this->request->method(), ['HEAD', 'GET', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PURGE']);
+    }
+
+    /**
+     * Checks whether the method is cacheable or not.
+     *
+     * @see https://tools.ietf.org/html/rfc7231#section-4.2.3
+     *
+     * @return bool
+     */
+    public function isMethodCacheable()
+    {
+        return in_array($this->getMethod(), ['GET', 'HEAD']);
+    }
+
     /**
      * Magically call the JWT instance.
      *

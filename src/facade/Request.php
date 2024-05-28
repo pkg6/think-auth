@@ -14,10 +14,10 @@
 
 namespace tp5er\think\auth\facade;
 
-use tp5er\think\auth\AuthRequest;
+use tp5er\think\auth\Requesta;
 
 /**
- * @mixin AuthRequest
+ * @mixin Requesta
  */
 class Request extends \think\Facade
 {
@@ -26,6 +26,6 @@ class Request extends \think\Facade
      */
     protected static function getFacadeClass()
     {
-        return AuthRequest::class;
+        return Requesta::class;
     }
 }

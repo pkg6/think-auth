@@ -22,7 +22,7 @@ use tp5er\think\auth\RequestGuard;
 class Register
 {
     const config = "sanctum";
-    const  sanctum = 'sanctum';
+    const sanctum = 'sanctum';
 
     public static function bind(App $app, $appConfig = [])
     {
