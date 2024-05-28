@@ -317,7 +317,7 @@ class SessionGuard implements StatefulGuard
      */
     public function attemptBasic(Request $request, $field, $extraConditions = [])
     {
-        if ( ! requestGetUser()) {
+        if ( ! requesta()->getUser()()) {
             return false;
         }
 
@@ -338,8 +338,8 @@ class SessionGuard implements StatefulGuard
     protected function basicCredentials(Request $request, $field)
     {
         return [
-            $field => requestGetUser(),
-            'password' => requestGetPassword()
+            $field => requesta()->setRequest($request)->getUser(),
+            'password' => requesta()->setRequest($request)->getPassword()
         ];
     }
 

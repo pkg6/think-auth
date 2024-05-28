@@ -66,6 +66,7 @@ class Service extends \think\Service
     public function register(): void
     {
         $this->registerAuthenticator();
+        $this->registerRequest();
         $this->registerUserResolver();
         $this->registerMiddleware();
         $this->registers();
@@ -103,6 +104,16 @@ class Service extends \think\Service
 
         $this->app->bind(ContractGuard::class, function () {
             return $this->app->get(Factory::class)->guard();
+        });
+    }
+
+    protected function registerRequest()
+    {
+        $this->app->bind(AuthRequest::class, function () {
+            $instance = new AuthRequest($this->app);
+
+            return $instance
+                ->setUserResolver($this->app->get(AuthenticatableContract::class));
         });
     }
 

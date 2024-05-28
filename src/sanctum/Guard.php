@@ -123,7 +123,7 @@ class Guard
             return (string) (Sanctum::$accessTokenRetrievalCallback)($request);
         }
 
-        return requestBearerToken();
+        return requesta()->bearerToken();
     }
 
     /**

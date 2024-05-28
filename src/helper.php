@@ -74,59 +74,13 @@ if ( ! function_exists('jwt')) {
     }
 }
 
-if ( ! function_exists('requestUser')) {
-
+if ( ! function_exists('requesta')) {
     /**
-     * Get the user making the request.
-     *
-     * @param string|null $guard
-     *
-     * @return Authenticatable|Authorizable
+     * @return \tp5er\think\auth\AuthRequest
      */
-    function requestUser($guard = null)
+    function requesta()
     {
-        return call_user_func(app()->get(Authenticatable::class), $guard);
-    }
-}
-
-if ( ! function_exists('requestBearerToken')) {
-
-    /**
-     * @return false|string|null
-     */
-    function requestBearerToken()
-    {
-        $header = app()->request->header("Authorization", "");
-        $position = strrpos($header, 'Bearer ');
-        if ($position !== false) {
-            $header = substr($header, $position + 7);
-
-            return strpos($header, ',') !== false ? strstr($header, ',', true) : $header;
-        }
-
-        return null;
-    }
-}
-
-if ( ! function_exists('requestGetUser')) {
-
-    /**
-     * @return array|string|null
-     */
-    function requestGetUser()
-    {
-        return app()->request->header("PHP_AUTH_USER");
-    }
-}
-
-if ( ! function_exists('requestGetPassword')) {
-
-    /**
-     * @return array|string|null
-     */
-    function requestGetPassword()
-    {
-        return app()->request->header("PHP_AUTH_PW");
+        return app()->get(\tp5er\think\auth\AuthRequest::class);
     }
 }
 
@@ -156,5 +110,62 @@ if ( ! function_exists('head')) {
     function head($array)
     {
         return reset($array);
+    }
+}
+
+// deprecated
+//--------------------------------------------------------------
+
+if ( ! function_exists('requestUser')) {
+    /**
+     * @deprecated
+     * Get the user making the request.
+     *
+     * @param string|null $guard
+     *
+     * @return Authenticatable|Authorizable
+     */
+    function requestUser($guard = null)
+    {
+        return requesta()->user($guard);
+    }
+}
+
+if ( ! function_exists('requestBearerToken')) {
+
+    /**
+     * @deprecated
+     *
+     * @return false|string|null
+     */
+    function requestBearerToken()
+    {
+        return requesta()->bearerToken();
+    }
+}
+
+if ( ! function_exists('requestGetUser')) {
+
+    /**
+     * @deprecated
+     *
+     * @return array|string|null
+     */
+    function requestGetUser()
+    {
+        return requesta()->getUser();
+    }
+}
+
+if ( ! function_exists('requestGetPassword')) {
+
+    /**
+     * @deprecated
+     *
+     * @return array|string|null
+     */
+    function requestGetPassword()
+    {
+        return requesta()->getPassword();
     }
 }

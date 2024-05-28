@@ -106,11 +106,11 @@ class TokenGuard implements Guard
         }
 
         if (empty($token)) {
-            $token = requestBearerToken();
+            $token = requesta()->bearerToken();
         }
 
         if (empty($token)) {
-            $token = requestGetPassword();
+            $token = requesta()->getPassword();
         }
 
         return $token;
