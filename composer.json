@@ -34,8 +34,7 @@
   },
   "autoload": {
     "psr-4": {
-      "tp5er\\think\\auth\\": "src",
-      "tp5er\\thinkphp\\auth\\": "thinkphp"
+      "tp5er\\think\\auth\\": "src"
     },
     "files": [
       "src/helper.php"

@@ -12,17 +12,16 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\thinkphp\auth;
+namespace tp5er\think\auth\think;
 
-use tp5er\thinkphp\auth\commands\AccessCommand;
-use tp5er\thinkphp\auth\commands\AuthCommand;
-use tp5er\thinkphp\auth\commands\InitCommand;
-use tp5er\thinkphp\auth\commands\JWTCommand;
-use tp5er\thinkphp\auth\commands\SanctumCommand;
+use tp5er\think\auth\think\commands\AccessCommand;
+use tp5er\think\auth\think\commands\AuthCommand;
+use tp5er\think\auth\think\commands\InitCommand;
+use tp5er\think\auth\think\commands\JWTCommand;
+use tp5er\think\auth\think\commands\SanctumCommand;
 
 class Service extends \think\Service
 {
-
     /**
      * @return void
      */

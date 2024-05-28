@@ -171,7 +171,6 @@ class Blacklist
      */
     protected function getGraceTimestamp()
     {
-
         return Timer::now()->addSeconds($this->gracePeriod)->getTimestamp();
     }
 
