@@ -15,8 +15,8 @@
 namespace tp5er\think\auth\jwt\claims;
 
 use think\Request;
-use tp5er\think\auth\jwt\support\Utils;
 use tp5er\think\auth\support\Str;
+use tp5er\think\auth\support\Timer;
 
 class Factory
 {
@@ -130,7 +130,7 @@ class Factory
      */
     public function iat()
     {
-        return Utils::now()->getTimestamp();
+        return Timer::now()->getTimestamp();
     }
 
     /**
@@ -140,7 +140,7 @@ class Factory
      */
     public function exp()
     {
-        return Utils::now()->addMinutes($this->ttl)->getTimestamp();
+        return Timer::now()->addMinutes($this->ttl)->getTimestamp();
     }
 
     /**
@@ -150,7 +150,7 @@ class Factory
      */
     public function nbf()
     {
-        return Utils::now()->getTimestamp();
+        return Timer::now()->getTimestamp();
     }
 
     /**

@@ -21,10 +21,13 @@ use tp5er\think\auth\contracts\UserProvider;
 use tp5er\think\auth\jwt\exceptions\JWTException;
 use tp5er\think\auth\jwt\exceptions\UserNotDefinedException;
 use tp5er\think\auth\jwt\JWTAuth;
+use tp5er\think\auth\support\Macroable;
 
 class JWTGuard implements Guard
 {
-    use GuardHelpers;
+    use GuardHelpers, Macroable {
+        __call as macroCall;
+    }
 
     /**
      * @var App
@@ -252,6 +255,10 @@ class JWTGuard implements Guard
     {
         if (method_exists($this->jwt, $method)) {
             return call_user_func_array([$this->jwt, $method], $parameters);
+        }
+
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
         }
         throw new BadMethodCallException("Method [$method] does not exist.");
     }

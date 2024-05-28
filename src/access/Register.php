@@ -23,6 +23,8 @@ class Register
     const config = "access";
 
     const gate = GateInterface::class;
+
+
     public static function bind(App $app, $config = [])
     {
         $app->bind(Register::gate, function () use (&$app) {

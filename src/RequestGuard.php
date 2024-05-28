@@ -18,10 +18,11 @@ use think\Request;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\UserProvider;
+use tp5er\think\auth\support\Macroable;
 
 class RequestGuard implements Guard
 {
-    use GuardHelpers;
+    use GuardHelpers,Macroable;
 
     /**
      * The guard callback.

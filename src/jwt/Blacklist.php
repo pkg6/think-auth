@@ -15,7 +15,7 @@
 namespace tp5er\think\auth\jwt;
 
 use tp5er\think\auth\jwt\contracts\Storage;
-use tp5er\think\auth\jwt\support\Utils;
+use tp5er\think\auth\support\Timer;
 
 class Blacklist
 {
@@ -97,8 +97,8 @@ class Blacklist
      */
     protected function getMinutesUntilExpired(Payload $payload)
     {
-        $exp = Utils::timestamp($payload['exp']);
-        $iat = Utils::timestamp($payload['iat']);
+        $exp = Timer::timestamp($payload['exp']);
+        $iat = Timer::timestamp($payload['iat']);
 
         // get the latter of the two expiration dates and find
         // the number of minutes until the expiration date,
@@ -136,7 +136,7 @@ class Blacklist
         }
 
         // check whether the expiry + grace has past
-        return ! empty($val) && ! Utils::isFuture($val['valid_until']);
+        return ! empty($val) && ! Timer::isFuture($val['valid_until']);
     }
 
     /**
@@ -171,7 +171,8 @@ class Blacklist
      */
     protected function getGraceTimestamp()
     {
-        return Utils::now()->addSeconds($this->gracePeriod)->getTimestamp();
+
+        return Timer::now()->addSeconds($this->gracePeriod)->getTimestamp();
     }
 
     /**

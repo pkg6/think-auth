@@ -17,7 +17,7 @@ namespace tp5er\think\auth\jwt\claims;
 use DateInterval;
 use DateTimeInterface;
 use tp5er\think\auth\jwt\exceptions\InvalidClaimException;
-use tp5er\think\auth\jwt\support\Utils;
+use tp5er\think\auth\support\Timer;
 
 trait DatetimeTrait
 {
@@ -40,7 +40,7 @@ trait DatetimeTrait
     public function setValue($value)
     {
         if ($value instanceof DateInterval) {
-            $value = Utils::now()->add($value);
+            $value = Timer::now()->add($value);
         }
 
         if ($value instanceof DateTimeInterface) {
@@ -71,7 +71,7 @@ trait DatetimeTrait
      */
     protected function isFuture($value)
     {
-        return Utils::isFuture($value, $this->leeway);
+        return Timer::isFuture($value, $this->leeway);
     }
 
     /**
@@ -83,7 +83,7 @@ trait DatetimeTrait
      */
     protected function isPast($value)
     {
-        return Utils::isPast($value, $this->leeway);
+        return Timer::isPast($value, $this->leeway);
     }
 
     /**

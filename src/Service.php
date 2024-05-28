@@ -109,9 +109,8 @@ class Service extends \think\Service
 
     protected function registerRequest()
     {
-        $this->app->bind(AuthRequest::class, function () {
-            $instance = new AuthRequest($this->app);
-
+        $this->app->bind(Requesta::class, function () {
+            $instance = new Requesta($this->app);
             return $instance
                 ->setUserResolver($this->app->get(AuthenticatableContract::class));
         });
