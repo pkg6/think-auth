@@ -111,6 +111,7 @@ class Service extends \think\Service
     {
         $this->app->bind(Requesta::class, function () {
             $instance = new Requesta($this->app);
+
             return $instance
                 ->setUserResolver($this->app->get(AuthenticatableContract::class));
         });

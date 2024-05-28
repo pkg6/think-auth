@@ -25,7 +25,7 @@ This source file is subject to the MIT license that is bundled.
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
-    ->in([__DIR__ . '/src',__DIR__ . '/config',__DIR__.'/thinkphp',__DIR__.'/tests']);
+    ->in([__DIR__ . '/src',__DIR__ . '/config',__DIR__.'/tests']);
 
 return (new PhpCsFixer\Config())
     ->setRules([

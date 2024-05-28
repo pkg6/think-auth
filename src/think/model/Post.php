@@ -12,15 +12,8 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\thinkphp\auth\policies;
+namespace tp5er\think\auth\think\model;
 
-use tp5er\think\auth\contracts\Authenticatable;
-use tp5er\thinkphp\auth\model\Post;
-
-class PostPolicy
+class Post extends \think\Model
 {
-    public function create(Authenticatable $user, Post $post)
-    {
-        return true;
-    }
 }

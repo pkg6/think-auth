@@ -12,14 +12,15 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\thinkphp\auth\commands;
+namespace tp5er\think\auth\think\commands;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\facade\Gate;
-use tp5er\thinkphp\auth\model\Post;
+use tp5er\think\auth\think\model\Post;
+use function auth;
 
 class AccessCommand extends Command
 {
