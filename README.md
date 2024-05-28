@@ -207,7 +207,7 @@ thinkRoute::get("/api/login", function () {
 });
 thinkRoute::get("/api/user", function () {
 
-    $user = requestUser();
+    $user = requesta()->user();
     //$user=  auth()->user();
 
     return json(['code' => 0, "msg" => "获取登录信息", "data" => $user]);
@@ -233,7 +233,7 @@ thinkRoute::get("/api/scan", function () {
 });
 
 thinkRoute::get("/api/token", function () {
-    //$user = requestUser();
+    //$user = requesta()->user();
     $user = auth()->user();
     $token = $user->createToken("test-token");
 
@@ -248,14 +248,14 @@ thinkRoute::get("/api/sanctum", function () {
     // curl -H "Authorization: Bearer 9|DqTQsBngTVJcFwJkslyvdZSeGuAjgaeikknQPHBI"  "http://127.0.0.1:8000/api/sanctum"
     // 注意： 使用sanctum必须使用模型，database 无法进行access权限验证
 
-    //$user = requestUser();
+    //$user = requesta()->user();
     $user = auth()->user();
 
     return json(['code' => 0, "msg" => "通过sanctum获取用户信息", "data" => $user]);
 })->middleware('auth', "sanctum");
 
 thinkRoute::get("/api/tokencan", function () {
-    //$user = requestUser();
+    //$user = requesta()->user();
     $user = auth()->user();
     $ret = [];
     //TODO 默认accessToken是tp5er\think\auth\sanctum\TransientToken
