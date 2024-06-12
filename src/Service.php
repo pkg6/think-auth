@@ -15,6 +15,7 @@
 namespace tp5er\think\auth;
 
 use tp5er\think\auth\commands\CreateUserCommand;
+use tp5er\think\auth\commands\KeyGenerateCommand;
 use tp5er\think\auth\commands\MakePolicyCommand;
 use tp5er\think\auth\commands\MigrateAccessTokenCommand;
 use tp5er\think\auth\commands\MigrateUserCommand;
@@ -42,6 +43,8 @@ class Service extends \think\Service
 
         CreateUserCommand::class,
         MakePolicyCommand::class,
+
+        KeyGenerateCommand::class,
     ];
     /**
      * The policy mappings for the application.
