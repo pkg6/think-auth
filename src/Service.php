@@ -31,6 +31,7 @@ class Service extends \think\Service
         \tp5er\think\auth\sanctum\Register::class,
         \tp5er\think\auth\access\Register::class,
         \tp5er\think\auth\jwt\Register::class,
+        \tp5er\think\auth\permission\Register::class,
     ];
 
     /**
