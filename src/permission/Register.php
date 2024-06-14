@@ -14,7 +14,13 @@
 
 namespace tp5er\think\auth\permission;
 
+use think\App;
+
 class Register
 {
     const config = "permission";
+
+    public static function bind(App $app, array $config = [])
+    {
+    }
 }

@@ -16,6 +16,7 @@ namespace tp5er\think\auth\support;
 
 use stdClass;
 use think\helper\Arr;
+use think\Model;
 use function data_get;
 
 /**
@@ -53,7 +54,7 @@ class Collection extends \think\Collection
      */
     public function when($value, callable $callback = null, callable $default = null)
     {
-        if ( ! $callback) {
+        if (!$callback) {
             return new HigherOrderWhenProxy($this, $value);
         }
 
@@ -94,7 +95,7 @@ class Collection extends \think\Collection
             $callback = $this->valueRetriever($key);
 
             foreach ($this as $k => $v) {
-                if ( ! $callback($v, $k)) {
+                if (!$callback($v, $k)) {
                     return false;
                 }
             }
@@ -190,7 +191,7 @@ class Collection extends \think\Collection
      */
     protected function useAsCallable($value)
     {
-        return ! is_string($value) && is_callable($value);
+        return !is_string($value) && is_callable($value);
     }
 
     /**
@@ -287,7 +288,7 @@ class Collection extends \think\Collection
         $keys = is_array($key) ? $key : func_get_args();
 
         foreach ($keys as $value) {
-            if ( ! array_key_exists($value, $this->items)) {
+            if (!array_key_exists($value, $this->items)) {
                 return false;
             }
         }
@@ -310,5 +311,15 @@ class Collection extends \think\Collection
         }
 
         return value($default);
+    }
+
+    /**
+     * @param $item
+     * @return $this
+     */
+    public function add($item)
+    {
+        $this->items[] = $item;
+        return $this;
     }
 }
