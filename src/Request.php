@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth;
 
 use Closure;
@@ -99,7 +111,7 @@ class Request extends \think\Request implements \tp5er\think\auth\contracts\Requ
     public function getUserInfo()
     {
         $userinfo = $this->getUser();
-        $pass     = $this->getPassword();
+        $pass = $this->getPassword();
         if ('' != $pass) {
             $userinfo .= ":$pass";
         }
@@ -116,7 +128,7 @@ class Request extends \think\Request implements \tp5er\think\auth\contracts\Requ
      */
     public function hasHeader($key)
     {
-        return !is_null($this->header($key));
+        return ! is_null($this->header($key));
     }
 
     /**
