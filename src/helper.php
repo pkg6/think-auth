@@ -76,11 +76,11 @@ if ( ! function_exists('jwt')) {
 
 if ( ! function_exists('requesta')) {
     /**
-     * @return \tp5er\think\auth\Requesta
+     * @return \tp5er\think\auth\Request
      */
     function requesta()
     {
-        return app()->get(\tp5er\think\auth\Requesta::class);
+        return app()->get(\tp5er\think\auth\contracts\Request::class);
     }
 }
 

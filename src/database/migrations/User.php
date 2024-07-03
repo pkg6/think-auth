@@ -27,7 +27,7 @@ class User extends Migrator
             ->addColumn('password', 'string', ['limit' => 255, 'null' => false])
             ->addColumn('remember_token', 'string', ['limit' => 100, 'null' => true])
             ->addTimestamps()
-            ->addIndex(['email'], ['unique' => true,'name'=>'users_email_unique'])
+            ->addIndex(['email'], ['unique' => true,'name' => 'users_email_unique'])
             ->create();
     }
 }
