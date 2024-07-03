@@ -21,13 +21,13 @@ class User extends Migrator
     public function change()
     {
         $table = $this->table('user');
-        $table->addColumn('name', 'string', ['limit' => 255, 'default' => ''])
-            ->addColumn('email', 'string', ['limit' => 255, 'default' => ''])
-            ->addColumn('email_verified_at', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'timezone' => false])
-            ->addColumn('password', 'string', ['limit' => 255, 'default' => ''])
-            ->addColumn('remember_token', 'string', ['limit' => 100, 'default' => ''])
+        $table->addColumn('name', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('email', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('email_verified_at', 'timestamp', ['null' => true])
+            ->addColumn('password', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('remember_token', 'string', ['limit' => 100, 'null' => true])
             ->addTimestamps()
-            ->addIndex(['email'], ['unique' => true])
+            ->addIndex(['email'], ['unique' => true,'name'=>'users_email_unique'])
             ->create();
     }
 }
