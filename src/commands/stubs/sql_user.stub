@@ -1,0 +1,12 @@
+CREATE TABLE `{%table%}` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255)  DEFAULT '',
+  `email` varchar(255)  DEFAULT '',
+  `email_verified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `password` varchar(255)  DEFAULT '',
+  `remember_token` varchar(100)  DEFAULT '',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB;

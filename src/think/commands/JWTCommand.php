@@ -17,7 +17,6 @@ namespace tp5er\think\auth\think\commands;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use tp5er\think\auth\support\Str;
 use function auth;
 
 class JWTCommand extends Command
