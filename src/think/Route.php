@@ -17,8 +17,6 @@ namespace tp5er\think\auth\think;
 use think\facade\Route as thinkRoute;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\facade\Gate;
-use tp5er\think\auth\permission\Guard;
-use tp5er\think\auth\support\Collection;
 use tp5er\think\auth\User;
 
 class Route
@@ -47,7 +45,7 @@ class Route
     {
         thinkRoute::get("/api/register", function () {
             //TODO 自己根据实际需求进行注册
-            $user           = new User();
+            $user = new User();
             $user->username = "tp5er";
             $user->password = hash_make("123456");
             $user->save();
@@ -99,7 +97,7 @@ class Route
     {
         thinkRoute::get("/api/token", function () {
             //$user = requesta()->user();
-            $user  = auth()->user();
+            $user = auth()->user();
             $token = $user->createToken("test-token");
 
             return json(["code" => 0, "msg" => "获取token信息", "data" => ["token" => $token->plainTextToken]]);
@@ -122,7 +120,7 @@ class Route
         thinkRoute::get("/api/tokencan", function () {
             //$user = requesta()->user();
             $user = auth()->user();
-            $ret  = [];
+            $ret = [];
             //TODO 默认accessToken是tp5er\think\auth\sanctum\TransientToken
             // 此处无论是什么都有权限的哦
             // 可以使用withAccessToken(HasAbilities $accessToken) 进行自定义
@@ -160,12 +158,12 @@ class Route
 
             return json([
                 "code" => 0,
-                "msg"  => "获取token信息",
+                "msg" => "获取token信息",
                 "data" => [
                     'access_token' => $token,
-                    'token_type'   => 'bearer',
-                    'expires_in'   => auth('jwt')->factory()->getTTL() * 60,
-                    'claims'       => auth('jwt')->getPayload()
+                    'token_type' => 'bearer',
+                    'expires_in' => auth('jwt')->factory()->getTTL() * 60,
+                    'claims' => auth('jwt')->getPayload()
                 ]
             ]);
         });
@@ -174,7 +172,7 @@ class Route
 
             return json([
                 "code" => 0,
-                "msg"  => "获取用户信息",
+                "msg" => "获取用户信息",
                 "data" => $user
             ]);
         })->middleware('auth', "jwt");
@@ -184,22 +182,22 @@ class Route
 
             return json([
                 "code" => 0,
-                "msg"  => "退出登录",
+                "msg" => "退出登录",
             ]);
         })->middleware('auth', "jwt");
 
         thinkRoute::get("/jwt/refresh", function () {
-            $token    = auth('jwt')->parseToken()->getToken()->get();
+            $token = auth('jwt')->parseToken()->getToken()->get();
             $newtoken = auth('jwt')->parseToken()->refresh();
 
             return json([
                 "code" => 0,
-                "msg"  => "刷新token成功",
+                "msg" => "刷新token成功",
                 "data" => [
-                    "token"         => $token,
+                    "token" => $token,
                     'refresh_token' => $newtoken,
-                    'token_type'    => 'bearer',
-                    'expires_in'    => auth('jwt')->factory()->getTTL() * 60
+                    'token_type' => 'bearer',
+                    'expires_in' => auth('jwt')->factory()->getTTL() * 60
                 ]
             ]);
         })->middleware('auth', "jwt");

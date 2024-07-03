@@ -40,7 +40,7 @@ class WildcardPermission
     public function __construct(string $permission)
     {
         $this->permission = $permission;
-        $this->parts      = collect();
+        $this->parts = collect();
 
         $this->setParts();
     }
@@ -64,8 +64,8 @@ class WildcardPermission
                 return true;
             }
 
-            if (!$this->parts->get($i)->contains(self::WILDCARD_TOKEN)
-                && !$this->containsAll($this->parts->get($i), $otherPart)) {
+            if ( ! $this->parts->get($i)->contains(self::WILDCARD_TOKEN)
+                && ! $this->containsAll($this->parts->get($i), $otherPart)) {
                 return false;
             }
 
@@ -73,7 +73,7 @@ class WildcardPermission
         }
 
         for ($i; $i < $this->parts->count(); $i++) {
-            if (!$this->parts->get($i)->contains(self::WILDCARD_TOKEN)) {
+            if ( ! $this->parts->get($i)->contains(self::WILDCARD_TOKEN)) {
                 return false;
             }
         }
@@ -90,7 +90,7 @@ class WildcardPermission
     protected function containsAll(Collection $part, Collection $otherPart): bool
     {
         foreach ($otherPart->toArray() as $item) {
-            if (!$part->contains($item)) {
+            if ( ! $part->contains($item)) {
                 return false;
             }
         }

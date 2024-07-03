@@ -40,8 +40,7 @@ class MakePolicyCommand extends Make
     {
         return __DIR__ . DIRECTORY_SEPARATOR
             . 'stubs' . DIRECTORY_SEPARATOR
-            . 'class' . DIRECTORY_SEPARATOR
-            . 'policy.stub';
+            . 'class_policy.stub';
     }
 
     /**

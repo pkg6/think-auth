@@ -16,32 +16,32 @@ namespace tp5er\think\auth\commands;
 
 use tp5er\think\auth\sanctum\PersonalAccessToken;
 
-class MigrateAccessTokenCommand extends MigrateAbstract
+class MigrateAccessTokenCommand extends Migrate
 {
 
     /**
      * @var string
      */
-    protected $default_table = "personal_access_token";
-
+    protected $tableName = "personal_access_token";
     /**
      * @var string
      */
     protected $model = PersonalAccessToken::class;
 
     /**
-     * @return string
+     * @var string
      */
-    protected function cmd()
-    {
-        return 'access-token';
-    }
+    protected $cmdName = 'auth:migrate-access-token';
 
     /**
      * @return string
      */
-    protected function stubs()
+    protected function createTableSQLTemp()
     {
-        return 'personal_access_token.stub';
+        return file_get_contents(
+            __DIR__ . DIRECTORY_SEPARATOR
+            . 'stubs' . DIRECTORY_SEPARATOR
+            . 'sql_personal_access_token.stub'
+        );
     }
 }

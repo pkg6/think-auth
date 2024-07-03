@@ -16,32 +16,30 @@ namespace tp5er\think\auth\commands;
 
 use tp5er\think\auth\User;
 
-class MigrateUserCommand extends MigrateAbstract
+class MigrateUserCommand extends Migrate
 {
-
     /**
      * @var string
      */
-    protected $default_table = "user";
-
+    protected $tableName = "user";
     /**
      * @var string
      */
     protected $model = User::class;
+    /**
+     * @var string
+     */
+    protected $cmdName = 'auth:migrate-user';
 
     /**
      * @return string
      */
-    protected function cmd()
+    protected function createTableSQLTemp()
     {
-        return parent::cmd();
-    }
-
-    /**
-     * @return string
-     */
-    protected function stubs()
-    {
-        return 'user.stub';
+        return file_get_contents(
+            __DIR__ . DIRECTORY_SEPARATOR
+            . 'stubs' . DIRECTORY_SEPARATOR
+            . 'sql_user.stub'
+        );
     }
 }
