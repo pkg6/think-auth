@@ -68,9 +68,9 @@ class Service extends \think\Service
      */
     public function register(): void
     {
+        $this->registerUserResolver();
         $this->registerAuthenticator();
         $this->registerRequest();
-        $this->registerUserResolver();
         $this->registerMiddleware();
         $this->registers();
         $this->registerPolicies();
@@ -112,12 +112,13 @@ class Service extends \think\Service
 
     protected function registerRequest()
     {
-        $this->app->bind(Requesta::class, function () {
-            $instance = new Requesta($this->app);
-
-            return $instance
-                ->setUserResolver($this->app->get(AuthenticatableContract::class));
-        });
+        $callback = $this->app->get(AuthenticatableContract::class);
+        $this->app->bind(\tp5er\think\auth\contracts\Request::class, Request::class);
+        $this->app->get(\tp5er\think\auth\contracts\Request::class)->setUserResolver($callback);
+        $thinkRequest = $this->app->get(\think\Request::class);
+        if (method_exists($thinkRequest, 'setUserResolver')) {
+            $thinkRequest->setUserResolver($callback);
+        }
     }
 
     /**

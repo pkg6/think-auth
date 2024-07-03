@@ -1,59 +1,15 @@
 <?php
 
-/*
- * This file is part of the tp5er/think-auth
- *
- * (c) pkg6 <https://github.com/pkg6>
- *
- * (L) Licensed <https://opensource.org/license/MIT>
- *
- * (A) zhiqiang <https://www.zhiqiang.wang>
- *
- * This source file is subject to the MIT license that is bundled.
- */
-
 namespace tp5er\think\auth;
 
-use BadMethodCallException;
 use Closure;
-use think\App;
-use think\Request;
 
-class Requesta
+class Request extends \think\Request implements \tp5er\think\auth\contracts\Request
 {
-    /**
-     * @var Request
-     */
-    protected $request;
     /**
      * @var Closure
      */
     protected $userResolver;
-    /**
-     * @var App
-     */
-    protected $app;
-
-    /**
-     * @param App $app
-     */
-    public function __construct(App $app)
-    {
-        $this->app = $app;
-        $this->request = $this->app->request;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return $this
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-
-        return $this;
-    }
 
     /**
      * Set the user resolver callback.
@@ -100,7 +56,7 @@ class Requesta
      */
     public function bearerToken()
     {
-        $header = $this->request->header('Authorization', '');
+        $header = $this->header('Authorization', '');
 
         $position = strrpos($header, 'Bearer ');
 
@@ -116,7 +72,7 @@ class Requesta
      */
     public function getPassword()
     {
-        return $this->request->header("PHP_AUTH_PW");
+        return $this->header("PHP_AUTH_PW");
     }
 
     /**
@@ -124,7 +80,7 @@ class Requesta
      */
     public function getUser()
     {
-        return $this->request->header("PHP_AUTH_USER");
+        return $this->header("PHP_AUTH_USER");
     }
 
     /**
@@ -132,7 +88,7 @@ class Requesta
      */
     public function userAgent()
     {
-        return $this->request->get('User-Agent');
+        return $this->get('User-Agent');
     }
 
     /**
@@ -143,7 +99,7 @@ class Requesta
     public function getUserInfo()
     {
         $userinfo = $this->getUser();
-        $pass = $this->getPassword();
+        $pass     = $this->getPassword();
         if ('' != $pass) {
             $userinfo .= ":$pass";
         }
@@ -160,7 +116,7 @@ class Requesta
      */
     public function hasHeader($key)
     {
-        return ! is_null($this->request->header($key));
+        return !is_null($this->header($key));
     }
 
     /**
@@ -172,7 +128,7 @@ class Requesta
      */
     public function isMethodSafe()
     {
-        return in_array($this->request->method(), ['GET', 'HEAD', 'OPTIONS', 'TRACE']);
+        return in_array($this->method(), ['GET', 'HEAD', 'OPTIONS', 'TRACE']);
     }
 
     /**
@@ -182,7 +138,7 @@ class Requesta
      */
     public function isMethodIdempotent()
     {
-        return in_array($this->request->method(), ['HEAD', 'GET', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PURGE']);
+        return in_array($this->method(), ['HEAD', 'GET', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PURGE']);
     }
 
     /**
@@ -194,24 +150,6 @@ class Requesta
      */
     public function isMethodCacheable()
     {
-        return in_array($this->getMethod(), ['GET', 'HEAD']);
-    }
-
-    /**
-     * Magically call the JWT instance.
-     *
-     * @param string $method
-     * @param array $parameters
-     *
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        if (method_exists($this->request, $method)) {
-            return call_user_func_array([$this->request, $method], $parameters);
-        }
-        throw new BadMethodCallException("Method [$method] does not exist.");
+        return in_array($this->method(), ['GET', 'HEAD']);
     }
 }
