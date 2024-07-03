@@ -19,30 +19,26 @@ use think\console\Input;
 use think\console\input\Argument;
 use think\console\Output;
 
-abstract class MigrateAbstract extends Command
+abstract class Migrate extends Command
 {
     /**
      * @var string
      */
-    protected $default_table = "";
-
+    protected $tableName = "";
     /**
      * @var string
      */
     protected $model = "";
 
     /**
-     * @return string
+     * @var string
      */
-    protected function cmd()
-    {
-        return $this->default_table;
-    }
+    protected $cmdName = "auth:migrate-";
 
     /**
-     * @return mixed
+     * @return string
      */
-    abstract protected function stubs();
+    abstract protected function createTableSQLTemp();
 
     /**
      * @return void
@@ -50,20 +46,9 @@ abstract class MigrateAbstract extends Command
     protected function configure()
     {
         // 指令配置
-        $this->setName('auth:migrate-' . $this->cmd())
-            ->addArgument("table", Argument::OPTIONAL, "Generate database table names", $this->default_table)
-            ->setDescription(sprintf('Create %s base table structure', $this->default_table));
-    }
-
-    /**
-     * @return string
-     */
-    protected function stubsFile()
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR .
-            'stubs' . DIRECTORY_SEPARATOR .
-            "sql" . DIRECTORY_SEPARATOR .
-            $this->stubs();
+        $this->setName($this->cmdName)
+            ->addArgument("table", Argument::OPTIONAL, "Generate database table names", $this->tableName)
+            ->setDescription(sprintf('Create %s base table structure', $this->tableName));
     }
 
     /**
@@ -74,19 +59,19 @@ abstract class MigrateAbstract extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-        $table = $input->getArgument("table") ?? $this->default_table;
+        $table = $input->getArgument("table") ?? $this->tableName;
 
         try {
             $this->app->db->execute(
                 str_replace(
                     ['{%table%}'],
                     [$table],
-                    file_get_contents($this->stubsFile())
+                    $this->createTableSQLTemp()
                 )
             );
             $output->writeln('<info>' . 'database table: `' . $table . '` created successfully.</info>');
 
-            if ($table != $this->default_table) {
+            if ($table != $this->tableName) {
                 $output->newLine();
                 $output->highlight("Table name change requires new model extends " . $this->model);
                 $output->newLine();

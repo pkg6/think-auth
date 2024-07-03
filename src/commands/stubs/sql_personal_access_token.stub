@@ -1,0 +1,14 @@
+CREATE TABLE `{%table%}` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255)  DEFAULT '',
+  `tokenable_id` bigint DEFAULT '0',
+  `name` varchar(255)  DEFAULT '',
+  `token` varchar(255)  DEFAULT '',
+  `abilities` text ,
+  `last_used_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `tokenable_type` (`tokenable_type`,`tokenable_id`)
+) ENGINE=InnoDB;

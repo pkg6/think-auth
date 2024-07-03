@@ -35,7 +35,7 @@ class KeyGenerateCommand extends Command
      * @param Input $input
      * @param Output $output
      *
-     * @return int|void|null
+     * @return void|null
      *
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -43,15 +43,16 @@ class KeyGenerateCommand extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-
-        $key      = Str::random(64);
+        $key = Str::random(64);
         $filename = $this->app->getRootPath() . '.env';
         if (file_exists($filename) === false) {
             $this->displayKey($key, $output);
+
             return;
         }
         if (Str::contains(file_get_contents($filename), 'JWT_SECRET')) {
             $output->comment('Secret key already exists. Skipping...');
+
             return;
         }
         $textLineArray = [];
@@ -61,7 +62,7 @@ class KeyGenerateCommand extends Command
         // 打开文件
         $file = fopen($filename, 'r');
         // 逐行读取文件内容
-        while (!feof($file)) {
+        while ( ! feof($file)) {
             // 读取一行内容
             $line = fgets($file);
 
@@ -74,7 +75,7 @@ class KeyGenerateCommand extends Command
                 }
             };
             $textLineArray[$currentNumber] = $line;
-            $currentNumber                 += 1;
+            $currentNumber += 1;
         }
         // 关闭文件
         fclose($file);
@@ -94,6 +95,7 @@ class KeyGenerateCommand extends Command
      * Display the key.
      *
      * @param string $key
+     *
      * @return void
      */
     protected function displayKey($key, Output $output)

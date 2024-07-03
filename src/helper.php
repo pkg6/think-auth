@@ -120,6 +120,7 @@ if ( ! function_exists('requestUser')) {
     /**
      * @deprecated
      * @removed 1.1.x
+     *
      * @see \tp5er\think\auth\Requesta
      * Get the user making the request.
      *
@@ -138,7 +139,9 @@ if ( ! function_exists('requestBearerToken')) {
     /**
      * @deprecated
      * @removed 1.1.x
+     *
      * @see \tp5er\think\auth\Requesta
+     *
      * @return false|string|null
      */
     function requestBearerToken()
@@ -152,7 +155,9 @@ if ( ! function_exists('requestGetUser')) {
     /**
      * @deprecated
      * @removed 1.1.x
+     *
      * @see \tp5er\think\auth\Requesta
+     *
      * @return array|string|null
      */
     function requestGetUser()
@@ -166,7 +171,9 @@ if ( ! function_exists('requestGetPassword')) {
     /**
      * @deprecated
      * @removed 1.1.x
+     *
      * @see \tp5er\think\auth\Requesta
+     *
      * @return array|string|null
      */
     function requestGetPassword()
