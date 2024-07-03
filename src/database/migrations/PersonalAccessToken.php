@@ -21,15 +21,15 @@ class PersonalAccessToken extends Migrator
     public function change()
     {
         $table = $this->table('personal_access_token');
-        $table->addColumn('tokenable_type', 'string', ['limit' => 255, 'default' => ''])
-            ->addColumn('tokenable_id', 'biginteger', ['default' => 0])
-            ->addColumn('name', 'string', ['limit' => 255, 'default' => ''])
-            ->addColumn('token', 'string', ['limit' => 255, 'default' => ''])
+        $table->addColumn('tokenable_type', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('tokenable_id', 'biginteger', ['null' => false])
+            ->addColumn('name', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('token', 'string', ['limit' => 255, 'null' => false])
             ->addColumn('abilities', 'text')
-            ->addColumn('last_used_at', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'timezone' => false])
+            ->addColumn('last_used_at', 'timestamp', ['null' => true])
             ->addTimestamps()
-            ->addIndex(['token'], ['unique' => true])
-            ->addIndex(['tokenable_type','tokenable_id'])
+            ->addIndex(['token'], ['unique' => true, 'name' => 'personal_access_tokens_token_unique'])
+            ->addIndex(['tokenable_type', 'tokenable_id'], ['name' => 'personal_access_tokens_tokenable_type_tokenable_id_index'])
             ->create();
     }
 }
