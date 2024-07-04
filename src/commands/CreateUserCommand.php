@@ -28,8 +28,8 @@ class CreateUserCommand extends Command
     {
         // 指令配置
         $this->setName('auth:create-user')
-            ->addArgument("user", Argument::OPTIONAL, "Username used to log in", "tp5er")
-            ->addArgument("password", Argument::OPTIONAL, "Password used to log in", "123456")
+            ->addArgument("user", Argument::OPTIONAL, "Username used to log in", "admin")
+            ->addArgument("password", Argument::OPTIONAL, "Password used to log in", "admin")
             ->addArgument("table", Argument::OPTIONAL, "Custom user table name", "user")
             ->setDescription('think-auth Create an account and password');
     }
@@ -51,11 +51,12 @@ class CreateUserCommand extends Command
         $password = $input->getArgument('password');
 
         $first = $this->app->db->name($table)
-            ->where(['username' => $user])
+            ->where(['name' => $user])
             ->find();
         if (is_null($first)) {
             $this->app->db->name($table)->insert([
-                'username' => $user,
+                'name' => $user,
+                'email' => $user.'@zhiqiang.wang',
                 "password" => hash_make($password)
             ]);
         } else {
