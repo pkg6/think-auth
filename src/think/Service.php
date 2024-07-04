@@ -18,6 +18,7 @@ use tp5er\think\auth\think\commands\AccessCommand;
 use tp5er\think\auth\think\commands\AuthCommand;
 use tp5er\think\auth\think\commands\InitCommand;
 use tp5er\think\auth\think\commands\JWTCommand;
+use tp5er\think\auth\think\commands\PermissionCommand;
 use tp5er\think\auth\think\commands\SanctumCommand;
 
 class Service extends \think\Service
@@ -32,7 +33,8 @@ class Service extends \think\Service
             AuthCommand::class,
             SanctumCommand::class,
             AccessCommand::class,
-            JWTCommand::class
+            JWTCommand::class,
+            PermissionCommand::class,
         ]);
     }
 }
