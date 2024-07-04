@@ -18,6 +18,7 @@ use think\App;
 use think\helper\Arr;
 use think\Model;
 use think\Request;
+use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\sanctum\events\TokenAuthenticated;
 use tp5er\think\auth\support\Timer;
@@ -50,6 +51,7 @@ class Guard
     protected $provider;
 
     /**
+     * @param App $app
      * @param Factory $auth
      * @param null $expiration
      * @param mixed $provider
@@ -65,11 +67,13 @@ class Guard
     /**
      * @param Request $request
      *
-     * @return mixed|\tp5er\think\auth\contracts\Authenticatable|null
+     * @return mixed|Authenticatable|null
+     *
+     * @throws \Exception
      */
     public function __invoke(Request $request)
     {
-        $guards = $this->app->config->get('auth.sanctum.guard', "web");
+        $guards = \tp5er\think\auth\Register::authGetConfig('sanctum.guard', ['web']);
         foreach (Arr::wrap($guards) as $guard) {
             if ($user = $this->auth->guard($guard)->user()) {
                 if ($this->supportsTokens($user) && method_exists($user, 'withAccessToken')) {
@@ -80,7 +84,6 @@ class Guard
             }
         }
         if ($token = $this->getTokenFromRequest($request)) {
-
             /**
              * @var PersonalAccessToken $model
              */
@@ -132,6 +135,8 @@ class Guard
      * @param PersonalAccessToken $accessToken
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     protected function isValidAccessToken($accessToken)
     {
@@ -158,7 +163,7 @@ class Guard
         if (is_null($this->provider)) {
             return true;
         }
-        $model = $this->app->config->get("auth.providers.{$this->provider}.model");
+        $model = \tp5er\think\auth\Register::authGetConfig("providers.{$this->provider}.model");
 
         return $tokenable instanceof $model;
     }

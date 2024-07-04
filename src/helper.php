@@ -13,9 +13,7 @@
  */
 
 use tp5er\think\auth\access\Register as accessRegister;
-use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\AuthManagerInterface;
-use tp5er\think\auth\contracts\Authorizable;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
@@ -25,7 +23,7 @@ use tp5er\think\auth\jwt\Register as JWTRegister;
 use tp5er\think\auth\JWTGuard;
 use tp5er\think\auth\keyparser\Register as keyparserRegister;
 
-if ( ! function_exists('auth')) {
+if (!function_exists('auth')) {
 
     /**
      * @param $guard
@@ -42,7 +40,7 @@ if ( ! function_exists('auth')) {
     }
 }
 
-if ( ! function_exists('gate')) {
+if (!function_exists('gate')) {
     /**
      * @return GateInterface
      */
@@ -52,7 +50,7 @@ if ( ! function_exists('gate')) {
     }
 }
 
-if ( ! function_exists('key_parser')) {
+if (!function_exists('key_parser')) {
     /**
      * 获取token的方式.
      *
@@ -64,7 +62,7 @@ if ( ! function_exists('key_parser')) {
     }
 }
 
-if ( ! function_exists('jwt')) {
+if (!function_exists('jwt')) {
     /**
      * @return JWTAuth
      */
@@ -74,7 +72,7 @@ if ( ! function_exists('jwt')) {
     }
 }
 
-if ( ! function_exists('requesta')) {
+if (!function_exists('requesta')) {
     /**
      * @return \tp5er\think\auth\Request
      */
@@ -83,8 +81,27 @@ if ( ! function_exists('requesta')) {
         return app()->get(\tp5er\think\auth\contracts\Request::class);
     }
 }
+if (!function_exists('requestSetUserResolver')) {
+    function setRequestUserResolver(callable $resolver, $requestAlias = [\think\Request::class, \tp5er\think\auth\contracts\Request::class])
+    {
+        $ret = true;
+        foreach ($requestAlias as $request) {
+            if (app()->has($request)) {
+                $request = app()->get($request);
+                if (method_exists($request, 'setUserResolver')) {
+                    $request->setUserResolver($resolver);
+                } else {
+                    $ret = false;
+                }
+            } else {
+                $ret = false;
+            }
+        }
+        return $ret;
+    }
+}
 
-if ( ! function_exists('with')) {
+if (!function_exists('with')) {
     /**
      * Return the given value, optionally passed through the given callback.
      *
@@ -99,11 +116,11 @@ if ( ! function_exists('with')) {
     }
 }
 
-if ( ! function_exists('head')) {
+if (!function_exists('head')) {
     /**
      * Get the first element of an array. Useful for method chaining.
      *
-     * @param  array  $array
+     * @param array $array
      *
      * @return mixed
      */
@@ -113,71 +130,5 @@ if ( ! function_exists('head')) {
     }
 }
 
-// deprecated
-//--------------------------------------------------------------
 
-if ( ! function_exists('requestUser')) {
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     * Get the user making the request.
-     *
-     * @param string|null $guard
-     *
-     * @return Authenticatable|Authorizable
-     */
-    function requestUser($guard = null)
-    {
-        return requesta()->user($guard);
-    }
-}
 
-if ( ! function_exists('requestBearerToken')) {
-
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     *
-     * @return false|string|null
-     */
-    function requestBearerToken()
-    {
-        return requesta()->bearerToken();
-    }
-}
-
-if ( ! function_exists('requestGetUser')) {
-
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     *
-     * @return array|string|null
-     */
-    function requestGetUser()
-    {
-        return requesta()->getUser();
-    }
-}
-
-if ( ! function_exists('requestGetPassword')) {
-
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     *
-     * @return array|string|null
-     */
-    function requestGetPassword()
-    {
-        return requesta()->getPassword();
-    }
-}

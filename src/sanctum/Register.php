@@ -15,29 +15,39 @@
 namespace tp5er\think\auth\sanctum;
 
 use think\App;
-use think\helper\Arr;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\RequestGuard;
 
-class Register
+class Register extends \tp5er\think\auth\Register
 {
-    const config = "sanctum";
     const sanctum = 'sanctum';
 
-    public static function bind(App $app, $appConfig = [])
+    public static $config = [
+        'guard' => ['web'],
+        'expiration' => null,
+    ];
+
+    public static function name()
     {
+        return 'sanctum';
+    }
+
+    public static function bind(App $app, $config = [])
+    {
+        parent::bind($app, $config);
+
         $auth = $app->get(Factory::class);
         $auth->configMergeGuards('sanctum', [
             "driver" => 'sanctum',
             "provider" => null
         ]);
-        $auth->extend(Register::sanctum, function (App $app, $name, $config) use (&$auth, $appConfig) {
-            $expiration = Arr::get($appConfig, 'expiration');
+        $auth->extend(Register::sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
+            $expiration = self::getConfig('expiration');
 
             return new RequestGuard(
-                new Guard($app, $auth, $expiration, $config['provider']),
+                new Guard($app, $auth, $expiration, $sanctumConfig['provider']),
                 $app->request,
-                $auth->createUserProvider($config['provider'] ?? null)
+                $auth->createUserProvider($sanctumConfig['provider'] ?? null)
             );
         });
     }

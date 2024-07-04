@@ -15,25 +15,21 @@
 namespace tp5er\think\auth\keyparser;
 
 use think\App;
-use think\helper\Arr;
 
-class Register
+class Register extends \tp5er\think\auth\Register
 {
-    const config = "parser";
     const keyParser = "tp5er.auth.keyparser";
 
-    /**
-     * @return array
-     */
-    public static function defaultParsers()
+    public static $config = [
+         AuthHeaders::class,
+         QueryString::class,
+         InputSource::class,
+         RouteParams::class,
+         Cookies::class,
+    ];
+    public static function name()
     {
-        return [
-            new AuthHeaders,
-            new QueryString,
-            new InputSource,
-            new RouteParams,
-            new Cookies(),
-        ];
+        return 'keyparser';
     }
 
     /**
@@ -44,8 +40,14 @@ class Register
      */
     public static function bind(App $app, array $config = [])
     {
+        parent::bind($app, $config);
+        array_walk(self::$config, function (&$classOrObject) {
+            if (is_string($classOrObject)) {
+                $classOrObject = new $classOrObject;
+            }
+        });
         $app->bind(Register::keyParser, function () use (&$app, &$config) {
-            return new Factory($app->request, Arr::get($config, 'parsers', Register::defaultParsers()));
+            return new Factory($app->request, self::getConfig());
         });
         key_parser();
     }

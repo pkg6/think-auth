@@ -23,11 +23,13 @@ class Authenticate
     /**
      * 处理请求
      *
-     * @param \think\Request $request
+     * @param Request $request
      * @param \Closure $next
      * @param mixed ...$guards
      *
      * @return Response
+     *
+     * @throws AuthenticationException
      */
     public function handle($request, \Closure $next, ...$guards)
     {
