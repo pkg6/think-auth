@@ -22,7 +22,6 @@ use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\Guard as ContractGuard;
-use tp5er\think\auth\support\Ref;
 
 class Service extends \think\Service
 {
@@ -30,7 +29,6 @@ class Service extends \think\Service
         \tp5er\think\auth\keyparser\Register::class,
         \tp5er\think\auth\access\Register::class,
         \tp5er\think\auth\sanctum\Register::class,
-        \tp5er\think\auth\access\Register::class,
         \tp5er\think\auth\jwt\Register::class,
     ];
 
@@ -137,9 +135,8 @@ class Service extends \think\Service
     {
         foreach ($this->registers as $register) {
             if (class_exists($register)) {
-                $cfg = Ref::getClassConstValue($register, "config");
-                if (method_exists($register, 'bind')) {
-                    $register::bind($this->app, $this->config($cfg, []));
+                if (method_exists($register, 'bind') && method_exists($register, 'name')) {
+                    $register::bind($this->app, $this->config($register::name(), []));
                 }
             }
         }

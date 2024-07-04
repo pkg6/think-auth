@@ -56,7 +56,7 @@ class CreateUserCommand extends Command
         if (is_null($first)) {
             $this->app->db->name($table)->insert([
                 'name' => $user,
-                'email' => $user.'@zhiqiang.wang',
+                'email' => $user . '@zhiqiang.wang',
                 "password" => hash_make($password)
             ]);
         } else {
