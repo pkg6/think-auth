@@ -35,6 +35,7 @@ class Route
             $user->password = hash_make("123456");
             $user->email = "tp5er@qq.com";
             $user->save();
+
             return json(["code" => 0, "msg" => $user]);
         });
 

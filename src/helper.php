@@ -13,9 +13,7 @@
  */
 
 use tp5er\think\auth\access\Register as accessRegister;
-use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\AuthManagerInterface;
-use tp5er\think\auth\contracts\Authorizable;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
@@ -110,74 +108,5 @@ if ( ! function_exists('head')) {
     function head($array)
     {
         return reset($array);
-    }
-}
-
-// deprecated
-//--------------------------------------------------------------
-
-if ( ! function_exists('requestUser')) {
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     * Get the user making the request.
-     *
-     * @param string|null $guard
-     *
-     * @return Authenticatable|Authorizable
-     */
-    function requestUser($guard = null)
-    {
-        return requesta()->user($guard);
-    }
-}
-
-if ( ! function_exists('requestBearerToken')) {
-
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     *
-     * @return false|string|null
-     */
-    function requestBearerToken()
-    {
-        return requesta()->bearerToken();
-    }
-}
-
-if ( ! function_exists('requestGetUser')) {
-
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     *
-     * @return array|string|null
-     */
-    function requestGetUser()
-    {
-        return requesta()->getUser();
-    }
-}
-
-if ( ! function_exists('requestGetPassword')) {
-
-    /**
-     * @deprecated
-     * @removed 1.1.x
-     *
-     * @see \tp5er\think\auth\Requesta
-     *
-     * @return array|string|null
-     */
-    function requestGetPassword()
-    {
-        return requesta()->getPassword();
     }
 }

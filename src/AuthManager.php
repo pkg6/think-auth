@@ -87,7 +87,7 @@ class AuthManager implements AuthManagerInterface, Factory
      */
     public function getDefaultDriver()
     {
-        return $this->app->config->get("auth.defaults.guard");
+        return Register::authGetConfig('defaults.guard');
     }
 
     /**
@@ -144,7 +144,7 @@ class AuthManager implements AuthManagerInterface, Factory
     {
         $this->app->config->set([
             "guards" => array_merge(
-                $this->app->config->get("auth.guards", []),
+                Register::authGetConfig('guards', []),
                 [$guard => $config]
             ),
         ], "auth");
@@ -159,7 +159,7 @@ class AuthManager implements AuthManagerInterface, Factory
     {
         $this->app->config->set([
             "providers" => array_merge(
-                $this->app->config->get("auth.providers", []),
+                Register::authGetConfig('providers', []),
                 [$guard => $config]
             ),
         ], "auth");
@@ -327,7 +327,7 @@ class AuthManager implements AuthManagerInterface, Factory
      */
     protected function getConfig($name)
     {
-        return $this->app->config->get("auth.guards.{$name}");
+        return Register::authGetConfig('guards.' . $name);
     }
 
     /**

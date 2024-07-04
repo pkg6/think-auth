@@ -34,7 +34,7 @@ trait CreatesUserProviders
      */
     public function getDefaultUserProvider()
     {
-        return $this->app->config->get('auth.defaults.provider');
+        return Register::authGetConfig('defaults.provider');
     }
 
     /**
@@ -65,7 +65,7 @@ trait CreatesUserProviders
     {
         $config = $this->getProviderConfiguration($provider);
         if (is_null($config)) {
-            return  null;
+            return null;
         }
         if (isset($this->customProviderCreators[$driver = ($config['driver'] ?? null)])) {
             return call_user_func(
@@ -124,6 +124,6 @@ trait CreatesUserProviders
     {
         $provider = $provider ?: $this->getDefaultUserProvider();
 
-        return $this->app->config->get('auth.providers.' . $provider);
+        return Register::authGetConfig('providers.' . $provider);
     }
 }
