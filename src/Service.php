@@ -110,13 +110,8 @@ class Service extends \think\Service
 
     protected function registerRequest()
     {
-        $callback = $this->app->get(AuthenticatableContract::class);
         $this->app->bind(\tp5er\think\auth\contracts\Request::class, Request::class);
-        $this->app->get(\tp5er\think\auth\contracts\Request::class)->setUserResolver($callback);
-        $thinkRequest = $this->app->get(\think\Request::class);
-        if (method_exists($thinkRequest, 'setUserResolver')) {
-            $thinkRequest->setUserResolver($callback);
-        }
+        setRequestUserResolver($this->app->get(AuthenticatableContract::class));
     }
 
     /**
