@@ -31,7 +31,7 @@ class Route
         thinkRoute::get("/api/register", function () {
             //TODO 自己根据实际需求进行注册
             $user = new User();
-            $user->username = "tp5er";
+            $user->name = "tp5er";
             $user->password = hash_make("123456");
             $user->save();
 
@@ -40,7 +40,7 @@ class Route
 
         thinkRoute::get("/api/login", function () {
             //TODO 自己根据实际需求进行登录
-            auth()->attempt(["username" => "tp5er", "password" => "123456"], true);
+            auth()->attempt(["name" => "tp5er", "password" => "123456"], true);
 
             return json(["code" => 0, "msge" => "登录成功"]);
         });
@@ -130,7 +130,7 @@ class Route
             $token = auth('jwt')
                 //有效期1分钟,默认是1小时
 //                ->setTTL(1)
-                ->attempt(["username" => "tp5er", "password" => "123456"]);
+                ->attempt(["name" => "tp5er", "password" => "123456"]);
 
             return json([
                 "code" => 0,

@@ -51,11 +51,11 @@ class CreateUserCommand extends Command
         $password = $input->getArgument('password');
 
         $first = $this->app->db->name($table)
-            ->where(['username' => $user])
+            ->where(['name' => $user])
             ->find();
         if (is_null($first)) {
             $this->app->db->name($table)->insert([
-                'username' => $user,
+                'name' => $user,
                 "password" => hash_make($password)
             ]);
         } else {

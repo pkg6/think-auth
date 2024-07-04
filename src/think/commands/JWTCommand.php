@@ -29,7 +29,7 @@ class JWTCommand extends Command
     }
     protected function execute(Input $input, Output $output)
     {
-        $token = auth('jwt')->attempt(["username" => "tp5er", "password" => "123456"]);
+        $token = auth('jwt')->attempt(["name" => "tp5er", "password" => "123456"]);
         $output->info("登录生成JWT-Token ：" . $token);
         $user = auth('jwt')->user();
         $output->info("获取用户信息 ：" . $user);
