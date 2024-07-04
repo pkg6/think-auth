@@ -52,6 +52,7 @@ class Guard
                 if ( ! isset($guard['provider'])) {
                     return null;
                 }
+
                 return config("auth.providers.{$guard['provider']}.model");
             })->filter(function ($mode) use (&$class) {
                 return $class === $mode;
@@ -65,6 +66,7 @@ class Guard
         if ($possible_guards->contains($default)) {
             return $default;
         }
+
         return $possible_guards->first() ?: $default;
     }
 }

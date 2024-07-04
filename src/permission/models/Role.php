@@ -17,11 +17,11 @@ namespace tp5er\think\auth\permission\models;
 use think\db\Query;
 use think\Model;
 use think\model\relation\BelongsToMany;
+use tp5er\think\auth\permission\contracts\Role as RoleContract;
 use tp5er\think\auth\permission\exceptions\RoleAlreadyExists;
 use tp5er\think\auth\permission\exceptions\RoleDoesNotExist;
 use tp5er\think\auth\permission\Guard;
-use tp5er\think\auth\permission\PermissionRegistrar;
-use  tp5er\think\auth\permission\contracts\Role as RoleContract;
+use  tp5er\think\auth\permission\PermissionRegistrar;
 
 class Role extends Model implements RoleContract
 {
@@ -41,36 +41,40 @@ class Role extends Model implements RoleContract
         if (static::findByParam($params)) {
             throw RoleAlreadyExists::create($data['name'], $data['guard_name']);
         }
+
         return parent::create($data, $allowField, $replace, $suffix);
     }
 
-    public static function findByName( $name, $guardName = null): RoleContract
+    public static function findByName($name, $guardName = null): RoleContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $role = static::findByParam(['name' => $name, 'guard_name' => $guardName]);
-        if (!$role) {
+        if ( ! $role) {
             throw RoleDoesNotExist::named($name);
         }
+
         return $role;
     }
 
-    public static function findById( $id, $guardName = null): RoleContract
+    public static function findById($id, $guardName = null): RoleContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $role = static::findByParam([(new static())->getPk() => $id, 'guard_name' => $guardName]);
-        if (!$role) {
+        if ( ! $role) {
             throw RoleDoesNotExist::withId($id);
         }
+
         return $role;
     }
 
-    public static function findOrCreate( $name, $guardName = null): RoleContract
+    public static function findOrCreate($name, $guardName = null): RoleContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $role = static::findByParam(['name' => $name, 'guard_name' => $guardName]);
-        if (!$role) {
+        if ( ! $role) {
             return self::create(['name' => $name, 'guard_name' => $guardName] + (PermissionRegistrar::$teams ? [PermissionRegistrar::$teamsKey => getPermissionsTeamId()] : []));
         }
+
         return $role;
     }
 
@@ -87,12 +91,13 @@ class Role extends Model implements RoleContract
         foreach ($params as $key => $value) {
             $query->where($key, $value);
         }
+
         return $query->find();
     }
 
     public function permissions(): BelongsToMany
     {
-       return  $this->belongsToMany(Permission::class);
+        return  $this->belongsToMany(Permission::class);
     }
 
     public function hasPermissionTo($permission, $guardName): bool

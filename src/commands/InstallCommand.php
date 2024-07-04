@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth\commands;
 
 use DateTime;
@@ -19,7 +31,6 @@ use tp5er\think\auth\support\Str;
 
 class InstallCommand extends Command
 {
-
     protected $migrationsClass = [
         ModelHasPermission::class,
         ModelHasRole::class,
@@ -42,8 +53,9 @@ class InstallCommand extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        if (!class_exists(\think\migration\Migrator::class)) {
+        if ( ! class_exists(\think\migration\Migrator::class)) {
             $output->error("Please install `topthink/think-migration`");
+
             return;
         }
         $this->migrations($output);
@@ -55,13 +67,12 @@ class InstallCommand extends Command
      */
     protected function migrations(Output $output)
     {
-
         $path = $this->app->getRootPath() . 'database' . DIRECTORY_SEPARATOR . 'migrations';
-        if (!file_exists($path)) {
+        if ( ! file_exists($path)) {
             mkdir($path, 0775, true);
         }
         $inFiles = [];
-        $glob    = new \FilesystemIterator($path, \FilesystemIterator::KEY_AS_FILENAME);
+        $glob = new \FilesystemIterator($path, \FilesystemIterator::KEY_AS_FILENAME);
         /* @var \SplFileInfo $file */
         foreach ($glob as $file) {
             if ($file->isFile()) {
@@ -74,6 +85,7 @@ class InstallCommand extends Command
                     return $file;
                 }
             }
+
             return false;
         };
         $dt = new DateTime('now', new DateTimeZone('UTC'));
@@ -84,9 +96,9 @@ class InstallCommand extends Command
                     $output->warning("file {$tpMigrationName} already exist");
                     continue;
                 }
-                $fileName = (int)$dt->format('YmdHis') + $i . '_' . $name;
-                $ref      = new \ReflectionClass($class);
-                $content  = str_replace(
+                $fileName = (int) $dt->format('YmdHis') + $i . '_' . $name;
+                $ref = new \ReflectionClass($class);
+                $content = str_replace(
                     [sprintf('namespace %s;' . PHP_EOL, $ref->getNamespaceName())],
                     [''],
                     file_get_contents($ref->getFileName())

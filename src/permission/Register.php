@@ -56,12 +56,13 @@ class Register
             'expiration_time' => 24 * 60 * 60,
             'key' => 'tp5er.auth.permission.cache',
             'store' => 'default',
-            'column_names_except'=>['create_time','update_time','delete_time'],
+            'column_names_except' => ['create_time','update_time','delete_time'],
         ]
     ];
 
     /**
      * @param array $config
+     *
      * @return void
      */
     public static function mergeConfig(array $config = [])
@@ -72,6 +73,7 @@ class Register
     /**
      * @param $key
      * @param $value
+     *
      * @return void
      */
     public static function setConfig($key, $value)
@@ -89,6 +91,7 @@ class Register
     /**
      * @param $key
      * @param $default
+     *
      * @return array|\ArrayAccess|mixed
      */
     public static function getConfig($key = null, $default = null)
@@ -96,12 +99,14 @@ class Register
         if (is_null($key)) {
             return self::$config;
         }
+
         return Arr::get(self::$config, $key, $default);
     }
 
     /**
      * @param App $app
      * @param array $config
+     *
      * @return void
      */
     public static function bind(App $app, array $config = [])
@@ -117,6 +122,7 @@ class Register
                 $permissionLoader->clearClassPermissions();
                 $permissionLoader->registerPermissions();
             }
+
             return $permissionLoader;
         });
     }
