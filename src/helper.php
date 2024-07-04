@@ -23,7 +23,7 @@ use tp5er\think\auth\jwt\Register as JWTRegister;
 use tp5er\think\auth\JWTGuard;
 use tp5er\think\auth\keyparser\Register as keyparserRegister;
 
-if ( ! function_exists('auth')) {
+if (!function_exists('auth')) {
 
     /**
      * @param $guard
@@ -40,7 +40,7 @@ if ( ! function_exists('auth')) {
     }
 }
 
-if ( ! function_exists('gate')) {
+if (!function_exists('gate')) {
     /**
      * @return GateInterface
      */
@@ -50,7 +50,7 @@ if ( ! function_exists('gate')) {
     }
 }
 
-if ( ! function_exists('key_parser')) {
+if (!function_exists('key_parser')) {
     /**
      * 获取token的方式.
      *
@@ -62,7 +62,7 @@ if ( ! function_exists('key_parser')) {
     }
 }
 
-if ( ! function_exists('jwt')) {
+if (!function_exists('jwt')) {
     /**
      * @return JWTAuth
      */
@@ -72,7 +72,7 @@ if ( ! function_exists('jwt')) {
     }
 }
 
-if ( ! function_exists('requesta')) {
+if (!function_exists('requesta')) {
     /**
      * @return \tp5er\think\auth\Request
      */
@@ -81,8 +81,27 @@ if ( ! function_exists('requesta')) {
         return app()->get(\tp5er\think\auth\contracts\Request::class);
     }
 }
+if (!function_exists('requestSetUserResolver')) {
+    function setRequestUserResolver(callable $resolver, $requestAlias = [\think\Request::class, \tp5er\think\auth\contracts\Request::class])
+    {
+        $ret = true;
+        foreach ($requestAlias as $request) {
+            if (app()->has($request)) {
+                $request = app()->get($request);
+                if (method_exists($request, 'setUserResolver')) {
+                    $request->setUserResolver($resolver);
+                } else {
+                    $ret = false;
+                }
+            } else {
+                $ret = false;
+            }
+        }
+        return $ret;
+    }
+}
 
-if ( ! function_exists('with')) {
+if (!function_exists('with')) {
     /**
      * Return the given value, optionally passed through the given callback.
      *
@@ -97,11 +116,11 @@ if ( ! function_exists('with')) {
     }
 }
 
-if ( ! function_exists('head')) {
+if (!function_exists('head')) {
     /**
      * Get the first element of an array. Useful for method chaining.
      *
-     * @param  array  $array
+     * @param array $array
      *
      * @return mixed
      */
@@ -110,3 +129,6 @@ if ( ! function_exists('head')) {
         return reset($array);
     }
 }
+
+
+
