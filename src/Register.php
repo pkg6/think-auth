@@ -25,6 +25,7 @@ abstract class Register
     {
         return 'auth';
     }
+
     /**
      * @param array $config
      *
@@ -62,6 +63,17 @@ abstract class Register
         }
 
         return Arr::get(self::$config, $key, $default);
+    }
+
+    /**
+     * @param $key
+     * @param $default
+     *
+     * @return array|mixed
+     */
+    public static function authGetConfig($key, $default = null)
+    {
+        return \app()->config->get('auth.' . $key, $default);
     }
 
     public static function bind(App $app, array $config = [])

@@ -22,14 +22,20 @@ class Register extends \tp5er\think\auth\Register
 {
     const sanctum = 'sanctum';
 
+    public static $config = [
+        'guard' => ['web'],
+        'expiration' => null,
+    ];
+
     public static function name()
     {
         return 'sanctum';
     }
 
-    public static function bind(App $app, $appConfig = [])
+    public static function bind(App $app, $config = [])
     {
-        parent::bind($app, $appConfig);
+        parent::bind($app, $config);
+
         $auth = $app->get(Factory::class);
         $auth->configMergeGuards('sanctum', [
             "driver" => 'sanctum',
