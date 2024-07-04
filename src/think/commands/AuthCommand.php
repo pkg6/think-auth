@@ -39,7 +39,7 @@ class AuthCommand extends Command
         });
 
         $database = auth();
-        $database->attempt(["name" => "tp5er","password" => "123456"]);
+        $database->attempt(["name" => "admin","password" => "admin"]);
         $output->info("默认测试：获取用户ID：" . $database->id());
         $output->info("默认测试：检查用户状态：" . $database->check());
 
@@ -47,7 +47,7 @@ class AuthCommand extends Command
         $database = auth()
             ->setConfigGuardProvider("database", 'user')
             ->guard('database');
-        $database->attempt(["name" => "tp5er","password" => "123456"]);
+        $database->attempt(["name" => "admin","password" => "admin"]);
 
         $output->info("database测试：获取用户ID：" . $database->id());
         $output->info("database测试：检查用户状态：" . $database->check());
@@ -56,7 +56,7 @@ class AuthCommand extends Command
         $model = auth()
             ->setConfigGuardProvider("eloquent", User::class)
             ->guard('eloquent');
-        $user = User::where(["name" => "tp5er"])
+        $user = User::where(["name" => "admin"])
             ->find();
         $model->login($user, true);
         $output->info("eloquent测试：获取用户ID：" . $model->id());

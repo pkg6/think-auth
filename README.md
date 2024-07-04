@@ -192,8 +192,8 @@ Gate::define('edit-settings', function (Authenticatable $authenticatable) {
 thinkRoute::get("/api/register", function () {
     //TODO 自己根据实际需求进行注册
     $user = new User();
-    $user->name = "tp5er";
-    $user->password = hash_make("123456");
+    $user->name = "admin";
+    $user->password = hash_make("admin");
     $user->save();
 
     return json(['code' => 0, "msge" => $user]);
@@ -201,7 +201,7 @@ thinkRoute::get("/api/register", function () {
 
 thinkRoute::get("/api/login", function () {
     //TODO 自己根据实际需求进行登录
-    auth()->attempt(["name" => "tp5er", "password" => "123456"]);
+    auth()->attempt(["name" => "admin", "password" => "admin"]);
 
     return json(['code' => 0, "msge" => "登录成功"]);
 });
@@ -284,7 +284,7 @@ thinkRoute::get("/api/tokencan", function () {
 
 //JWT 使用
 thinkRoute::get("/jwt/token", function () {
-    $token = auth('jwt')->attempt(["name" => "tp5er", "password" => "123456"]);
+    $token = auth('jwt')->attempt(["name" => "admin", "password" => "admin"]);
 
     return json([
         "code" => 0,

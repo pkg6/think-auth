@@ -33,16 +33,16 @@ class Route
             $user = new User();
             $user->name = "tp5er";
             $user->password = hash_make("123456");
+            $user->email = "tp5er@qq.com";
             $user->save();
-
-            return json(["code" => 0, "msge" => $user]);
+            return json(["code" => 0, "msg" => $user]);
         });
 
         thinkRoute::get("/api/login", function () {
             //TODO 自己根据实际需求进行登录
-            auth()->attempt(["name" => "tp5er", "password" => "123456"], true);
+            auth()->attempt(["name" => "admin", "password" => "admin"], true);
 
-            return json(["code" => 0, "msge" => "登录成功"]);
+            return json(["code" => 0, "msg" => "登录成功"]);
         });
         thinkRoute::get("/api/user", function () {
             $user = requesta()->user();
@@ -130,7 +130,7 @@ class Route
             $token = auth('jwt')
                 //有效期1分钟,默认是1小时
 //                ->setTTL(1)
-                ->attempt(["name" => "tp5er", "password" => "123456"]);
+                ->attempt(["name" => "admin", "password" => "admin"]);
 
             return json([
                 "code" => 0,
