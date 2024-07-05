@@ -81,7 +81,7 @@ if ( ! function_exists('requesta')) {
         return app()->get(\tp5er\think\auth\contracts\Request::class);
     }
 }
-if ( ! function_exists('requestSetUserResolver')) {
+if ( ! function_exists('setRequestUserResolver')) {
     function setRequestUserResolver(callable $resolver, $requestAlias = [\think\Request::class, \tp5er\think\auth\contracts\Request::class])
     {
         $ret = true;
