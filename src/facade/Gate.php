@@ -14,7 +14,7 @@
 
 namespace tp5er\think\auth\facade;
 
-use tp5er\think\auth\access\Register;
+use tp5er\think\auth\access\AppService;
 use tp5er\think\auth\access\Response;
 use tp5er\think\auth\contracts\Authenticatable;
 use tp5er\think\auth\contracts\GateInterface;
@@ -50,6 +50,6 @@ class Gate extends \think\Facade
      */
     protected static function getFacadeClass()
     {
-        return Register::gate;
+        return AppService::gate;
     }
 }

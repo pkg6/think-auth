@@ -16,7 +16,7 @@ namespace tp5er\think\auth\keyparser;
 
 use think\App;
 
-class Register extends \tp5er\think\auth\Register
+class AppService extends \tp5er\think\auth\AppService
 {
     const keyParser = "tp5er.auth.keyparser";
 
@@ -46,7 +46,7 @@ class Register extends \tp5er\think\auth\Register
                 $classOrObject = new $classOrObject;
             }
         });
-        $app->bind(Register::keyParser, function () use (&$app, &$config) {
+        $app->bind(AppService::keyParser, function () use (&$app, &$config) {
             return new Factory($app->request, self::getConfig());
         });
         key_parser();

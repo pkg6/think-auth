@@ -73,7 +73,7 @@ class Guard
      */
     public function __invoke(Request $request)
     {
-        $guards = \tp5er\think\auth\Register::authGetConfig('sanctum.guard', ['web']);
+        $guards = \tp5er\think\auth\AppService::authGetConfig('sanctum.guard', ['web']);
         foreach (Arr::wrap($guards) as $guard) {
             if ($user = $this->auth->guard($guard)->user()) {
                 if ($this->supportsTokens($user) && method_exists($user, 'withAccessToken')) {
@@ -163,7 +163,7 @@ class Guard
         if (is_null($this->provider)) {
             return true;
         }
-        $model = \tp5er\think\auth\Register::authGetConfig("providers.{$this->provider}.model");
+        $model = \tp5er\think\auth\AppService::authGetConfig("providers.{$this->provider}.model");
 
         return $tokenable instanceof $model;
     }

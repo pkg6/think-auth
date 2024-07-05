@@ -278,7 +278,7 @@ class Gate implements GateInterface
     }
 
     /**
-     * Register a callback to run before all Gate checks.
+     * AppService a callback to run before all Gate checks.
      *
      * @param  callable  $callback
      *
@@ -292,7 +292,7 @@ class Gate implements GateInterface
     }
 
     /**
-     * Register a callback to run after all Gate checks.
+     * AppService a callback to run after all Gate checks.
      *
      * @param  callable  $callback
      *

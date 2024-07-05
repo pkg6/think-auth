@@ -26,11 +26,11 @@ use tp5er\think\auth\contracts\Guard as ContractGuard;
 
 class Service extends \think\Service
 {
-    protected $registers = [
-        \tp5er\think\auth\keyparser\Register::class,
-        \tp5er\think\auth\access\Register::class,
-        \tp5er\think\auth\sanctum\Register::class,
-        \tp5er\think\auth\jwt\Register::class,
+    protected $services = [
+        \tp5er\think\auth\keyparser\AppService::class,
+        \tp5er\think\auth\access\AppService::class,
+        \tp5er\think\auth\sanctum\AppService::class,
+        \tp5er\think\auth\jwt\AppService::class,
     ];
 
     /**
@@ -73,7 +73,7 @@ class Service extends \think\Service
         $this->registerAuthenticator();
         $this->registerRequest();
         $this->registerMiddleware();
-        $this->registers();
+        $this->serviceBind();
         $this->registerPolicies();
     }
 
@@ -96,7 +96,7 @@ class Service extends \think\Service
     }
 
     /**
-     * Register the authenticator services.
+     * AppService the authenticator services.
      *
      * @return void
      */
@@ -118,7 +118,7 @@ class Service extends \think\Service
     }
 
     /**
-     * Register a resolver for the authenticated user.
+     * AppService a resolver for the authenticated user.
      *
      * @return void
      */
@@ -129,9 +129,9 @@ class Service extends \think\Service
         });
     }
 
-    protected function registers()
+    protected function serviceBind()
     {
-        foreach ($this->registers as $register) {
+        foreach ($this->services as $register) {
             if (class_exists($register)) {
                 if (method_exists($register, 'bind') && method_exists($register, 'name')) {
                     $register::bind($this->app, $this->config($register::name(), []));
@@ -145,7 +145,7 @@ class Service extends \think\Service
      */
     protected function registerPolicies()
     {
-        \tp5er\think\auth\access\Register::registerPolicy($this->app, $this->policies());
+        \tp5er\think\auth\access\AppService::registerPolicy($this->app, $this->policies());
     }
 
     /**

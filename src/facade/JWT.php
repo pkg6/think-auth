@@ -15,7 +15,7 @@
 namespace tp5er\think\auth\facade;
 
 use tp5er\think\auth\jwt\JWTAuth;
-use tp5er\think\auth\jwt\Register;
+use tp5er\think\auth\jwt\AppService;
 
 /**
  * @mixin JWTAuth
@@ -27,6 +27,6 @@ class JWT extends \think\Facade
      */
     protected static function getFacadeClass()
     {
-        return Register::auth;
+        return AppService::auth;
     }
 }
