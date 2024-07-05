@@ -18,8 +18,8 @@ use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
-use tp5er\think\auth\jwt\JWTAuth;
 use tp5er\think\auth\jwt\AppService as JWTRegister;
+use tp5er\think\auth\jwt\JWTAuth;
 use tp5er\think\auth\JWTGuard;
 use tp5er\think\auth\keyparser\AppService as keyparserRegister;
 
