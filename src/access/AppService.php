@@ -18,7 +18,7 @@ use think\App;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\GateInterface;
 
-class Register extends \tp5er\think\auth\Register
+class AppService extends \tp5er\think\auth\AppService
 {
     const gate = GateInterface::class;
 
@@ -30,7 +30,7 @@ class Register extends \tp5er\think\auth\Register
     public static function bind(App $app, $config = [])
     {
         parent::bind($app, $config);
-        $app->bind(Register::gate, function () use (&$app) {
+        $app->bind(AppService::gate, function () use (&$app) {
             return new Gate($app, $app->get(AuthenticatableContract::class));
         });
     }
@@ -38,7 +38,7 @@ class Register extends \tp5er\think\auth\Register
     public static function registerPolicy(App $app, $policy = [])
     {
         foreach ($policy as $key => $value) {
-            $app->get(Register::gate)->policy($key, $value);
+            $app->get(AppService::gate)->policy($key, $value);
         }
     }
 }

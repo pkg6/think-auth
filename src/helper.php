@@ -12,16 +12,16 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-use tp5er\think\auth\access\Register as accessRegister;
+use tp5er\think\auth\access\AppService as accessRegister;
 use tp5er\think\auth\contracts\AuthManagerInterface;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\GateInterface;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
 use tp5er\think\auth\jwt\JWTAuth;
-use tp5er\think\auth\jwt\Register as JWTRegister;
+use tp5er\think\auth\jwt\AppService as JWTRegister;
 use tp5er\think\auth\JWTGuard;
-use tp5er\think\auth\keyparser\Register as keyparserRegister;
+use tp5er\think\auth\keyparser\AppService as keyparserRegister;
 
 if (!function_exists('auth')) {
 

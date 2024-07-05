@@ -17,7 +17,7 @@ namespace tp5er\think\auth;
 use think\App;
 use think\helper\Arr;
 
-abstract class Register
+abstract class AppService
 {
     public static $config = [];
 

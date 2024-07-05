@@ -34,11 +34,11 @@ trait CreatesUserProviders
      */
     public function getDefaultUserProvider()
     {
-        return Register::authGetConfig('defaults.provider');
+        return AppService::authGetConfig('defaults.provider');
     }
 
     /**
-     * Register a custom provider creator Closure.
+     * AppService a custom provider creator Closure.
      *
      * @param string $name
      * @param Closure $callback
@@ -124,6 +124,6 @@ trait CreatesUserProviders
     {
         $provider = $provider ?: $this->getDefaultUserProvider();
 
-        return Register::authGetConfig('providers.' . $provider);
+        return AppService::authGetConfig('providers.' . $provider);
     }
 }
