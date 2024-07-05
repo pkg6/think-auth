@@ -14,8 +14,8 @@
 
 namespace tp5er\think\auth\facade;
 
-use tp5er\think\auth\jwt\JWTAuth;
 use tp5er\think\auth\jwt\AppService;
+use tp5er\think\auth\jwt\JWTAuth;
 
 /**
  * @mixin JWTAuth
