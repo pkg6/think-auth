@@ -55,7 +55,7 @@ interface AuthManagerInterface
     public function setDefaultDriver($name);
 
     /**
-     * Register a new callback based request guard.
+     * AppService a new callback based request guard.
      *
      * @param  string  $driver
      * @param  callable  $callback
@@ -96,7 +96,7 @@ interface AuthManagerInterface
     public function configMergeProviders($guard, $config);
 
     /**
-     * Register a custom driver creator Closure.
+     * AppService a custom driver creator Closure.
      *
      * @param string $driver
      * @param Closure $callback
@@ -106,7 +106,7 @@ interface AuthManagerInterface
     public function extend($driver, Closure $callback);
 
     /**
-     * Register a custom provider creator Closure.
+     * AppService a custom provider creator Closure.
      *
      * @param string $name
      * @param Closure $callback

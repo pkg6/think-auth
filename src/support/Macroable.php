@@ -29,7 +29,7 @@ trait Macroable
     protected static $macros = [];
 
     /**
-     * Register a custom macro.
+     * AppService a custom macro.
      *
      * @param  string  $name
      * @param  object|callable  $macro

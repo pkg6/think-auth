@@ -18,7 +18,7 @@ use think\App;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\RequestGuard;
 
-class Register extends \tp5er\think\auth\Register
+class AppService extends \tp5er\think\auth\AppService
 {
     const sanctum = 'sanctum';
 
@@ -41,7 +41,7 @@ class Register extends \tp5er\think\auth\Register
             "driver" => 'sanctum',
             "provider" => null
         ]);
-        $auth->extend(Register::sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
+        $auth->extend(AppService::sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
             $expiration = self::getConfig('expiration');
 
             return new RequestGuard(

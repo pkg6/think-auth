@@ -22,7 +22,7 @@ use tp5er\think\auth\jwt\providers\jwt\Lcobucci;
 use tp5er\think\auth\jwt\providers\storage\Think;
 use tp5er\think\auth\jwt\validators\PayloadValidator;
 
-class Register extends \tp5er\think\auth\Register
+class AppService extends \tp5er\think\auth\AppService
 {
     const claimFactory = ClaimFactory::class;
     const claimsValidatorFactory = ClaimsValidatorFactory::class;
@@ -74,39 +74,39 @@ class Register extends \tp5er\think\auth\Register
     {
         parent::bind($app, $config);
 
-        $app->bind(Register::claimFactory, function () use (&$app) {
+        $app->bind(AppService::claimFactory, function () use (&$app) {
             return new ClaimFactory($app->request);
         });
-        $app->bind(Register::validatorpayload, function () {
+        $app->bind(AppService::validatorpayload, function () {
             return (new PayloadValidator)
                 ->setRefreshTTL(self::getConfig('refresh_ttl'))
                 ->setRequiredClaims(self::getConfig('required_claims', []));
         });
 
-        $app->bind(Register::claimsValidatorFactory, function () use (&$app) {
+        $app->bind(AppService::claimsValidatorFactory, function () use (&$app) {
             $factory = new ClaimsValidatorFactory(
-                $app->get(Register::claimFactory),
-                $app->get(Register::validatorpayload)
+                $app->get(AppService::claimFactory),
+                $app->get(AppService::validatorpayload)
             );
 
             return $factory->setTTL(self::getConfig('ttl'))
                 ->setLeeway(self::getConfig('leeway'));
         });
 
-        $app->bind(Register::storge, function () use (&$app) {
+        $app->bind(AppService::storge, function () use (&$app) {
             $storageClass = self::getConfig('providers.storage', Think::class);
 
             return new $storageClass($app);
         });
 
-        $app->bind(Register::blacklist, function () use (&$app) {
-            $instance = new Blacklist($app->get(Register::storge));
+        $app->bind(AppService::blacklist, function () use (&$app) {
+            $instance = new Blacklist($app->get(AppService::storge));
 
             return $instance->setGracePeriod(self::getConfig('blacklist_grace_period'))
                 ->setRefreshTTL(self::getConfig('refresh_ttl'));
         });
 
-        $app->bind(Register::cipher, function () {
+        $app->bind(AppService::cipher, function () {
             $jwtClass = self::getConfig('providers.jwt', Lcobucci::class);
 
             return new $jwtClass(
@@ -116,21 +116,21 @@ class Register extends \tp5er\think\auth\Register
             );
         });
 
-        $app->bind(Register::manager, function () use (&$app) {
+        $app->bind(AppService::manager, function () use (&$app) {
             $instance = new Manager(
-                $app->get(Register::cipher),
-                $app->get(Register::blacklist),
-                $app->get(Register::claimsValidatorFactory)
+                $app->get(AppService::cipher),
+                $app->get(AppService::blacklist),
+                $app->get(AppService::claimsValidatorFactory)
             );
 
             return $instance
                 ->setBlacklistEnabled((bool) self::getConfig('blacklist_enabled', true))
                 ->setPersistentClaims(self::getConfig('persistent_claims', []));
         });
-        $app->bind(Register::auth, function () use ($app) {
+        $app->bind(AppService::auth, function () use ($app) {
             $instance = new JWTAuth(
-                $app->get(Register::manager),
-                $app->get(\tp5er\think\auth\keyparser\Register::keyParser)
+                $app->get(AppService::manager),
+                $app->get(\tp5er\think\auth\keyparser\AppService::keyParser)
             );
 
             return $instance->lockSubject(self::getConfig('lock_subject'));

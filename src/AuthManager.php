@@ -21,7 +21,7 @@ use tp5er\think\auth\contracts\AuthManagerInterface;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\Guard;
 use tp5er\think\auth\contracts\StatefulGuard;
-use tp5er\think\auth\jwt\Register as JWTRegister;
+use tp5er\think\auth\jwt\AppService as JWTRegister;
 
 class AuthManager implements AuthManagerInterface, Factory
 {
@@ -87,7 +87,7 @@ class AuthManager implements AuthManagerInterface, Factory
      */
     public function getDefaultDriver()
     {
-        return Register::authGetConfig('defaults.guard');
+        return AppService::authGetConfig('defaults.guard');
     }
 
     /**
@@ -144,7 +144,7 @@ class AuthManager implements AuthManagerInterface, Factory
     {
         $this->app->config->set([
             "guards" => array_merge(
-                Register::authGetConfig('guards', []),
+                AppService::authGetConfig('guards', []),
                 [$guard => $config]
             ),
         ], "auth");
@@ -159,7 +159,7 @@ class AuthManager implements AuthManagerInterface, Factory
     {
         $this->app->config->set([
             "providers" => array_merge(
-                Register::authGetConfig('providers', []),
+                AppService::authGetConfig('providers', []),
                 [$guard => $config]
             ),
         ], "auth");
@@ -327,7 +327,7 @@ class AuthManager implements AuthManagerInterface, Factory
      */
     protected function getConfig($name)
     {
-        return Register::authGetConfig('guards.' . $name);
+        return AppService::authGetConfig('guards.' . $name);
     }
 
     /**
