@@ -12,12 +12,11 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\support;
+namespace tp5er\think\auth\permission;
 
-class Ref
+class Route
 {
-    public static function getClassConstValue($objectOrClass, $name)
+    public static function route()
     {
-        return (new \ReflectionClass($objectOrClass))->getConstant($name);
     }
 }
