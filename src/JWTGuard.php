@@ -88,7 +88,6 @@ class JWTGuard implements Guard
         if ($this->user !== null) {
             return $this->user;
         }
-
         if ($this->jwt->setRequest($this->request)->getToken() &&
             ($payload = $this->jwt->check(true)) &&
             $this->validateSubject()
@@ -253,6 +252,7 @@ class JWTGuard implements Guard
      */
     public function __call($method, $parameters)
     {
+
         if (method_exists($this->jwt, $method)) {
             return call_user_func_array([$this->jwt, $method], $parameters);
         }

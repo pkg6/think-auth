@@ -14,12 +14,29 @@
 
 namespace tp5er\think\auth\support;
 
+use FilesystemIterator;
+
 class Str extends \think\helper\Str
 {
+
+    public static function filesystemIteratorHGName(FilesystemIterator $filesystemIterator, $name)
+    {
+        /* @var \SplFileInfo $file */
+        foreach ($filesystemIterator as $file) {
+            if ($file->isFile()) {
+                if (Str::endsWith($file->getBasename(), $name)) {
+                    return $file;
+                }
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Make a string's first character uppercase.
      *
-     * @param  string  $string
+     * @param string $string
      *
      * @return string
      */
@@ -31,8 +48,8 @@ class Str extends \think\helper\Str
     /**
      * Parse a Class[@]method style callback into class and method.
      *
-     * @param  string  $callback
-     * @param  string|null  $default
+     * @param string $callback
+     * @param string|null $default
      *
      * @return array<int, string|null>
      */

@@ -27,11 +27,10 @@ class AppService extends \tp5er\think\auth\AppService
         return 'access';
     }
 
-    public static function bind(App $app, $config = [])
+    public function bind()
     {
-        parent::bind($app, $config);
-        $app->bind(AppService::gate, function () use (&$app) {
-            return new Gate($app, $app->get(AuthenticatableContract::class));
+        $this->app->bind(AppService::gate, function () {
+            return new Gate($this->app, $this->app->get(AuthenticatableContract::class));
         });
     }
 

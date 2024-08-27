@@ -140,13 +140,13 @@ class Route
                     'access_token' => $token,
                     'token_type' => 'bearer',
                     'expires_in' => auth('jwt')->factory()->getTTL() * 60,
-                    'claims' => auth('jwt')->getPayload()
+                    'claims' => auth('jwt')->getPayload(),
+                    'user' => auth('jwt')->user(),
                 ]
             ]);
         });
         thinkRoute::get("/jwt/user", function () {
             $user = auth('jwt')->user();
-
             return json([
                 "code" => 0,
                 "msg" => "获取用户信息",

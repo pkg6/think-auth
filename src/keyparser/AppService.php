@@ -14,41 +14,36 @@
 
 namespace tp5er\think\auth\keyparser;
 
-use think\App;
-
 class AppService extends \tp5er\think\auth\AppService
 {
     const keyParser = "tp5er.auth.keyparser";
 
-    public static $config = [
-         AuthHeaders::class,
-         QueryString::class,
-         InputSource::class,
-         RouteParams::class,
-         Cookies::class,
+    public $config = [
+        AuthHeaders::class,
+        QueryString::class,
+        InputSource::class,
+        RouteParams::class,
+        Cookies::class,
     ];
+
     public static function name()
     {
         return 'keyparser';
     }
 
     /**
-     * @param App $app
-     * @param array $config
-     *
      * @return void
      */
-    public static function bind(App $app, array $config = [])
+    public function bind()
     {
-        parent::bind($app, $config);
-        array_walk(self::$config, function (&$classOrObject) {
-            if (is_string($classOrObject)) {
+        $cfg = $this->getConfig();
+        array_walk($cfg, function (&$classOrObject) {
+            if (class_exists($classOrObject)) {
                 $classOrObject = new $classOrObject;
             }
         });
-        $app->bind(AppService::keyParser, function () use (&$app, &$config) {
-            return new Factory($app->request, self::getConfig());
+        $this->app->bind(AppService::keyParser, function ()  use (&$cfg) {
+            return new Factory( $this->app->request, $cfg);
         });
-        key_parser();
     }
 }
