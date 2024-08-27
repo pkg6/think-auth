@@ -9,14 +9,25 @@ use think\console\Input;
 use think\console\Output;
 use tp5er\think\auth\database\migrations\PersonalAccessToken;
 use tp5er\think\auth\database\migrations\User;
+use tp5er\think\auth\database\seeder\UserSender;
 use tp5er\think\auth\support\File;
 use tp5er\think\auth\support\Str;
 
 class InstallCommand extends Command
 {
+    /**
+     * @var string[]
+     */
     protected $migrationsClass = [
         PersonalAccessToken::class,
         User::class,
+    ];
+
+    /**
+     * @var \class-string[]
+     */
+    protected $senderClass = [
+        UserSender::class,
     ];
 
     /**
@@ -28,7 +39,18 @@ class InstallCommand extends Command
         $this->setName('auth:install')
             ->setDescription('think-auth install');
     }
-
+    /**
+     * @param Output $output
+     * @return bool
+     */
+    protected function check(Output $output)
+    {
+        if (!class_exists(\think\migration\Migrator::class)) {
+            $output->error("Please install `topthink/think-migration`");
+            return false;
+        }
+        return true;
+    }
     /**
      * @param Input $input
      * @param Output $output
@@ -40,7 +62,14 @@ class InstallCommand extends Command
         if (!$check) {
             return;
         }
+        $this->thinkMigration($output);
+
+    }
+
+    protected function thinkMigration(Output $output)
+    {
         $this->migrations($output);
+        $this->sender($output);
     }
 
     /**
@@ -78,14 +107,34 @@ class InstallCommand extends Command
 
     /**
      * @param Output $output
-     * @return bool
+     * @return void
      */
-    protected function check(Output $output)
+    public function sender(Output $output)
     {
-        if (!class_exists(\think\migration\Migrator::class)) {
-            $output->error("Please install `topthink/think-migration`");
-            return false;
+        $path = $this->app->getRootPath() . 'database' . DIRECTORY_SEPARATOR . 'seeds';
+        if (!file_exists($path)) {
+            mkdir($path, 0775, true);
         }
-        return true;
+        $fileIterator = File::fileIterator($path);
+        foreach ($this->senderClass as $i => $class) {
+            if (class_exists($class)) {
+                $name = class_basename($class) . ".php";
+                if (($tpSenderName = Str::filesystemIteratorHGName($fileIterator, $name))) {
+                    $output->warning("file {$tpSenderName} already exist");
+                    continue;
+                }
+                $ref = new \ReflectionClass($class);
+                $fileName = $name;
+                $content = str_replace(
+                    [sprintf('namespace %s;' . PHP_EOL, $ref->getNamespaceName())],
+                    [''],
+                    file_get_contents($ref->getFileName())
+                );
+                file_put_contents($path . DIRECTORY_SEPARATOR . $fileName, $content);
+                $output->info("Migration of {$class} file completed. {$fileName}");
+            }
+        }
     }
+
+
 }

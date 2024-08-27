@@ -42,8 +42,10 @@ class InitCommand extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-        $this->app->console->call((new InstallCommand())->getName());
 
+        $this->app->console->call((new InstallCommand())->getName());
+        $this->app->console->call('migrate:run');
+        $this->app->console->call('seed:run');
         $this->post_db_create();
         $output->info("测试准备初始化成功");
     }
