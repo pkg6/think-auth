@@ -19,36 +19,24 @@ use think\helper\Arr;
 
 abstract class AppService
 {
-    public static $config = [];
+    public $config = [];
+    /**
+     * @var App
+     */
+    protected $app;
+
+
+    public function __construct(App $app, array $config = [])
+    {
+        $this->app = $app;
+        $this->config = array_merge($this->config, $config);
+    }
 
     public static function name()
     {
         return 'auth';
     }
 
-    /**
-     * @param array $config
-     *
-     * @return array
-     */
-    public static function mergeConfig(array $config = [])
-    {
-        self::$config = array_merge(self::$config, $config);
-
-        return self::$config;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     *
-     * @return void
-     */
-    public static function setConfig($key, $value)
-    {
-        Arr::set(self::$config, $key, $value);
-        \app()->config->set([self::name() => self::$config], 'auth');
-    }
 
     /**
      * @param $key
@@ -56,14 +44,24 @@ abstract class AppService
      *
      * @return array|\ArrayAccess|mixed
      */
-    public static function getConfig($key = null, $default = null)
+    public function getConfig($key = null, $default = null)
     {
         if (is_null($key)) {
-            return self::$config;
+            return $this->config;
         }
-
-        return Arr::get(self::$config, $key, $default);
+        return Arr::get($this->config, $key, $default);
     }
+
+    /**
+     * @param $service
+     * @param $config
+     * @return void
+     */
+    public static function authSetConfig($service, $config)
+    {
+        \app()->config->set([$service => $config], 'auth');
+    }
+
 
     /**
      * @param $key
@@ -74,10 +72,5 @@ abstract class AppService
     public static function authGetConfig($key, $default = null)
     {
         return \app()->config->get('auth.' . $key, $default);
-    }
-
-    public static function bind(App $app, array $config = [])
-    {
-        self::mergeConfig($config);
     }
 }

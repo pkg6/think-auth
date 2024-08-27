@@ -22,7 +22,7 @@ class AppService extends \tp5er\think\auth\AppService
 {
     const sanctum = 'sanctum';
 
-    public static $config = [
+    public $config = [
         'guard' => ['web'],
         'expiration' => null,
     ];
@@ -32,18 +32,15 @@ class AppService extends \tp5er\think\auth\AppService
         return 'sanctum';
     }
 
-    public static function bind(App $app, $config = [])
+    public function bind()
     {
-        parent::bind($app, $config);
-
-        $auth = $app->get(Factory::class);
+        $auth = $this->app->get(Factory::class);
         $auth->configMergeGuards('sanctum', [
             "driver" => 'sanctum',
             "provider" => null
         ]);
         $auth->extend(AppService::sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
-            $expiration = self::getConfig('expiration');
-
+            $expiration = $this->getConfig('expiration');
             return new RequestGuard(
                 new Guard($app, $auth, $expiration, $sanctumConfig['provider']),
                 $app->request,

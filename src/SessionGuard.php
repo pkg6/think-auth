@@ -339,8 +339,8 @@ class SessionGuard implements StatefulGuard
     protected function basicCredentials(Request $request, $field)
     {
         return [
-            $field => requesta()->setRequest($request)->getUser(),
-            'password' => requesta()->setRequest($request)->getPassword()
+            $field => requesta()->getUser(),
+            'password' => requesta()->getPassword()
         ];
     }
 

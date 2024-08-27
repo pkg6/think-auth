@@ -126,11 +126,9 @@ class Service extends \think\Service
     protected function serviceBind()
     {
         foreach ($this->services as $register) {
-            if (class_exists($register)) {
-                if (method_exists($register, 'bind') && method_exists($register, 'name')) {
-                    $register::bind($this->app, $this->config($register::name(), []));
-                }
-            }
+            $instance = new $register($this->app, $this->config($register::name(), []));
+            $instance->bind();
+            $this->app->bind($register, $instance);
         }
     }
 

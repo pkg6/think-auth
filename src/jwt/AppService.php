@@ -34,7 +34,7 @@ class AppService extends \tp5er\think\auth\AppService
     const manager = 'tp5er.auth.jwt.manager';
     const auth = 'tp5er.auth.jwt.auth';
 
-    public static $config = [
+    public  $config = [
         'secret' => '',
         'algo' => 'HS256',
         'keys' => [
@@ -70,45 +70,40 @@ class AppService extends \tp5er\think\auth\AppService
         return 'jwt';
     }
 
-    public static function bind(App $app, $config = [])
+    public  function bind()
     {
-        parent::bind($app, $config);
-
-        $app->bind(AppService::claimFactory, function () use (&$app) {
-            return new ClaimFactory($app->request);
+        $this->app->bind(AppService::claimFactory, function () {
+            return new ClaimFactory($this->app->request);
         });
-        $app->bind(AppService::validatorpayload, function () {
+        $this->app->bind(AppService::validatorpayload, function () {
             return (new PayloadValidator)
                 ->setRefreshTTL(self::getConfig('refresh_ttl'))
                 ->setRequiredClaims(self::getConfig('required_claims', []));
         });
 
-        $app->bind(AppService::claimsValidatorFactory, function () use (&$app) {
+        $this->app->bind(AppService::claimsValidatorFactory, function ()  {
             $factory = new ClaimsValidatorFactory(
-                $app->get(AppService::claimFactory),
-                $app->get(AppService::validatorpayload)
+                $this->app->get(AppService::claimFactory),
+                $this->app->get(AppService::validatorpayload)
             );
 
             return $factory->setTTL(self::getConfig('ttl'))
                 ->setLeeway(self::getConfig('leeway'));
         });
 
-        $app->bind(AppService::storge, function () use (&$app) {
+        $this->app->bind(AppService::storge, function ()  {
             $storageClass = self::getConfig('providers.storage', Think::class);
-
-            return new $storageClass($app);
+            return new $storageClass($this->app);
         });
 
-        $app->bind(AppService::blacklist, function () use (&$app) {
-            $instance = new Blacklist($app->get(AppService::storge));
-
+        $this->app->bind(AppService::blacklist, function () {
+            $instance = new Blacklist($this->app->get(AppService::storge));
             return $instance->setGracePeriod(self::getConfig('blacklist_grace_period'))
                 ->setRefreshTTL(self::getConfig('refresh_ttl'));
         });
 
-        $app->bind(AppService::cipher, function () {
+        $this->app->bind(AppService::cipher, function () {
             $jwtClass = self::getConfig('providers.jwt', Lcobucci::class);
-
             return new $jwtClass(
                 self::getConfig('secret'),
                 self::getConfig('algo'),
@@ -116,23 +111,22 @@ class AppService extends \tp5er\think\auth\AppService
             );
         });
 
-        $app->bind(AppService::manager, function () use (&$app) {
+        $this->app->bind(AppService::manager, function () {
             $instance = new Manager(
-                $app->get(AppService::cipher),
-                $app->get(AppService::blacklist),
-                $app->get(AppService::claimsValidatorFactory)
+                $this->app->get(AppService::cipher),
+                $this->app->get(AppService::blacklist),
+                $this->app->get(AppService::claimsValidatorFactory)
             );
 
             return $instance
                 ->setBlacklistEnabled((bool) self::getConfig('blacklist_enabled', true))
                 ->setPersistentClaims(self::getConfig('persistent_claims', []));
         });
-        $app->bind(AppService::auth, function () use ($app) {
+        $this->app->bind(AppService::auth, function () {
             $instance = new JWTAuth(
-                $app->get(AppService::manager),
-                $app->get(\tp5er\think\auth\keyparser\AppService::keyParser)
+                $this->app->get(AppService::manager),
+                $this->app->get(\tp5er\think\auth\keyparser\AppService::keyParser)
             );
-
             return $instance->lockSubject(self::getConfig('lock_subject'));
         });
     }
