@@ -24,12 +24,12 @@ class InputSource implements ParserContract
     /**
      * Try to parse the token from the request input source.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return null|string
      */
     public function parse(Request $request)
     {
-        return $request->param([$this->key]);
+        return $request->param($this->key);
     }
 }

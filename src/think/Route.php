@@ -145,7 +145,7 @@ class Route
                 ]
             ]);
         });
-        thinkRoute::get("/jwt/user", function () {
+        thinkRoute::post("/jwt/user", function () {
             $user = auth('jwt')->user();
             return json([
                 "code" => 0,
