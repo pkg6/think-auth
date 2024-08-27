@@ -18,6 +18,7 @@ use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use tp5er\think\auth\commands\CreateUserCommand;
+use tp5er\think\auth\commands\InstallCommand;
 use tp5er\think\auth\commands\MigrateAccessTokenCommand;
 use tp5er\think\auth\commands\MigrateUserCommand;
 
@@ -41,11 +42,9 @@ class InitCommand extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-        $this->app->console->call((new MigrateAccessTokenCommand)->getName());
-        $this->app->console->call((new MigrateUserCommand)->getName());
-        $this->app->console->call((new CreateUserCommand())->getName());
-        $this->post_db_create();
+        $this->app->console->call((new InstallCommand())->getName());
 
+        $this->post_db_create();
         $output->info("测试准备初始化成功");
     }
 
