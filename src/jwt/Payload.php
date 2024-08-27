@@ -167,7 +167,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize():array
     {
         return $this->toArray();
     }
@@ -201,7 +201,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
      *
      * @return bool
      */
-    public function offsetExists($key)
+    public function offsetExists($key):bool
     {
         return Arr::has($this->toArray(), $key);
     }
@@ -213,7 +213,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
      *
      * @return mixed
      */
-    public function offsetGet($key)
+    public function offsetGet($key):mixed
     {
         return Arr::get($this->toArray(), $key);
     }
@@ -226,7 +226,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
      *
      * @throws PayloadException
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value) :void
     {
         throw new PayloadException('The payload is immutable');
     }
@@ -240,7 +240,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
      *
      * @throws PayloadException
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key):void
     {
         throw new PayloadException('The payload is immutable');
     }
@@ -250,7 +250,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
      *
      * @return int
      */
-    public function count()
+    public function count():int
     {
         return count($this->toArray());
     }
