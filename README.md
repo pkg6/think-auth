@@ -20,18 +20,15 @@ composer require tp5er/think-auth
 ## 命令行
 
 ~~~
-//生成基础用户表，如果重命名，需要继承\tp5er\think\auth\User,然后修改`config/auth.php`中的providers
-php think auth:create-user
+//生成基础数据结构
+php think auth:install
+// 默认会生成 personal_access_token & user表结构
 
-//生成基础personal_access_token表,如果重写命名 需继承\tp5er\think\auth\sanctum\PersonalAccessToken
-//修改模型地址 \tp5er\think\auth\sanctum\Sanctum::$personalAccessTokenModel =\app\model\PersonalAccessToken::class;
-php think auth:migrate-access-token
+//生成测试数据
+php think seed:run
 
-//创建一个admin用户，密码为123456
-php think auth:create-user  admin 123456
+//具体参考 `topthink/think-migration`
 
-//指定用户表中创建一个admin用户，密码为123456
-php think auth:create-user  admin 123456 user
 
 // 使用policy类
 php think make:policy Post

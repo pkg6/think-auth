@@ -81,7 +81,7 @@ class InstallCommand extends Command
         $this->migrations($output);
         $this->sender($output);
         $this->app->console->call('migrate:run');
-        $this->app->console->call('seed:run');
+//        $this->app->console->call('seed:run');
     }
 
     /**
