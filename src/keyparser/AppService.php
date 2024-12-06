@@ -42,8 +42,8 @@ class AppService extends \tp5er\think\auth\AppService
                 $classOrObject = new $classOrObject;
             }
         });
-        $this->app->bind(AppService::keyParser, function ()  use (&$cfg) {
-            return new Factory( $this->app->request, $cfg);
+        $this->app->bind(AppService::keyParser, function () use (&$cfg) {
+            return new Factory($this->app->request, $cfg);
         });
     }
 }

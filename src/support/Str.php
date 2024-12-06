@@ -18,7 +18,6 @@ use FilesystemIterator;
 
 class Str extends \think\helper\Str
 {
-
     public static function filesystemIteratorHGName(FilesystemIterator $filesystemIterator, $name)
     {
         /* @var \SplFileInfo $file */
@@ -29,9 +28,9 @@ class Str extends \think\helper\Str
                 }
             }
         }
+
         return false;
     }
-
 
     /**
      * Make a string's first character uppercase.

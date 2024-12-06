@@ -41,6 +41,7 @@ class AppService extends \tp5er\think\auth\AppService
         ]);
         $auth->extend(AppService::sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
             $expiration = $this->getConfig('expiration');
+
             return new RequestGuard(
                 new Guard($app, $auth, $expiration, $sanctumConfig['provider']),
                 $app->request,

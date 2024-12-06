@@ -147,6 +147,7 @@ class Route
         });
         thinkRoute::post("/jwt/user", function () {
             $user = auth('jwt')->user();
+
             return json([
                 "code" => 0,
                 "msg" => "获取用户信息",
