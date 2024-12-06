@@ -67,9 +67,9 @@ class InstallCommand extends Command
         }
         $this->migrations($output);
         $this->sender($output);
-        $output->info("Manually execute as needed：");
-        $output->info("php think migrate:run");
-        $output->info("php think seed:run");
+        $output->highlight("Manually execute as needed：");
+        $output->comment("php think migrate:run");
+        $output->comment("php think seed:run");
         //$this->app->console->call('migrate:run');
         //$this->app->console->call('seed:run');
     }
