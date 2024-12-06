@@ -67,8 +67,11 @@ class InstallCommand extends Command
         }
         $this->migrations($output);
         $this->sender($output);
-        $this->app->console->call('migrate:run');
-        $this->app->console->call('seed:run');
+        $output->info("Manually execute as needed：");
+        $output->info("php think migrate:run");
+        $output->info("php think seed:run");
+        //$this->app->console->call('migrate:run');
+        //$this->app->console->call('seed:run');
     }
 
 
@@ -85,9 +88,9 @@ class InstallCommand extends Command
         $files = File::publishes($sourcePath, $targetPath);
         foreach ($files as $file) {
             [$b, $sourceFile, $targetFile] = $file;
-            if ($b){
+            if ($b) {
                 $output->info("【Migrations】Successfully transitioned from {$sourceFile} cp to {$targetFile}");
-            }else{
+            } else {
                 $output->error("【Migrations】Failed from {$sourceFile} cp to {$targetFile}");
             }
         }
@@ -105,9 +108,9 @@ class InstallCommand extends Command
         $files = File::publishes($sourcePath, $targetPath);
         foreach ($files as $file) {
             [$b, $sourceFile, $targetFile] = $file;
-            if ($b){
+            if ($b) {
                 $output->info("【Seeder】Successfully transitioned from {$sourceFile} cp to {$targetFile}");
-            }else{
+            } else {
                 $output->error("【Seeder】Failed from {$sourceFile} cp to {$targetFile}");
             }
         }
