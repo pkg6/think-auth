@@ -311,4 +311,16 @@ class Collection extends \think\Collection
 
         return value($default);
     }
+
+    /**
+     * Get a flattened array of the items in the collection.
+     *
+     * @param  int  $depth
+     * @return static<int, mixed>
+     */
+    public function flatten($depth = INF)
+    {
+        return new static(Arr::flatten($this->items, $depth));
+    }
+
 }
