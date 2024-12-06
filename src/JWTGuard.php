@@ -252,7 +252,6 @@ class JWTGuard implements Guard
      */
     public function __call($method, $parameters)
     {
-
         if (method_exists($this->jwt, $method)) {
             return call_user_func_array([$this->jwt, $method], $parameters);
         }

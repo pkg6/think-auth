@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth\commands;
 
 use DateTime;
@@ -41,46 +53,47 @@ class InstallCommand extends Command
     }
     /**
      * @param Output $output
+     *
      * @return bool
      */
     protected function check(Output $output)
     {
-        if (!class_exists(\think\migration\Migrator::class)) {
+        if ( ! class_exists(\think\migration\Migrator::class)) {
             $output->error("Please install `topthink/think-migration`");
+
             return false;
         }
+
         return true;
     }
     /**
      * @param Input $input
      * @param Output $output
+     *
      * @return void
      */
     protected function execute(Input $input, Output $output)
     {
         $check = $this->check($output);
-        if (!$check) {
+        if ( ! $check) {
             return;
         }
-        $this->thinkMigration($output);
-
-    }
-
-    protected function thinkMigration(Output $output)
-    {
         $this->migrations($output);
         $this->sender($output);
+        $this->app->console->call('migrate:run');
+        $this->app->console->call('seed:run');
     }
 
     /**
-     * migrations 文件迁移
+     * migrations 文件迁移.
+     *
      * @see \think\migration\Creator
      * @see Util::mapClassNameToFileName
      */
     protected function migrations(Output $output)
     {
         $path = $this->app->getRootPath() . 'database' . DIRECTORY_SEPARATOR . 'migrations';
-        if (!file_exists($path)) {
+        if ( ! file_exists($path)) {
             mkdir($path, 0775, true);
         }
         $fileIterator = File::fileIterator($path);
@@ -92,7 +105,7 @@ class InstallCommand extends Command
                     $output->warning("file {$tpMigrationName} already exist");
                     continue;
                 }
-                $fileName = (int)$dt->format('YmdHis') + $i . '_' . $name;
+                $fileName = (int) $dt->format('YmdHis') + $i . '_' . $name;
                 $ref = new \ReflectionClass($class);
                 $content = str_replace(
                     [sprintf('namespace %s;' . PHP_EOL, $ref->getNamespaceName())],
@@ -107,12 +120,13 @@ class InstallCommand extends Command
 
     /**
      * @param Output $output
+     *
      * @return void
      */
     public function sender(Output $output)
     {
         $path = $this->app->getRootPath() . 'database' . DIRECTORY_SEPARATOR . 'seeds';
-        if (!file_exists($path)) {
+        if ( ! file_exists($path)) {
             mkdir($path, 0775, true);
         }
         $fileIterator = File::fileIterator($path);
@@ -135,6 +149,4 @@ class InstallCommand extends Command
             }
         }
     }
-
-
 }

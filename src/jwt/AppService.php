@@ -14,7 +14,6 @@
 
 namespace tp5er\think\auth\jwt;
 
-use think\App;
 use tp5er\think\auth\jwt\claims\Factory as ClaimFactory;
 use tp5er\think\auth\jwt\contracts\JWT;
 use tp5er\think\auth\jwt\contracts\Storage;
@@ -34,7 +33,7 @@ class AppService extends \tp5er\think\auth\AppService
     const manager = 'tp5er.auth.jwt.manager';
     const auth = 'tp5er.auth.jwt.auth';
 
-    public  $config = [
+    public $config = [
         'secret' => '',
         'algo' => 'HS256',
         'keys' => [
@@ -70,7 +69,7 @@ class AppService extends \tp5er\think\auth\AppService
         return 'jwt';
     }
 
-    public  function bind()
+    public function bind()
     {
         $this->app->bind(AppService::claimFactory, function () {
             return new ClaimFactory($this->app->request);
@@ -81,7 +80,7 @@ class AppService extends \tp5er\think\auth\AppService
                 ->setRequiredClaims(self::getConfig('required_claims', []));
         });
 
-        $this->app->bind(AppService::claimsValidatorFactory, function ()  {
+        $this->app->bind(AppService::claimsValidatorFactory, function () {
             $factory = new ClaimsValidatorFactory(
                 $this->app->get(AppService::claimFactory),
                 $this->app->get(AppService::validatorpayload)
@@ -91,19 +90,22 @@ class AppService extends \tp5er\think\auth\AppService
                 ->setLeeway(self::getConfig('leeway'));
         });
 
-        $this->app->bind(AppService::storge, function ()  {
+        $this->app->bind(AppService::storge, function () {
             $storageClass = self::getConfig('providers.storage', Think::class);
+
             return new $storageClass($this->app);
         });
 
         $this->app->bind(AppService::blacklist, function () {
             $instance = new Blacklist($this->app->get(AppService::storge));
+
             return $instance->setGracePeriod(self::getConfig('blacklist_grace_period'))
                 ->setRefreshTTL(self::getConfig('refresh_ttl'));
         });
 
         $this->app->bind(AppService::cipher, function () {
             $jwtClass = self::getConfig('providers.jwt', Lcobucci::class);
+
             return new $jwtClass(
                 self::getConfig('secret'),
                 self::getConfig('algo'),
@@ -127,6 +129,7 @@ class AppService extends \tp5er\think\auth\AppService
                 $this->app->get(AppService::manager),
                 $this->app->get(\tp5er\think\auth\keyparser\AppService::keyParser)
             );
+
             return $instance->lockSubject(self::getConfig('lock_subject'));
         });
     }

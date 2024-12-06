@@ -14,12 +14,9 @@
 
 namespace tp5er\think\auth;
 
-use tp5er\think\auth\commands\CreateUserCommand;
 use tp5er\think\auth\commands\InstallCommand;
 use tp5er\think\auth\commands\KeyGenerateCommand;
 use tp5er\think\auth\commands\MakePolicyCommand;
-use tp5er\think\auth\commands\MigrateAccessTokenCommand;
-use tp5er\think\auth\commands\MigrateUserCommand;
 use tp5er\think\auth\contracts\Authenticatable as AuthenticatableContract;
 use tp5er\think\auth\contracts\Factory;
 use tp5er\think\auth\contracts\Guard as ContractGuard;

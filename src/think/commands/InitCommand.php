@@ -17,10 +17,7 @@ namespace tp5er\think\auth\think\commands;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use tp5er\think\auth\commands\CreateUserCommand;
 use tp5er\think\auth\commands\InstallCommand;
-use tp5er\think\auth\commands\MigrateAccessTokenCommand;
-use tp5er\think\auth\commands\MigrateUserCommand;
 
 class InitCommand extends Command
 {
@@ -42,10 +39,7 @@ class InitCommand extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-
         $this->app->console->call((new InstallCommand())->getName());
-        $this->app->console->call('migrate:run');
-        $this->app->console->call('seed:run');
         $this->post_db_create();
         $output->info("测试准备初始化成功");
     }

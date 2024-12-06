@@ -25,7 +25,6 @@ abstract class AppService
      */
     protected $app;
 
-
     public function __construct(App $app, array $config = [])
     {
         $this->app = $app;
@@ -36,7 +35,6 @@ abstract class AppService
     {
         return 'auth';
     }
-
 
     /**
      * @param $key
@@ -49,19 +47,20 @@ abstract class AppService
         if (is_null($key)) {
             return $this->config;
         }
+
         return Arr::get($this->config, $key, $default);
     }
 
     /**
      * @param $service
      * @param $config
+     *
      * @return void
      */
     public static function authSetConfig($service, $config)
     {
         \app()->config->set([$service => $config], 'auth');
     }
-
 
     /**
      * @param $key
