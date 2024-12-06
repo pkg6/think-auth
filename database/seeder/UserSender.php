@@ -12,8 +12,6 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\database\seeder;
-
 use think\migration\Seeder;
 
 class UserSender extends Seeder
