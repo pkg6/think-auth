@@ -12,8 +12,6 @@
  * This source file is subject to the MIT license that is bundled.
  */
 
-namespace tp5er\think\auth\database\migrations;
-
 use think\migration\Migrator;
 
 class PersonalAccessToken extends Migrator
