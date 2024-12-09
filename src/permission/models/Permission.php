@@ -28,6 +28,8 @@ class Permission extends Model implements \tp5er\think\auth\permission\contracts
         );
     }
 
+
+
     public static function creates(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);

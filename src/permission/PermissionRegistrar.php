@@ -80,7 +80,7 @@ class PermissionRegistrar
     {
         return $this->modelClassPermission;
     }
-
+    
     public function getPermissions(array $params = []): Collection
     {
         if ($this->permissions === null) {
@@ -97,6 +97,16 @@ class PermissionRegistrar
             $permissions = $permissions->where($attr, $value);
         }
         return $permissions;
+    }
+    public function forgetCachedPermissions()
+    {
+        $this->permissions = null;
+        return $this->app->cache->delete(self::$cacheKey);
+    }
+
+    public function getRoleClass()
+    {
+        return $this->modelClassRole;
     }
 
     public static function isUid($value): bool
