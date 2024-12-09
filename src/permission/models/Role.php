@@ -4,21 +4,26 @@ namespace tp5er\think\auth\permission\models;
 
 use think\Model;
 use think\model\relation\BelongsToMany;
+use tp5er\think\auth\permission\exceptions\GuardDoesNotMatch;
 use tp5er\think\auth\permission\exceptions\RoleAlreadyExists;
 use tp5er\think\auth\permission\exceptions\RoleDoesNotExist;
 use tp5er\think\auth\permission\Guard;
 use tp5er\think\auth\permission\PermissionRegistrar;
+use tp5er\think\auth\permission\traits\HasPermissions;
 
 
 class Role extends Model implements \tp5er\think\auth\permission\contracts\Role
 {
+
+    use HasPermissions;
+
     protected $table = 'roles';
 
 
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(
-            app(PermissionRegistrar::class)->modelClassPermission,
+            $this->getPermissionClass(),
             app(PermissionRegistrar::class)->roleHasPermissionTable,
             app(PermissionRegistrar::class)->pivotPermission,
             app(PermissionRegistrar::class)->pivotRole
@@ -57,7 +62,17 @@ class Role extends Model implements \tp5er\think\auth\permission\contracts\Role
 
     public function hasPermissionTo($permission, $guardName = null): bool
     {
-        // TODO: Implement hasPermissionTo() method.
+        $permissionClass = $this->getPermissionClass();
+        if (is_string($permission)) {
+            $permission = $permissionClass->findByName($permission, $this->getDefaultGuardName());
+        }
+        if (PermissionRegistrar::isUid($permission)) {
+            $permission = $permissionClass->findById($permission, $this->getDefaultGuardName());
+        }
+        if (! $this->getGuardNames()->contains($permission->guard_name)) {
+            throw GuardDoesNotMatch::create($permission->guard_name, $this->getGuardNames());
+        }
+        return $this->permissions->contains('id', $permission->id);
     }
 
     public static function creates($attributes)

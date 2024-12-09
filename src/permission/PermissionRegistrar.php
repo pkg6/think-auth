@@ -3,6 +3,7 @@
 namespace tp5er\think\auth\permission;
 
 use think\App;
+use think\model\Collection;
 use tp5er\think\auth\permission\models\Permission;
 use tp5er\think\auth\permission\models\Role;
 
@@ -41,6 +42,11 @@ class PermissionRegistrar
     public $modelClassRole = Role::class;
 
     /**
+     * @var \think\model\Collection
+     */
+    protected $permissions;
+
+    /**
      * @param App $app
      */
     public function __construct(App $app)
@@ -64,9 +70,33 @@ class PermissionRegistrar
         $this->pivotPermission = config('auth.permission.column_names.permission_pivot_key', 'permission_id');
     }
 
+    public function setPermissionClass($permissionClass)
+    {
+        $this->modelClassPermission = $permissionClass;
+        return $this;
+    }
+
     public function getPermissionClass()
     {
         return $this->modelClassPermission;
+    }
+
+    public function getPermissions(array $params = []): Collection
+    {
+        if ($this->permissions === null) {
+            $this->permissions = $this->app
+                ->cache
+                ->remember(self::$cacheKey, function () {
+                    return $this->getPermissionClass()::newQuery()
+                        ->with('roles')
+                        ->select();
+                }, self::$cacheExpirationTime);
+        }
+        $permissions = clone $this->permissions;
+        foreach ($params as $attr => $value) {
+            $permissions = $permissions->where($attr, $value);
+        }
+        return $permissions;
     }
 
     public static function isUid($value): bool

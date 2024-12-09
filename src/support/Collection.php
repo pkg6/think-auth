@@ -42,6 +42,21 @@ class Collection extends \think\Collection
             ->map($callback);
     }
 
+    public function implode($value, $glue = null)
+    {
+        $first = $this->first();
+
+        if (is_array($first) || (is_object($first))) {
+            return implode($glue ?? '', $this->pluck($value)->all());
+        }
+        return implode($value ?? '', $this->items);
+    }
+
+    public function pluck($value, $key = null)
+    {
+        return new static(Arr::pluck($this->items, $value, $key));
+    }
+
     /**
      * Apply the callback if the value is truthy.
      *
@@ -53,7 +68,7 @@ class Collection extends \think\Collection
      */
     public function when($value, callable $callback = null, callable $default = null)
     {
-        if ( ! $callback) {
+        if (!$callback) {
             return new HigherOrderWhenProxy($this, $value);
         }
 
@@ -94,7 +109,7 @@ class Collection extends \think\Collection
             $callback = $this->valueRetriever($key);
 
             foreach ($this as $k => $v) {
-                if ( ! $callback($v, $k)) {
+                if (!$callback($v, $k)) {
                     return false;
                 }
             }
@@ -190,7 +205,7 @@ class Collection extends \think\Collection
      */
     protected function useAsCallable($value)
     {
-        return ! is_string($value) && is_callable($value);
+        return !is_string($value) && is_callable($value);
     }
 
     /**
@@ -287,7 +302,7 @@ class Collection extends \think\Collection
         $keys = is_array($key) ? $key : func_get_args();
 
         foreach ($keys as $value) {
-            if ( ! array_key_exists($value, $this->items)) {
+            if (!array_key_exists($value, $this->items)) {
                 return false;
             }
         }
@@ -315,7 +330,7 @@ class Collection extends \think\Collection
     /**
      * Get a flattened array of the items in the collection.
      *
-     * @param  int  $depth
+     * @param int $depth
      * @return static<int, mixed>
      */
     public function flatten($depth = INF)
