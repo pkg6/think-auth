@@ -4,6 +4,7 @@ namespace tp5er\think\auth\permission\traits;
 
 use tp5er\think\auth\permission\contracts\Role;
 use tp5er\think\auth\permission\PermissionRegistrar;
+use tp5er\think\auth\support\Collection;
 
 trait HasRoles
 {
@@ -19,6 +20,7 @@ trait HasRoles
 
         return $this->roleClass;
     }
+
     public function assignRole(...$roles)
     {
         $roles = collect($roles)
@@ -42,17 +44,20 @@ trait HasRoles
         $this->forgetCachedPermissions();
         return $this;
     }
+
     public function removeRole($role)
     {
         $this->roles()->detach($this->getStoredRole($role));
         $this->forgetCachedPermissions();
         return $this;
     }
+
     public function syncRoles(...$roles)
     {
         $this->roles()->detach();
         return $this->assignRole($roles);
     }
+
     public function hasRole($roles, string $guard = null): bool
     {
         if (is_string($roles) && false !== strpos($roles, '|')) {
@@ -61,18 +66,18 @@ trait HasRoles
 
         if (is_string($roles)) {
             return $guard
-                ? $this->roles->where('guard_name', $guard)->contains('name', $roles)
-                : $this->roles->contains('name', $roles);
+                ? Collection::make($this->roles)->where('guard_name', $guard)->contains('name', $roles)
+                : Collection::make($this->roles)->contains('name', $roles);
         }
 
         if (is_int($roles)) {
             return $guard
-                ? $this->roles->where('guard_name', $guard)->contains('id', $roles)
-                : $this->roles->contains('id', $roles);
+                ? Collection::make($this->roles)->where('guard_name', $guard)->contains('id', $roles)
+                : Collection::make($this->roles)->contains('id', $roles);
         }
 
         if ($roles instanceof Role) {
-            return $this->roles->contains('id', $roles->id);
+            return Collection::make($this->roles)->contains('id', $roles->id);
         }
 
         if (is_array($roles)) {
@@ -84,9 +89,12 @@ trait HasRoles
 
             return false;
         }
-
-        return $roles->intersect($guard ? $this->roles->where('guard_name', $guard) : $this->roles)->isNotEmpty();
+        return !$roles->intersect($guard ?
+            Collection::make($this->roles)->where('guard_name', $guard) :
+            $this->roles
+        )->isEmpty();
     }
+
     protected function getStoredRole($role): Role
     {
         $roleClass = $this->getRoleClass();
@@ -98,6 +106,7 @@ trait HasRoles
         }
         return $role;
     }
+
     protected function convertPipeToArray(string $pipeString)
     {
         $pipeString = trim($pipeString);
@@ -113,7 +122,7 @@ trait HasRoles
             return explode('|', $pipeString);
         }
 
-        if (! in_array($quoteCharacter, ["'", '"'])) {
+        if (!in_array($quoteCharacter, ["'", '"'])) {
             return explode('|', $pipeString);
         }
 
