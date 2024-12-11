@@ -118,7 +118,7 @@ class AppService extends \tp5er\think\auth\AppService
             );
 
             return $instance
-                ->setBlacklistEnabled((bool)self::getConfig('blacklist_enabled', true))
+                ->setBlacklistEnabled((bool) self::getConfig('blacklist_enabled', true))
                 ->setPersistentClaims(self::getConfig('persistent_claims', []));
         });
         $this->app->bind(AppService::abstract_auth, function () {

@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth\think\commands;
 
 use think\console\Command;
@@ -22,7 +34,7 @@ class CasbinCommand extends Command
         // 给用户alice赋予对data1的read权限
         Casbin::addPolicy('alice', 'data1', 'read');
         //判断是权限策略是否存在
-        if (Casbin::hasPolicy('alice', 'data1', 'read')){
+        if (Casbin::hasPolicy('alice', 'data1', 'read')) {
             $output->info("alice 有权限");
         }
         Casbin::removePolicy('alice', 'data1', 'read');

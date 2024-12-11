@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth\facade;
 
 use Casbin\Enforcer;
@@ -8,6 +20,7 @@ use Casbin\Model\Model;
 /**
  * @see Enforcer
  * @mixin Enforcer
+ *
  * @method mixed GetRolesForUser(string $username) static 获取用户具有的角色
  * @method mixed GetUsersForRole(string $role) static 获取具有角色的用户
  * @method mixed HasRoleForUser(string $username, string $role) static 确定用户是否具有角色

@@ -48,9 +48,9 @@ abstract class AppService
         if (is_null($key)) {
             return $this->config;
         }
+
         return Arr::get($this->config, $key, $default);
     }
-
 
     public static function getCfg($key = null, $default = null)
     {
