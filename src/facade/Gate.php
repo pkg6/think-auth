@@ -50,6 +50,6 @@ class Gate extends \think\Facade
      */
     protected static function getFacadeClass()
     {
-        return AppService::gate;
+        return AppService::abstract_gate;
     }
 }

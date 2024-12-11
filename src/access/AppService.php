@@ -20,16 +20,13 @@ use tp5er\think\auth\contracts\GateInterface;
 
 class AppService extends \tp5er\think\auth\AppService
 {
-    const gate = GateInterface::class;
+    const abstract_gate = GateInterface::class;
 
-    public static function name()
-    {
-        return 'access';
-    }
+    public $name = 'auth.access';
 
     public function bind()
     {
-        $this->app->bind(AppService::gate, function () {
+        $this->app->bind(AppService::abstract_gate, function () {
             return new Gate($this->app, $this->app->get(AuthenticatableContract::class));
         });
     }
@@ -37,7 +34,7 @@ class AppService extends \tp5er\think\auth\AppService
     public static function registerPolicy(App $app, $policy = [])
     {
         foreach ($policy as $key => $value) {
-            $app->get(AppService::gate)->policy($key, $value);
+            $app->get(AppService::abstract_gate)->policy($key, $value);
         }
     }
 }

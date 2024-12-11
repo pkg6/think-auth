@@ -288,7 +288,7 @@ class AuthManager implements AuthManagerInterface, Factory
             $this->app,
             $name,
             $provider,
-            $this->app->get(JWTRegister::auth)
+            $this->app->get(JWTRegister::abstract_auth)
         );
 
         return $guard;

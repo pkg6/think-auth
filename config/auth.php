@@ -299,6 +299,12 @@ return [
         ]
     ],
 
+    'casbin' => [
+        'model_conf_file' => env('CASBIN_MODEL_CONF_FILE', root_path() . 'casbin-basic-model.conf'),
+        'adapter' => \tp5er\think\auth\casbin\adapters\ModelAdapter::class,
+        "rule_model" => \tp5er\think\auth\casbin\adapters\CasbinRule::class,
+    ],
+
     'middleware' => [
         'global' => [
             \think\middleware\SessionInit::class,

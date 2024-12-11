@@ -16,7 +16,7 @@ use think\migration\Migrator;
 
 class PersonalAccessToken extends Migrator
 {
-    public function change()
+    public function up()
     {
         $table = $this->table('personal_access_token');
         $table->addColumn('tokenable_type', 'string', ['limit' => 255, 'null' => false])
@@ -29,5 +29,11 @@ class PersonalAccessToken extends Migrator
             ->addIndex(['token'], ['unique' => true, 'name' => 'personal_access_tokens_token_unique'])
             ->addIndex(['tokenable_type', 'tokenable_id'], ['name' => 'personal_access_tokens_tokenable_type_tokenable_id_index'])
             ->create();
+    }
+
+    public function down()
+    {
+        $table = $this->table('personal_access_token');
+        $table->drop();
     }
 }

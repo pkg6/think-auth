@@ -5,7 +5,7 @@ use think\migration\db\Column;
 
 class User extends Migrator
 {
-    public function change()
+    public function up()
     {
         $table = $this->table('user');
         $table->addColumn('name', 'string', ['limit' => 255, 'null' => false])
@@ -16,5 +16,10 @@ class User extends Migrator
             ->addTimestamps()
             ->addIndex(['email'], ['unique' => true,'name' => 'users_email_unique'])
             ->create();
+    }
+    public function down()
+    {
+        $table = $this->table('user');
+        $table->drop();
     }
 }
