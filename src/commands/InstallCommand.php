@@ -14,16 +14,10 @@
 
 namespace tp5er\think\auth\commands;
 
-use DateTime;
-use DateTimeZone;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use tp5er\think\auth\database\migrations\PersonalAccessToken;
-use tp5er\think\auth\database\migrations\User;
-use tp5er\think\auth\database\seeder\UserSender;
 use tp5er\think\auth\support\File;
-use tp5er\think\auth\support\Str;
 
 class InstallCommand extends Command
 {
@@ -44,7 +38,7 @@ class InstallCommand extends Command
      */
     protected function check(Output $output)
     {
-        if (!class_exists(\think\migration\Migrator::class)) {
+        if ( ! class_exists(\think\migration\Migrator::class)) {
             $output->error("Please install `topthink/think-migration`");
 
             return false;
@@ -62,7 +56,7 @@ class InstallCommand extends Command
     protected function execute(Input $input, Output $output)
     {
         $check = $this->check($output);
-        if (!$check) {
+        if ( ! $check) {
             return;
         }
         $this->cashbin($output);
@@ -74,7 +68,6 @@ class InstallCommand extends Command
         //$this->app->console->call('migrate:run');
         //$this->app->console->call('seed:run');
     }
-
 
     /**
      * migrations 文件迁移.
@@ -121,7 +114,7 @@ class InstallCommand extends Command
     {
         $output->info("【casbin】 initialization");
         $fileName = 'casbin-basic-model.conf';
-        if (!file_exists(root_path() . $fileName)) {
+        if ( ! file_exists(root_path() . $fileName)) {
             copy(__DIR__ . '/../../config/' . $fileName, root_path() . $fileName);
         }
     }

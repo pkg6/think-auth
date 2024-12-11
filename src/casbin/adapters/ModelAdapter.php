@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth\casbin\adapters;
 
 use Casbin\Persist\Adapter as AdapterContract;
@@ -24,6 +36,7 @@ class ModelAdapter implements AdapterContract
     /**
      * @param $ptype
      * @param array $rule
+     *
      * @return void
      */
     public function savePolicyLine($ptype, array $rule)
@@ -37,7 +50,9 @@ class ModelAdapter implements AdapterContract
 
     /**
      * @param $model
+     *
      * @return void
+     *
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -51,7 +66,7 @@ class ModelAdapter implements AdapterContract
             }
 
             $line = implode(', ', array_filter(array_slice($row, 1), function ($val) {
-                return '' != $val && !is_null($val);
+                return '' != $val && ! is_null($val);
             }));
             $this->loadPolicyLine(trim($line), $model);
         }
@@ -59,6 +74,7 @@ class ModelAdapter implements AdapterContract
 
     /**
      * @param $model
+     *
      * @return true
      */
     public function savePolicy($model)
@@ -73,14 +89,15 @@ class ModelAdapter implements AdapterContract
                 $this->savePolicyLine($ptype, $rule);
             }
         }
+
         return true;
     }
-
 
     /**
      * @param $sec
      * @param $ptype
      * @param $rule
+     *
      * @return void
      */
     public function addPolicy($sec, $ptype, $rule)
@@ -92,6 +109,7 @@ class ModelAdapter implements AdapterContract
      * @param $sec
      * @param $ptype
      * @param $rule
+     *
      * @return bool|mixed
      */
     public function removePolicy($sec, $ptype, $rule)
@@ -100,6 +118,7 @@ class ModelAdapter implements AdapterContract
         foreach ($rule as $key => $value) {
             $result->where('v' . strval($key), $value);
         }
+
         return $result->delete();
     }
 
@@ -108,7 +127,9 @@ class ModelAdapter implements AdapterContract
      * @param $ptype
      * @param $fieldIndex
      * @param ...$fieldValues
+     *
      * @return int
+     *
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -129,6 +150,7 @@ class ModelAdapter implements AdapterContract
                 ++$count;
             }
         }
+
         return $count;
     }
 }

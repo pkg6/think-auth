@@ -1,10 +1,21 @@
 <?php
 
+/*
+ * This file is part of the tp5er/think-auth
+ *
+ * (c) pkg6 <https://github.com/pkg6>
+ *
+ * (L) Licensed <https://opensource.org/license/MIT>
+ *
+ * (A) zhiqiang <https://www.zhiqiang.wang>
+ *
+ * This source file is subject to the MIT license that is bundled.
+ */
+
 namespace tp5er\think\auth\casbin;
 
-use Casbin\Model\Model;
 use Casbin\Enforcer;
-
+use Casbin\Model\Model;
 
 class AppService extends \tp5er\think\auth\AppService
 {
@@ -27,6 +38,7 @@ class AppService extends \tp5er\think\auth\AppService
             if (is_string($adapter) && class_exists($adapter)) {
                 $adapter = new $adapter();
             }
+
             return new Enforcer($model, $adapter);
         });
     }
