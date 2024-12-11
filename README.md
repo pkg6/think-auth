@@ -331,7 +331,7 @@ thinkRoute::get("/jwt/refresh", function () {
 })->middleware('auth', "jwt");
 ~~~
 
-## casbin权限验证
+## [casbin权限验证](https://casbin.org/)
 
 ~~~
 // 给用户alice赋予对data1的read权限
@@ -384,6 +384,8 @@ https://github.com/laravel/framework/tree/8.x/src/Illuminate/Auth
 https://github.com/laravel/sanctum
 
 https://github.com/tymondesigns/jwt-auth
+
+https://github.com/php-casbin/think-casbin
 
 ## 许可协议
 
