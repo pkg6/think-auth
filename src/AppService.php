@@ -19,21 +19,22 @@ use think\helper\Arr;
 
 abstract class AppService
 {
+    public $name = 'auth';
     public $config = [];
     /**
      * @var App
      */
     protected $app;
 
-    public function __construct(App $app, array $config = [])
+    public function __construct(App $app)
     {
-        $this->app = $app;
-        $this->config = array_merge($this->config, $config);
+        $this->mergeConfig($app);
     }
 
-    public static function name()
+    public function mergeConfig(App $app)
     {
-        return 'auth';
+        $this->app = $app;
+        $this->config = array_merge($this->config, $app->config->get($this->name, []));
     }
 
     /**
@@ -47,8 +48,13 @@ abstract class AppService
         if (is_null($key)) {
             return $this->config;
         }
-
         return Arr::get($this->config, $key, $default);
+    }
+
+
+    public static function getCfg($key = null, $default = null)
+    {
+        return (new static(\app()))->getConfig($key, $default);
     }
 
     /**

@@ -331,6 +331,30 @@ thinkRoute::get("/jwt/refresh", function () {
 })->middleware('auth', "jwt");
 ~~~
 
+## casbin权限验证
+
+~~~
+// 给用户alice赋予对data1的read权限
+Casbin::addPolicy('alice', 'data1', 'read');
+//判断是权限策略是否存在
+if (Casbin::hasPolicy('alice', 'data1', 'read')){
+    $output->info("alice 有权限");
+}
+//移除权限
+Casbin::removePolicy('alice', 'data1', 'read');
+
+//使用决策器，验证权限
+$sub = 'alice'; // the user that wants to access a resource.
+$obj = 'data1'; // the resource that is going to be accessed.
+$act = 'read'; // the operation that the user performs on the resource.
+if (true === Casbin::enforce($sub, $obj, $act)) {
+    // permit alice to read data1
+    echo 'permit alice to read data1';
+} else {
+    // deny the request, show an error
+}
+~~~
+
 ## [密码生成和验证](https://github.com/pkg6/think-hashing)
 
 ~~~

@@ -27,6 +27,6 @@ class JWT extends \think\Facade
      */
     protected static function getFacadeClass()
     {
-        return AppService::auth;
+        return AppService::abstract_auth;
     }
 }

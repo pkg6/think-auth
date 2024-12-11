@@ -65,6 +65,7 @@ class InstallCommand extends Command
         if (!$check) {
             return;
         }
+        $this->cashbin($output);
         $this->migrations($output);
         $this->sender($output);
         $output->highlight("Manually execute as needed：");
@@ -113,6 +114,15 @@ class InstallCommand extends Command
             } else {
                 $output->error("【Seeder】Failed from {$sourceFile} cp to {$targetFile}");
             }
+        }
+    }
+
+    public function cashbin(Output $output)
+    {
+        $output->info("【casbin】 initialization");
+        $fileName = 'casbin-basic-model.conf';
+        if (!file_exists(root_path() . $fileName)) {
+            copy(__DIR__ . '/../../config/' . $fileName, root_path() . $fileName);
         }
     }
 }

@@ -28,6 +28,7 @@ class Service extends \think\Service
         \tp5er\think\auth\access\AppService::class,
         \tp5er\think\auth\sanctum\AppService::class,
         \tp5er\think\auth\jwt\AppService::class,
+        \tp5er\think\auth\casbin\AppService::class,
     ];
 
     /**
@@ -123,7 +124,7 @@ class Service extends \think\Service
     protected function serviceBind()
     {
         foreach ($this->services as $register) {
-            $instance = new $register($this->app, $this->config($register::name(), []));
+            $instance = new $register($this->app);
             $instance->bind();
             $this->app->bind($register, $instance);
         }

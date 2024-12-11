@@ -23,15 +23,16 @@ use tp5er\think\auth\jwt\validators\PayloadValidator;
 
 class AppService extends \tp5er\think\auth\AppService
 {
-    const claimFactory = ClaimFactory::class;
-    const claimsValidatorFactory = ClaimsValidatorFactory::class;
+    public $name = 'auth.jwt';
+    const abstract_claim_factory = ClaimFactory::class;
+    const abstract_claims_validator_factory = ClaimsValidatorFactory::class;
 
-    const storge = Storage::class;
-    const validatorpayload = "tp5er.auth.jwt.validators.payload";
-    const blacklist = "tp5er.auth.jwt.blacklist";
-    const cipher = JWT::class;
-    const manager = 'tp5er.auth.jwt.manager';
-    const auth = 'tp5er.auth.jwt.auth';
+    const abstract_storge = Storage::class;
+    const abstract_validatorpayload = "tp5er.auth.jwt.validators.payload";
+    const abstract_blacklist = "tp5er.auth.jwt.blacklist";
+    const abstract_cipher = JWT::class;
+    const abstract_manager = 'tp5er.auth.jwt.manager';
+    const abstract_auth = 'tp5er.auth.jwt.auth';
 
     public $config = [
         'secret' => '',
@@ -64,46 +65,42 @@ class AppService extends \tp5er\think\auth\AppService
             "storage" => \tp5er\think\auth\jwt\providers\storage\Think::class,
         ]
     ];
-    public static function name()
-    {
-        return 'jwt';
-    }
 
     public function bind()
     {
-        $this->app->bind(AppService::claimFactory, function () {
+        $this->app->bind(AppService::abstract_claim_factory, function () {
             return new ClaimFactory($this->app->request);
         });
-        $this->app->bind(AppService::validatorpayload, function () {
+        $this->app->bind(AppService::abstract_validatorpayload, function () {
             return (new PayloadValidator)
                 ->setRefreshTTL(self::getConfig('refresh_ttl'))
                 ->setRequiredClaims(self::getConfig('required_claims', []));
         });
 
-        $this->app->bind(AppService::claimsValidatorFactory, function () {
+        $this->app->bind(AppService::abstract_claims_validator_factory, function () {
             $factory = new ClaimsValidatorFactory(
-                $this->app->get(AppService::claimFactory),
-                $this->app->get(AppService::validatorpayload)
+                $this->app->get(AppService::abstract_claim_factory),
+                $this->app->get(AppService::abstract_validatorpayload)
             );
 
             return $factory->setTTL(self::getConfig('ttl'))
                 ->setLeeway(self::getConfig('leeway'));
         });
 
-        $this->app->bind(AppService::storge, function () {
+        $this->app->bind(AppService::abstract_storge, function () {
             $storageClass = self::getConfig('providers.storage', Think::class);
 
             return new $storageClass($this->app);
         });
 
-        $this->app->bind(AppService::blacklist, function () {
-            $instance = new Blacklist($this->app->get(AppService::storge));
+        $this->app->bind(AppService::abstract_blacklist, function () {
+            $instance = new Blacklist($this->app->get(AppService::abstract_storge));
 
             return $instance->setGracePeriod(self::getConfig('blacklist_grace_period'))
                 ->setRefreshTTL(self::getConfig('refresh_ttl'));
         });
 
-        $this->app->bind(AppService::cipher, function () {
+        $this->app->bind(AppService::abstract_cipher, function () {
             $jwtClass = self::getConfig('providers.jwt', Lcobucci::class);
 
             return new $jwtClass(
@@ -113,21 +110,21 @@ class AppService extends \tp5er\think\auth\AppService
             );
         });
 
-        $this->app->bind(AppService::manager, function () {
+        $this->app->bind(AppService::abstract_manager, function () {
             $instance = new Manager(
-                $this->app->get(AppService::cipher),
-                $this->app->get(AppService::blacklist),
-                $this->app->get(AppService::claimsValidatorFactory)
+                $this->app->get(AppService::abstract_cipher),
+                $this->app->get(AppService::abstract_blacklist),
+                $this->app->get(AppService::abstract_claims_validator_factory)
             );
 
             return $instance
-                ->setBlacklistEnabled((bool) self::getConfig('blacklist_enabled', true))
+                ->setBlacklistEnabled((bool)self::getConfig('blacklist_enabled', true))
                 ->setPersistentClaims(self::getConfig('persistent_claims', []));
         });
-        $this->app->bind(AppService::auth, function () {
+        $this->app->bind(AppService::abstract_auth, function () {
             $instance = new JWTAuth(
-                $this->app->get(AppService::manager),
-                $this->app->get(\tp5er\think\auth\keyparser\AppService::keyParser)
+                $this->app->get(AppService::abstract_manager),
+                $this->app->get(\tp5er\think\auth\keyparser\AppService::abstract_key_parser)
             );
 
             return $instance->lockSubject(self::getConfig('lock_subject'));

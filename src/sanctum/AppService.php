@@ -20,17 +20,14 @@ use tp5er\think\auth\RequestGuard;
 
 class AppService extends \tp5er\think\auth\AppService
 {
-    const sanctum = 'sanctum';
+    public $name = 'auth.sanctum';
+
+    const driver_sanctum = 'sanctum';
 
     public $config = [
         'guard' => ['web'],
         'expiration' => null,
     ];
-
-    public static function name()
-    {
-        return 'sanctum';
-    }
 
     public function bind()
     {
@@ -39,7 +36,7 @@ class AppService extends \tp5er\think\auth\AppService
             "driver" => 'sanctum',
             "provider" => null
         ]);
-        $auth->extend(AppService::sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
+        $auth->extend(AppService::driver_sanctum, function (App $app, $name, $sanctumConfig) use (&$auth) {
             $expiration = $this->getConfig('expiration');
 
             return new RequestGuard(
