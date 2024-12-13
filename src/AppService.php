@@ -48,34 +48,11 @@ abstract class AppService
         if (is_null($key)) {
             return $this->config;
         }
-
         return Arr::get($this->config, $key, $default);
     }
 
     public static function getCfg($key = null, $default = null)
     {
         return (new static(\app()))->getConfig($key, $default);
-    }
-
-    /**
-     * @param $service
-     * @param $config
-     *
-     * @return void
-     */
-    public static function authSetConfig($service, $config)
-    {
-        \app()->config->set([$service => $config], 'auth');
-    }
-
-    /**
-     * @param $key
-     * @param $default
-     *
-     * @return array|mixed
-     */
-    public static function authGetConfig($key, $default = null)
-    {
-        return \app()->config->get('auth.' . $key, $default);
     }
 }

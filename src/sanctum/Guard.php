@@ -73,13 +73,12 @@ class Guard
      */
     public function __invoke(Request $request)
     {
-        $guards = \tp5er\think\auth\AppService::authGetConfig('sanctum.guard', ['web']);
+        $guards = $this->app->config->get('auth.sanctum.guard', ['web']);
         foreach (Arr::wrap($guards) as $guard) {
             if ($user = $this->auth->guard($guard)->user()) {
                 if ($this->supportsTokens($user) && method_exists($user, 'withAccessToken')) {
                     $user->withAccessToken(new TransientToken);
                 }
-
                 return $user;
             }
         }
@@ -89,8 +88,8 @@ class Guard
              */
             $model = Sanctum::$personalAccessTokenModel;
             $accessToken = $model::findToken($token);
-            if ( ! $this->isValidAccessToken($accessToken) ||
-                ! $this->supportsTokens($accessToken->tokenable)) {
+            if (!$this->isValidAccessToken($accessToken) ||
+                !$this->supportsTokens($accessToken->tokenable)) {
                 return null;
             }
             $tokenable = $accessToken->tokenable->withAccessToken($accessToken);
@@ -123,7 +122,7 @@ class Guard
     protected function getTokenFromRequest(Request $request)
     {
         if (is_callable(Sanctum::$accessTokenRetrievalCallback)) {
-            return (string) (Sanctum::$accessTokenRetrievalCallback)($request);
+            return (string)(Sanctum::$accessTokenRetrievalCallback)($request);
         }
 
         return requesta()->bearerToken();
@@ -140,14 +139,14 @@ class Guard
      */
     protected function isValidAccessToken($accessToken)
     {
-        if ( ! $accessToken) {
+        if (!$accessToken) {
             return false;
         }
         $isValid =
-            ( ! $this->expiration || $accessToken->getCreateTimeTimestamp() > Timer::timeAddSec($this->expiration))
+            (!$this->expiration || $accessToken->getCreateTimeTimestamp() > Timer::timeAddSec($this->expiration))
             && $this->hasValidProvider($accessToken->getTokenable());
         if (is_callable(Sanctum::$accessTokenAuthenticationCallback)) {
-            $isValid = (bool) (Sanctum::$accessTokenAuthenticationCallback)($accessToken, $isValid);
+            $isValid = (bool)(Sanctum::$accessTokenAuthenticationCallback)($accessToken, $isValid);
         }
 
         return $isValid;
@@ -163,7 +162,8 @@ class Guard
         if (is_null($this->provider)) {
             return true;
         }
-        $model = \tp5er\think\auth\AppService::authGetConfig("providers.{$this->provider}.model");
+
+        $model = $this->app->config->get('auth.providers.' . $this->provider . '.model');
 
         return $tokenable instanceof $model;
     }
